@@ -1,0 +1,108 @@
+:where([class^="ri-"])::before { content: "\f3c2"; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F3F4F6;
+    background-image: url("https://readdy.ai/api/search-image?query=subtle%2520Ethiopian%2520pattern%2520background%2C%2520very%2520light%2520and%2520barely%2520visible%2C%2520geometric%2520patterns%2520inspired%2520by%2520Ethiopian%2520textiles%2C%2520extremely%2520faded%2C%2520perfect%2520for%2520website%2520background%2C%2520minimal%2C%2520modern%2C%2520professional&width=1920&height=1080&seq=1&orientation=landscape");
+    background-repeat: repeat;
+    background-size: 400px;
+}
+
+.form-container {
+    opacity: 0;
+    transform: translateY(50px);
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-input {
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.form-input.error {
+    border-color: #EF4444;
+    animation: shake 0.3s linear;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.submit-btn {
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+.dropzone {
+    transition: all 0.3s ease;
+    border: 2px dashed #16A34A;
+}
+
+.dropzone.dragover {
+    background-color: rgba(22, 163, 74, 0.1);
+    border-color: #16A34A;
+}
+
+.custom-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.custom-checkbox:checked {
+    background-color: #2563EB;
+    border-color: #2563EB;
+}
+
+.custom-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.ethiopian-border {
+    background-image: linear-gradient(to right, #EA580C, #16A34A, #2563EB);
+    height: 3px;
+    border-radius: 3px;
+}

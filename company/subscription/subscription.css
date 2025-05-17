@@ -1,0 +1,131 @@
+:where([class^="ri-"])::before { content: "\f3c2"; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+}
+
+.toggle-checkbox:checked {
+    right: 0;
+    border-color: #2563EB;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #2563EB;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+.pricing-card {
+    transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: scale(1.02);
+}
+
+.most-popular {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #16A34A;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: #EA580C;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.payment-icon {
+    transition: all 0.3s ease;
+    filter: grayscale(100%);
+    opacity: 0.7;
+}
+
+.payment-icon:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* Mobile navigation styles */
+.mobile-menu {
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobile-menu-hidden {
+  transform: translateX(100%);
+}
+
+@media (max-width: 768px) {
+  .pricing-card {
+    margin-bottom: 2rem;
+  }
+
+  .pricing-card:hover {
+    transform: none;
+  }
+
+  .most-popular {
+    font-size: 12px;
+    padding: 3px 10px;
+  }
+
+  .discount-badge {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .payment-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .toggle-checkbox {
+    width: 20px;
+    height: 20px;
+    top: 2px;
+    left: 2px;
+  }
+
+  .toggle-label {
+    height: 24px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-icon span {
+    display: none;
+  }
+}
