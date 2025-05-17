@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant Messaging Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+    <style>
+        .typing-indicator {
+            display: inline-block;
+        }
+        .typing-indicator span {
+            animation: bounce 1.4s infinite ease-in-out;
+            display: inline-block;
+            margin: 0 1px;
+        }
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+        }
+        .message-employer {
+            background-color: #2563EB;
+            color: white;
+            border-radius: 18px 18px 0 18px;
+        }
+        .message-applicant {
+            background-color: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 18px 18px 18px 0;
+        }
+        .file-preview {
+            background-color: #F3F4F6;
+            border-radius: 12px;
+        }
+        .timestamp {
+            color: #4B5563;
+            font-size: 0.75rem;
+        }
+        .applicant-info {
+            background-color: #F9FAFB;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto max-w-4xl p-4">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <!-- Header with Applicant Info -->
+            <div class="border-b border-gray-200 p-4 applicant-info">
+                <div class="flex items-center">
+                    <div class="mr-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                            JS
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-gray-800">John Smith</h2>
+                        <p class="text-sm text-gray-600">Applicant for: Senior Developer</p>
+                        <div class="flex items-center mt-1">
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Active</span>
+                            <span class="ml-2 text-xs text-gray-500">Last active: 2 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Messages Container -->
+            <div id="messages" class="h-96 p-4 overflow-y-auto space-y-3">
+                <!-- Messages will appear here -->
+            </div>
+            
+            <!-- Typing Indicator -->
+            <div id="typingIndicator" class="px-4 pb-2 hidden">
+                <div class="typing-indicator text-gray-500 text-sm">
+                    <span>•</span>
+                    <span>•</span>
+                    <span>•</span>
+                    <span class="text-xs ml-2">Applicant is typing...</span>
+                </div>
+            </div>
+            
+            <!-- Input Area -->
+            <div class="border-t border-gray-200 p-4">
+                <!-- File Upload Preview -->
+                <div id="filePreview" class="mb-3 hidden">
+                    <div class="file-preview p-3 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div id="fileIcon" class="mr-3"></div>
+                            <div>
+                                <div id="fileName" class="font-medium"></div>
+                                <div id="fileSize" class="text-xs text-gray-500"></div>
+                            </div>
+                        </div>
+                        <button id="removeFile" class="text-gray-500 hover:text-red-500">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <!-- File Upload Button -->
+                    <button id="fileButton" class="flex-shrink-0 p-2 rounded-full bg-gray-200 hover:bg-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                        </svg>
+                    </button>
+                    <input type="file" id="fileInput" class="hidden">
+                    
+                    <!-- Message Input -->
+                    <div class="flex-1 relative">
+                        <textarea 
+                            id="messageInput" 
+                            rows="1"
+                            placeholder="Type your message to the applicant..."
+                            class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"></textarea>
+                        <button id="sendButton" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-blue-600 hover:text-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Applicant Documents Section -->
+        <div class="mt-6 bg-white rounded-xl shadow-md overflow-hidden p-4">
+            <h3 class="font-medium text-gray-800 mb-3">Applicant Documents</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-medium">Resume.pdf</div>
+                            <div class="text-xs text-gray-500">Uploaded 3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-medium">Cover_Letter.pdf</div>
+                            <div class="text-xs text-gray-500">Uploaded 3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== DOM Elements =====
+            const messagesContainer = document.getElementById('messages');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const fileButton = document.getElementById('fileButton');
+            const fileInput = document.getElementById('fileInput');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const fileIcon = document.getElementById('fileIcon');
+            const removeFile = document.getElementById('removeFile');
+            const typingIndicator = document.getElementById('typingIndicator');
+            
+            // ===== State =====
+            let currentFile = null;
+            let isTyping = false;
+            let lastTypingTime = 0;
+            
+            // ===== Sample Applicant Data =====
+            const applicant = {
+                id: 'applicant-123',
+                name: 'John Smith',
+                position: 'Senior Developer',
+                status: 'active',
+                lastActive: '2 hours ago'
+            };
+            
+            // ===== Sample Messages =====
+            const sampleMessages = [
+                {
+                    id: 1,
+                    text: "Hello, I'm interested in the Senior Developer position and have attached my resume.",
+                    sender: 'applicant',
+                    timestamp: '2023-05-10T09:30:00Z'
+                },
+                {
+                    id: 2,
+                    text: "Thanks for applying John! We reviewed your resume and would like to schedule an interview.",
+                    sender: 'employer',
+                    timestamp: '2023-05-10T11:45:00Z'
+                },
+                {
+                    id: 3,
+                    text: "That sounds great! What dates and times work for you?",
+                    sender: 'applicant',
+                    timestamp: '2023-05-10T13:20:00Z'
+                },
+                {
+                    id: 4,
+                    file: {
+                        name: 'Interview_Schedule.pdf',
+                        type: 'application/pdf',
+                        size: '245 KB',
+                        url: '#'
+                    },
+                    sender: 'employer',
+                    timestamp: '2023-05-10T15:10:00Z'
+                }
+            ];
+            
+            // ===== Event Listeners =====
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+                
+                updateTypingIndicator();
+            });
+            
+            sendButton.addEventListener('click', sendMessage);
+            fileButton.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+            
+            removeFile.addEventListener('click', function() {
+                currentFile = null;
+                filePreview.classList.add('hidden');
+                fileInput.value = '';
+            });
+            
+            // ===== Message Handling =====
+            function sendMessage() {
+                const text = DOMPurify.sanitize(messageInput.value.trim());
+                
+                if (text || currentFile) {
+                    // Create message object
+                    const message = {
+                        id: Date.now(),
+                        text: text,
+                        file: currentFile,
+                        sender: 'employer',
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Save to localStorage (simulated "database")
+                    saveMessage(message);
+                    
+                    // Display the message
+                    displayMessage(message);
+                    
+                    // Clear inputs
+                    messageInput.value = '';
+                    messageInput.style.height = 'auto';
+                    if (currentFile) {
+                        currentFile = null;
+                        filePreview.classList.add('hidden');
+                        fileInput.value = '';
+                    }
+                    
+                    // Simulate applicant response after 1-3 seconds
+                    setTimeout(simulateApplicantReply, 1000 + Math.random() * 2000);
+                }
+            }
+            
+            function simulateApplicantReply() {
+                const replies = [
+                    "Thanks for getting back to me!",
+                    "I'll review the materials and get back to you.",
+                    "What's the next step in the process?",
+                    "Are there any specific skills you're looking for?",
+                    "I'm available for an interview next week.",
+                    "Would you like me to complete any assessments?"
+                ];
+                
+                const reply = {
+                    id: Date.now(),
+                    text: replies[Math.floor(Math.random() * replies.length)],
+                    sender: 'applicant',
+                    timestamp: new Date().toISOString()
+                };
+                
+                saveMessage(reply);
+                displayMessage(reply);
+            }
+            
+            // ===== File Handling =====
+            function handleFileUpload(file) {
+                // Virus scan simulation
+                if (file.type === 'application/exe' || file.name.endsWith('.exe')) {
+                    alert("Blocked potentially unsafe file");
+                    return;
+                }
+                
+                // Show preview
+                currentFile = {
+                    name: file.name,
+                    type: file.type,
+                    size: formatFileSize(file.size),
+                    url: URL.createObjectURL(file) // In real app, upload to server
+                };
+                
+                filePreview.classList.remove('hidden');
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                
+                // Set appropriate icon
+                fileIcon.innerHTML = '';
+                if (file.type.startsWith('image/')) {
+                    fileIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
+                } else if (file.type === 'application/pdf') {
+                    fileIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>';
+                } else {
+                    fileIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
+                }
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+            
+            // ===== Typing Indicator =====
+            function updateTypingIndicator() {
+                if (!isTyping) {
+                    isTyping = true;
+                    // In real app, send "typing" event to applicant
+                }
+                
+                lastTypingTime = Date.now();
+                
+                // Hide after 2 seconds of inactivity
+                setTimeout(() => {
+                    if (Date.now() - lastTypingTime > 2000) {
+                        isTyping = false;
+                        typingIndicator.classList.add('hidden');
+                    }
+                }, 2000);
+                
+                typingIndicator.classList.remove('hidden');
+            }
+            
+            // ===== Message Storage =====
+            function saveMessage(message) {
+                let messages = JSON.parse(localStorage.getItem('applicantMessages') || []);
+                
+                // Auto-delete messages older than 90 days
+                const ninetyDaysAgo = new Date();
+                ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+                
+                messages = messages.filter(msg => {
+                    return new Date(msg.timestamp) > ninetyDaysAgo;
+                });
+                
+                messages.push(message);
+                localStorage.setItem('applicantMessages', JSON.stringify(messages));
+            }
+            
+            function loadMessages() {
+                // First load sample messages if none exist
+                if (!localStorage.getItem('applicantMessages')) {
+                    localStorage.setItem('applicantMessages', JSON.stringify(sampleMessages));
+                }
+                
+                const messages = JSON.parse(localStorage.getItem('applicantMessages') || []);
+                
+                // Auto-delete messages older than 90 days
+                const ninetyDaysAgo = new Date();
+                ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+                
+                const recentMessages = messages.filter(msg => {
+                    return new Date(msg.timestamp) > ninetyDaysAgo;
+                });
+                
+                // Update storage with only recent messages
+                if (recentMessages.length < messages.length) {
+                    localStorage.setItem('applicantMessages', JSON.stringify(recentMessages));
+                }
+                
+                // Display all messages
+                recentMessages.forEach(displayMessage);
+                
+                // Scroll to bottom
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
+            }
+            
+            // ===== Message Display =====
+            function displayMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex ${message.sender === 'employer' ? 'justify-end' : 'justify-start'}`;
+                
+                let content = '';
+                if (message.text) {
+                    content += `<div class="px-4 py-2 max-w-xs lg:max-w-md mb-1 ${message.sender === 'employer' ? 'message-employer' : 'message-applicant'}">${message.text}</div>`;
+                }
+                
+                if (message.file) {
+                    if (message.file.type.startsWith('image/')) {
+                        content += `
+                            <div class="px-0 py-2 max-w-xs lg:max-w-md mb-1 ${message.sender === 'employer' ? 'message-employer' : 'message-applicant'}">
+                                <img src="${message.file.url}" alt="${message.file.name}" class="max-h-48 rounded-lg">
+                                <div class="px-3 py-1 text-xs ${message.sender === 'employer' ? 'text-blue-100' : 'text-gray-500'}">${message.file.name}</div>
+                            </div>
+                        `;
+                    } else {
+                        content += `
+                            <div class="file-preview p-3 max-w-xs lg:max-w-md mb-1">
+                                <div class="flex items-center">
+                                    ${message.file.type === 'application/pdf' ? 
+                                        '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>' : 
+                                        '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>'}
+                                    <div>
+                                        <div class="font-medium">${message.file.name}</div>
+                                        <div class="text-xs text-gray-500">${message.file.size}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                content += `<div class="timestamp px-2 ${message.sender === 'employer' ? 'text-right' : 'text-left'}">${formatTime(message.timestamp)}</div>`;
+                
+                messageDiv.innerHTML = content;
+                messagesContainer.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            
+            function formatTime(timestamp) {
+                const date = new Date(timestamp);
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+            
+            // ===== Initialize =====
+            loadMessages();
+            
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <style>
+        /* Custom CSS for resume viewer iframe */
+        #resume-viewer {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            margin-bottom: 1rem;
+        }
+        .anonymized {
+            filter: blur(5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-inter">
+    <div class="container mx-auto py-6">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Applicant Tracker</h1>
+
+        <div class="mb-4">
+            <label for="status-filter" class="inline-flex items-center">
+                <span class="mr-2 text-gray-700">Filter by Status:</span>
+                <select id="status-filter" class="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:border-blue-500">
+                    <option value="all">All</option>
+                    <option value="new">New</option>
+                    <option value="reviewed">Reviewed</option>
+                    <option value="hired">Hired</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="bg-white shadow-md rounded-md p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Applicants</h2>
+            <table class="min-w-full table-auto rounded-md overflow-hidden" id="applicant-table">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Name</th>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Email</th>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Phone</th>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Status</th>
+                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white" id="applicant-table-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="bg-white shadow-md rounded-md p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Resume Viewer</h2>
+            <iframe id="resume-viewer" src=""></iframe>
+        </div>
+
+        <div class="bg-white shadow-md rounded-md p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Secure Notes</h2>
+            <div id="secure-notes-container">
+                <textarea id="secure-notes" placeholder="Enter secure notes here..." class="w-full h-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:border-blue-500"></textarea>
+                <p id="notes-warning" class="text-red-500 text-sm mt-2"></p>
+                <button id="save-notes-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mt-2">Save Notes</button>
+            </div>
+        </div>
+
+        <div class="text-right">
+            <button id="export-csv-button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md">Export to CSV</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Helper Functions ---
+        /**
+         * Masks email address.
+         * @param {string} email The email address to mask.
+         * @returns {string} The masked email address.
+         */
+        function maskEmail(email) {
+            if (!email) return '';
+            const parts = email.split('@');
+            if (parts.length !== 2) return email;
+            return parts[0].replace(/./g, '*') + '@' + parts[1];
+        }
+
+        /**
+         * Masks phone number.
+         * @param {string} phone The phone number to mask.
+         * @returns {string} The masked phone number.
+         */
+        function maskPhone(phone) {
+            if (!phone) return '';
+            return phone.replace(/\d/g, '*');
+        }
+
+        /**
+         * Exports data to CSV.
+         * @param {Array} data The data to export.
+         * @param {boolean} anonymize Whether to anonymize the data.
+         */
+        function exportToCsv(data, anonymize = false) {
+            if (!data || data.length === 0) {
+                alert('No data to export.');
+                return;
+            }
+
+            const header = Object.keys(data[0]).join(',') + '\n';
+            const rows = data.map(item => {
+                let row = Object.values(item);
+                if (anonymize) {
+                    row[1] = maskEmail(row[1]); // Mask email
+                    row[2] = maskPhone(row[2]); // Mask phone
+                }
+                return row.join(',');
+            }).join('\n');
+
+            const csvContent = header + rows;
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "applicants.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // --- Data ---
+        let applicants = [
+            { name: 'John Doe', email: 'john.doe@example.com', phone: '123-456-7890', status: 'new', resume: 'resume1.pdf' },
+            { name: 'Jane Smith', email: 'jane.smith@example.com', phone: '987-654-3210', status: 'reviewed', resume: 'resume2.pdf' },
+            { name: 'Mike Johnson', email: 'mike.johnson@example.com', phone: '555-123-4567', status: 'hired', resume: 'resume3.pdf' },
+            { name: 'Alice Brown', email: 'alice.brown@example.com', phone: '111-222-3333', status: 'new', resume: 'resume4.pdf' },
+            { name: 'Bob Williams', email: 'bob.williams@example.com', phone: '444-555-6666', status: 'reviewed', resume: 'resume5.pdf' },
+        ];
+
+        // --- DOM Elements ---
+        const statusFilter = document.getElementById('status-filter');
+        const applicantTableBody = document.getElementById('applicant-table-body');
+        const resumeViewer = document.getElementById('resume-viewer');
+        const exportCsvButton = document.getElementById('export-csv-button');
+        const secureNotesInput = document.getElementById('secure-notes');
+        const saveNotesButton = document.getElementById('save-notes-button');
+        const notesWarning = document.getElementById('notes-warning');
+
+        // --- State Management ---
+        let anonymizeData = false; // Default is to not anonymize
+        let storedNotes = localStorage.getItem('secureNotes');
+        let secureNotes = storedNotes ? storedNotes : "";
+
+        // --- Functions ---
+
+        /**
+         * Renders the applicant table.
+         * @param {Array} applicants The applicants to render.
+         */
+        function renderApplicantTable(applicants) {
+            applicantTableBody.innerHTML = ''; // Clear table
+            applicants.forEach(applicant => {
+                const row = document.createElement('tr');
+                const nameCell = document.createElement('td');
+                nameCell.textContent = applicant.name;
+                nameCell.className = 'px-4 py-2';
+                const emailCell = document.createElement('td');
+                emailCell.textContent = anonymizeData ? maskEmail(applicant.email) : applicant.email;
+                emailCell.className = 'px-4 py-2';
+                const phoneCell = document.createElement('td');
+                phoneCell.textContent = anonymizeData ? maskPhone(applicant.phone) : applicant.phone;
+                phoneCell.className = 'px-4 py-2';
+                const statusCell = document.createElement('td');
+                statusCell.textContent = applicant.status;
+                statusCell.className = 'px-4 py-2';
+                const actionsCell = document.createElement('td');
+                const viewResumeButton = document.createElement('button');
+                viewResumeButton.textContent = 'View Resume';
+                viewResumeButton.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-md text-sm';
+                viewResumeButton.addEventListener('click', () => {
+                    resumeViewer.src = applicant.resume;
+                });
+                actionsCell.appendChild(viewResumeButton);
+                actionsCell.className = 'px-4 py-2';
+
+                row.appendChild(nameCell);
+                row.appendChild(emailCell);
+                row.appendChild(phoneCell);
+                row.appendChild(statusCell);
+                row.appendChild(actionsCell);
+                applicantTableBody.appendChild(row);
+            });
+        }
+
+        /**
+         * Filters applicants by status.
+         * @param {Array} applicants The applicants to filter.
+         * @param {string} status The status to filter by.
+         * @returns {Array} The filtered applicants.
+         */
+        function filterApplicants(applicants, status) {
+            if (status === 'all') {
+                return applicants;
+            }
+            return applicants.filter(applicant => applicant.status === status);
+        }
+
+        /**
+         * Initializes the app.
+         */
+        function initApp() {
+            renderApplicantTable(applicants);
+            if (storedNotes) {
+                secureNotesInput.value = storedNotes;
+            }
+        }
+
+        // --- Event Listeners ---
+
+        // Status filter change
+        statusFilter.addEventListener('change', (event) => {
+            const status = event.target.value;
+            const filteredApplicants = filterApplicants(applicants, status);
+            renderApplicantTable(filteredApplicants);
+        });
+
+        // Export CSV button click
+        exportCsvButton.addEventListener('click', () => {
+            exportToCsv(applicants, anonymizeData);
+        });
+
+        // Secure notes save button
+        saveNotesButton.addEventListener('click', () => {
+            const notes = secureNotesInput.value.trim();
+            if (notes.length > 200) {
+                notesWarning.textContent = "Notes cannot exceed 200 characters.";
+                return;
+            }
+            secureNotes = notes;
+            localStorage.setItem('secureNotes', notes);
+            notesWarning.textContent = ""; // Clear message
+            alert("Notes saved successfully!");
+        });
+
+        // --- Initialization ---
+        initApp();
+    </script>
+</body>
+</html>

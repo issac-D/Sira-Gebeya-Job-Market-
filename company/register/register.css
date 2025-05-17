@@ -3,8 +3,8 @@
 body {
     font-family: 'Inter', sans-serif;
     background-color: #F3F4F6;
-    background-image: url("https://readdy.ai/api/search-image?query=subtle%2520Ethiopian%2520pattern%2520background%2C%2520very%2520light%2520and%2520barely%2520visible%2C%2520geometric%2520patterns%2520inspired%2520by%2520Ethiopian%2520textiles%2C%2520extremely%2520faded%2C%2520perfect%2520for%2520website%2520background%2C%2520minimal%2C%2520modern%2C%2520professional&width=1920&height=1080&seq=1&orientation=landscape");
-    background-repeat: repeat;
+    background-image: url("./image.png");
+    background-repeat: no-repeat;
     background-size: 400px;
 }
 

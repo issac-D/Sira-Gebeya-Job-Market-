@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.1.1/dist/compressor.min.js"></script>
+    <!-- Cloudinary Upload Widget -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        import { 
+            getAuth,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc,
+            setDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD11ABaNYrhHo5clZDpmuIanlGGRsW1-eU",
+            authDomain: "sira-gebeya-job-market.firebaseapp.com",
+            projectId: "sira-gebeya-job-market",
+            storageBucket: "sira-gebeya-job-market.appspot.com",
+            messagingSenderId: "460938974467",
+            appId: "1:460938974467:web:703df4960cbd9941ba0536",
+            measurementId: "G-65HYNHT5Q4"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Cloudinary Configuration
+        const cloudinaryConfig = {
+            cloudName: 'dbw2rypb0',
+            uploadPreset: 'your_upload_preset',
+            apiKey: 'your_cloudinary_api_key'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const logoUpload = document.getElementById('logoUpload');
+            const uploadTrigger = document.getElementById('uploadTrigger');
+            const logoPreview = document.getElementById('logoPreview');
+            const logoPlaceholder = document.getElementById('logoPlaceholder');
+            const uploadProgress = document.getElementById('uploadProgress');
+            const uploadBar = document.getElementById('uploadBar');
+            const uploadError = document.getElementById('uploadError');
+            const description = document.getElementById('companyDescription');
+            const counter = document.getElementById('descriptionCounter');
+            const verificationStatus = document.getElementById('verificationStatus');
+            const verifyToggle = document.getElementById('verifyToggle');
+            const saveProfileBtn = document.getElementById('saveProfile');
+            const scanDescriptionBtn = document.getElementById('scanDescription');
+            
+            let currentUser = null;
+            let companyData = {};
+            let logoFileUrl = '';
+
+            // Initialize Cloudinary widget for logo upload
+            const logoWidget = cloudinary.createUploadWidget({
+                cloudName: cloudinaryConfig.cloudName,
+                uploadPreset: cloudinaryConfig.uploadPreset,
+                sources: ['local'],
+                multiple: false,
+                clientAllowedFormats: ['jpg', 'jpeg', 'png'],
+                maxFileSize: 2000000, // 2MB
+                cropping: true,
+                croppingAspectRatio: 1,
+                croppingShowDimensions: true,
+                showAdvancedOptions: false,
+                styles: {
+                    palette: {
+                        window: "#FFFFFF",
+                        sourceBg: "#F4F4F5",
+                        windowBorder: "#90a0b3",
+                        tabIcon: "#2563EB",
+                        inactiveTabIcon: "#9BA6B2",
+                        menuIcons: "#2563EB",
+                        link: "#2563EB",
+                        action: "#16A34A",
+                        inProgress: "#2563EB",
+                        complete: "#16A34A",
+                        error: "#EF4444",
+                        textDark: "#1E293B",
+                        textLight: "#FFFFFF"
+                    }
+                }
+            }, (error, result) => {
+                if (!error && result && result.event === "success") {
+                    handleLogoUploadSuccess(result.info);
+                } else if (error) {
+                    showError('Logo upload failed: ' + error.message);
+                }
+            });
+
+            // Check auth state and load company data
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUser = user;
+                    await loadCompanyData(user.uid);
+                } else {
+                    // Redirect to login if not authenticated
+                    window.location.href = '../login/login.html';
+                }
+            });
+
+            // Load company data from Firestore
+            async function loadCompanyData(userId) {
+                try {
+                    const docRef = doc(db, "companies", userId);
+                    const docSnap = await getDoc(docRef);
+                    
+                    if (docSnap.exists()) {
+                        companyData = docSnap.data();
+                        populateForm(companyData);
+                        
+                        // Check verification status
+                        if (companyData.verified) {
+                            verificationStatus.classList.remove('hidden');
+                            verifyToggle.classList.add('hidden');
+                        } else {
+                            verificationStatus.classList.add('hidden');
+                            verifyToggle.classList.remove('hidden');
+                        }
+                    } else {
+                        console.log("No company data found");
+                    }
+                } catch (error) {
+                    console.error("Error loading company data:", error);
+                    showToast('Failed to load company data', 'error');
+                }
+            }
+
+            // Populate form with company data
+            function populateForm(data) {
+                // Logo
+                if (data.logoUrl) {
+                    logoPreview.src = data.logoUrl;
+                    logoPreview.classList.remove('hidden');
+                    logoPlaceholder.classList.add('hidden');
+                    logoFileUrl = data.logoUrl;
+                }
+
+                // Description
+                if (data.description) {
+                    description.value = data.description;
+                    updateCharCounter(description.value.length);
+                }
+
+                // Social media links
+                if (data.socialLinks) {
+                    document.getElementById('twitterLink').value = data.socialLinks.twitter || '';
+                    document.getElementById('linkedinLink').value = data.socialLinks.linkedin || '';
+                    document.getElementById('instagramLink').value = data.socialLinks.instagram || '';
+                }
+
+                // License file (if needed)
+                if (data.licenseFileUrl) {
+                    // You could display license info if needed
+                }
+            }
+
+            // Logo upload handling
+            uploadTrigger.addEventListener('click', () => logoWidget.open());
+
+            function handleLogoUploadSuccess(fileInfo) {
+                uploadProgress.classList.remove('hidden');
+                uploadError.classList.add('hidden');
+                
+                // Simulate upload progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    uploadBar.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        logoFileUrl = fileInfo.secure_url;
+                        logoPreview.src = logoFileUrl;
+                        logoPreview.classList.remove('hidden');
+                        logoPlaceholder.classList.add('hidden');
+                        uploadProgress.classList.add('hidden');
+                        showToast('Logo uploaded successfully!', 'success');
+                    }
+                }, 100);
+            }
+
+            // Character counter for description
+            description.addEventListener('input', function() {
+                updateCharCounter(this.value.length);
+            });
+
+            function updateCharCounter(count) {
+                const remaining = 500 - count;
+                counter.textContent = `${count}/500`;
+                counter.classList.toggle('warning', remaining < 20);
+            }
+
+            // Verification request
+            verifyToggle.addEventListener('click', async function() {
+                try {
+                    verifyToggle.disabled = true;
+                    verifyToggle.textContent = 'Processing...';
+                    
+                    // In a real app, you would trigger a verification workflow
+                    // For now, we'll simulate it
+                    setTimeout(() => {
+                        verifyToggle.textContent = 'Pending Review';
+                        showToast('Verification request sent to admin', 'info');
+                    }, 1500);
+                } catch (error) {
+                    console.error("Verification request error:", error);
+                    verifyToggle.disabled = false;
+                    verifyToggle.textContent = 'Request Verification';
+                    showToast('Failed to request verification', 'error');
+                }
+            });
+
+            // Description security scan
+            scanDescriptionBtn.addEventListener('click', function() {
+                // Simulate scanning process
+                scanDescriptionBtn.disabled = true;
+                scanDescriptionBtn.textContent = 'Scanning...';
+                
+                setTimeout(() => {
+                    // 90% chance of passing, 10% chance of finding issues
+                    const isClean = Math.random() > 0.1;
+                    
+                    if (isClean) {
+                        showToast('Description scanned successfully - no issues found', 'success');
+                    } else {
+                        showToast('Potential security issues found in description', 'error');
+                    }
+                    
+                    scanDescriptionBtn.disabled = false;
+                    scanDescriptionBtn.textContent = 'Scan for Security';
+                }, 2000);
+            });
+
+            // Save profile
+            saveProfileBtn.addEventListener('click', async function() {
+                try {
+                    saveProfileBtn.disabled = true;
+                    saveProfileBtn.innerHTML = '<span class="loader"></span> Saving...';
+                    
+                    // Validate description length
+                    if (description.value.length > 500) {
+                        showToast('Description must be 500 characters or less', 'error');
+                        saveProfileBtn.disabled = false;
+                        saveProfileBtn.textContent = 'Save Profile';
+                        return;
+                    }
+                    
+                    // Prepare update data
+                    const updateData = {
+                        description: sanitizeText(description.value),
+                        socialLinks: {
+                            twitter: sanitizeLink(document.getElementById('twitterLink').value),
+                            linkedin: sanitizeLink(document.getElementById('linkedinLink').value),
+                            instagram: sanitizeLink(document.getElementById('instagramLink').value)
+                        },
+                        updatedAt: new Date().toISOString()
+                    };
+                    
+                    // Add logo URL if changed
+                    if (logoFileUrl && logoFileUrl !== companyData.logoUrl) {
+                        updateData.logoUrl = logoFileUrl;
+                    }
+                    
+                    // Update Firestore
+                    await setDoc(doc(db, "companies", currentUser.uid), updateData, { merge: true });
+                    
+                    showToast('Profile saved successfully!', 'success');
+                    companyData = { ...companyData, ...updateData };
+                } catch (error) {
+                    console.error("Error saving profile:", error);
+                    showToast('Failed to save profile', 'error');
+                } finally {
+                    saveProfileBtn.disabled = false;
+                    saveProfileBtn.textContent = 'Save Profile';
+                }
+            });
+
+            // Helper functions
+            function sanitizeLink(url) {
+                return url.replace(/[<>"'`]/g, '');
+            }
+
+            function sanitizeText(text) {
+                return text.replace(/<[^>]*>/g, '');
+            }
+
+            function showError(message) {
+                uploadError.textContent = message;
+                uploadError.classList.remove('hidden');
+                uploadProgress.classList.add('hidden');
+            }
+
+            function showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-md shadow-lg text-white ${
+                    type === 'error' ? 'bg-red-500' : 
+                    type === 'success' ? 'bg-green-500' : 
+                    'bg-blue-500'
+                }`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        });
+    </script>
+    <style>
+        .verified-badge {
+            background-color: #10B981;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .logo-preview {
+            max-height: 120px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .char-counter {
+            font-size: 0.75rem;
+            color: #6B7280;
+        }
+        .char-counter.warning {
+            color: #EF4444;
+        }
+        .loader {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Company Profile</h1>
+            
+            <!-- Logo Upload Section -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-medium text-gray-700">Company Logo</h2>
+                    <div class="flex items-center">
+                        <span id="verificationStatus" class="text-sm font-medium px-3 py-1 rounded-full mr-3 hidden verified-badge text-white">
+                            Verified ✓
+                        </span>
+                        <button id="verifyToggle" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded hidden">
+                            Request Verification
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div id="logoPreviewContainer" class="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50 flex items-center justify-center">
+                            <img id="logoPreview" class="logo-preview hidden" alt="Logo preview">
+                            <span id="logoPlaceholder" class="text-gray-500">No logo uploaded</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <input type="file" id="logoUpload" accept="image/*" class="hidden">
+                        <button id="uploadTrigger" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium mb-3">
+                            Upload Logo
+                        </button>
+                        <p class="text-xs text-gray-500">
+                            Max 2MB (JPG, PNG). Logo will be automatically resized to 300x300px.
+                        </p>
+                        <div id="uploadProgress" class="w-full bg-gray-200 rounded-full h-2.5 mt-2 hidden">
+                            <div id="uploadBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p id="uploadError" class="text-xs text-red-500 mt-1 hidden"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Company Description -->
+            <div class="mb-8">
+                <label for="companyDescription" class="block text-lg font-medium text-gray-700 mb-3">
+                    About Us
+                </label>
+                <textarea 
+                    id="companyDescription" 
+                    maxlength="500" 
+                    rows="5" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Tell us about your company (max 500 characters)"></textarea>
+                <div class="flex justify-between items-center mt-1">
+                    <div id="descriptionCounter" class="char-counter">0/500</div>
+                    <button id="scanDescription" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded">
+                        Scan for Security
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Social Media Links -->
+            <div class="mb-8">
+                <h2 class="text-lg font-medium text-gray-700 mb-3">Social Media</h2>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <div class="w-8 flex-shrink-0 text-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="twitterLink" placeholder="https://twitter.com/yourcompany" 
+                            class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 flex-shrink-0 text-blue-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="linkedinLink" placeholder="https://linkedin.com/company/yourcompany" 
+                            class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-8 flex-shrink-0 text-pink-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="instagramLink" placeholder="https://instagram.com/yourcompany" 
+                            class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Links will be sanitized for security</p>
+            </div>
+            
+            <!-- Save Button -->
+            <div class="flex justify-end">
+                <button id="saveProfile" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md text-base font-medium">
+                    Save Profile
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

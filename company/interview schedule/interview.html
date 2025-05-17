@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Scheduler</title>
+    <link rel="stylesheet" href="interview.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="scheduler-container">
+        <header class="scheduler-header">
+            <h1>Interview Scheduler</h1>
+            <div class="header-controls">
+                <button id="prevMonth" class="btn btn-icon">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h2 id="currentMonth">Month Year</h2>
+                <button id="nextMonth" class="btn btn-icon">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar cells will be generated here -->
+            </div>
+        </div>
+
+        <div class="time-slots-container" id="timeSlotsContainer">
+            <h3>Available Time Slots</h3>
+            <div class="time-slots" id="timeSlots">
+                <!-- Time slots will be generated here -->
+            </div>
+        </div>
+
+        <!-- Event Modal -->
+        <div class="modal" id="eventModal">
+            <div class="modal-content">
+                <h3>Schedule Interview</h3>
+                <div class="form-group">
+                    <label for="eventTitle">Candidate Name</label>
+                    <input type="text" id="eventTitle" placeholder="Enter candidate name">
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Date</label>
+                    <input type="text" id="eventDate" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="eventTime">Time</label>
+                    <select id="eventTime">
+                        <!-- Time options will be added dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventDuration">Duration</label>
+                    <select id="eventDuration">
+                        <option value="30">30 minutes</option>
+                        <option value="60" selected>60 minutes</option>
+                        <option value="90">90 minutes</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button id="saveEvent" class="btn btn-primary">Schedule</button>
+                    <button id="cancelEvent" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Detail Modal -->
+        <div class="modal" id="eventDetailModal">
+            <div class="modal-content">
+                <h3 id="detailTitle">Interview Details</h3>
+                <div class="event-details">
+                    <p><strong>Date:</strong> <span id="detailDate"></span></p>
+                    <p><strong>Time:</strong> <span id="detailTime"></span></p>
+                    <p><strong>Duration:</strong> <span id="detailDuration"></span> minutes</p>
+                </div>
+                <div class="modal-actions">
+                    <button id="startMeeting" class="btn btn-primary">
+                        <i class="fas fa-video"></i> Start Meeting
+                    </button>
+                    <button id="deleteEvent" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Cancel Interview
+                    </button>
+                    <button id="closeDetail" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="interview.js"></script>
+</body>
+</html>

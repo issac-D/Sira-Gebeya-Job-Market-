@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Performance Dashboard</title>
+    <link rel="stylesheet" href="performance.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Job Performance Dashboard</h1>
+            <div class="export-controls">
+                <button id="exportPdf" class="btn btn-export">
+                    <i class="fas fa-file-pdf"></i> PDF
+                </button>
+                <button id="exportCsv" class="btn btn-export">
+                    <i class="fas fa-file-csv"></i> CSV
+                </button>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="metric-value">1,248</div>
+                    <div class="metric-label">Total Views</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i> 12% from last month
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">84</div>
+                    <div class="metric-label">Total Applicants</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">6.7%</div>
+                    <div class="metric-label">Conversion Rate</div>
+                    <div class="metric-change negative">
+                        <i class="fas fa-arrow-down"></i> 1.2% from last month
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h2>Views vs Applicants</h2>
+                    <canvas id="viewsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h2>Applicant Age Distribution</h2>
+                    <canvas id="ageChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Applicant Gender Distribution</h2>
+                    <canvas id="genderChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="performance.js"></script>
+</body>
+</html>

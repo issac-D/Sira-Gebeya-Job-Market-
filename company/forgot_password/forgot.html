@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset Flow</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .view {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        input.error {
+            border-color: #e74c3c;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #357ab8;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: -10px;
+            display: none;
+        }
+
+        .timer {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+        }
+
+        #resend-otp {
+            display: none;
+            background-color: transparent;
+            color: #4a90e2;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        #resend-otp:hover {
+            background-color: transparent;
+            color: #357ab8;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .success-message {
+            color: #2ecc71;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .password-strength {
+            height: 4px;
+            background-color: #eee;
+            margin-top: -10px;
+            margin-bottom: 5px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s, background-color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Email Input View -->
+    <div class="view" id="email-view">
+        <h2>Reset Password</h2>
+        <form id="email-form">
+            <input type="email" id="email" placeholder="Your registered email" required>
+            <div class="error-message" id="email-error"></div>
+            <button type="submit">Send Reset Link</button>
+        </form>
+    </div>
+
+    <!-- OTP Verification View -->
+    <div class="view hidden" id="otp-view">
+        <h2>Enter OTP</h2>
+        <form id="otp-form">
+            <input type="text" id="otp" placeholder="6-digit code" maxlength="6" pattern="\d{6}" inputmode="numeric">
+            <div class="error-message" id="otp-error"></div>
+            <button type="submit">Verify</button>
+        </form>
+        <p class="timer">Resend OTP in <span id="countdown">60</span>s</p>
+        <button id="resend-otp">Resend OTP</button>
+    </div>
+
+    <!-- Password Reset View -->
+    <div class="view hidden" id="reset-view">
+        <h2>New Password</h2>
+        <form id="reset-form">
+            <div class="password-container">
+                <input type="password" id="new-password" placeholder="New password" minlength="8" required>
+                <button type="button" class="toggle-password">Show</button>
+            </div>
+            <div class="password-strength">
+                <div class="strength-meter" id="strength-meter"></div>
+            </div>
+            <div class="password-container">
+                <input type="password" id="confirm-password" placeholder="Confirm password" required>
+                <button type="button" class="toggle-password">Show</button>
+            </div>
+            <div class="error-message" id="password-error"></div>
+            <button type="submit">Update Password</button>
+        </form>
+    </div>
+
+    <script>
+        // DOM Elements
+        const emailView = document.getElementById('email-view');
+        const otpView = document.getElementById('otp-view');
+        const resetView = document.getElementById('reset-view');
+        
+        const emailForm = document.getElementById('email-form');
+        const otpForm = document.getElementById('otp-form');
+        const resetForm = document.getElementById('reset-form');
+        
+        const emailInput = document.getElementById('email');
+        const otpInput = document.getElementById('otp');
+        const newPasswordInput = document.getElementById('new-password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        
+        const emailError = document.getElementById('email-error');
+        const otpError = document.getElementById('otp-error');
+        const passwordError = document.getElementById('password-error');
+        
+        const countdownElement = document.getElementById('countdown');
+        const resendOtpButton = document.getElementById('resend-otp');
+        const strengthMeter = document.getElementById('strength-meter');
+        
+        // State variables
+        let countdown;
+        let otpAttempts = 0;
+        const maxOtpAttempts = 3;
+        const sessionDuration = 10 * 60 * 1000; // 10 minutes in milliseconds
+        let sessionTimeout;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for existing session
+            const sessionStart = localStorage.getItem('passwordResetSessionStart');
+            if (sessionStart && (Date.now() - parseInt(sessionStart)) < sessionDuration) {
+                // Session is valid, show OTP view
+                switchView('otp-view');
+                startCountdown();
+            } else {
+                // Clear any existing session
+                clearSession();
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+        
+        function setupEventListeners() {
+            // Email form submission
+            emailForm.addEventListener('submit', handleEmailSubmit);
+            
+            // OTP form submission
+            otpForm.addEventListener('submit', handleOtpSubmit);
+            
+            // Resend OTP button
+            resendOtpButton.addEventListener('click', handleResendOtp);
+            
+            // Password form submission
+            resetForm.addEventListener('submit', handlePasswordReset);
+            
+            // Password strength indicator
+            newPasswordInput.addEventListener('input', updatePasswordStrength);
+            
+            // Toggle password visibility
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const type = input.type === 'password' ? 'text' : 'password';
+                    input.type = type;
+                    this.textContent = type === 'password' ? 'Show' : 'Hide';
+                });
+            });
+        }
+        
+        function handleEmailSubmit(e) {
+            e.preventDefault();
+            
+            // Validate email
+            const email = emailInput.value.trim();
+            if (!validateEmail(email)) {
+                showError(emailInput, emailError, 'Please enter a valid email address');
+                return;
+            }
+            
+            // Clear any errors
+            clearError(emailInput, emailError);
+            
+            // Simulate API call to send OTP
+            simulateSendOtp(email)
+                .then(() => {
+                    // Start session
+                    localStorage.setItem('passwordResetSessionStart', Date.now().toString());
+                    localStorage.setItem('passwordResetEmail', email);
+                    
+                    // Switch to OTP view
+                    switchView('otp-view');
+                    startCountdown();
+                })
+                .catch(error => {
+                    showError(emailInput, emailError, error.message || 'Failed to send OTP. Please try again.');
+                });
+        }
+        
+        function handleOtpSubmit(e) {
+            e.preventDefault();
+            
+            const otp = otpInput.value.trim();
+            
+            // Validate OTP
+            if (!/^\d{6}$/.test(otp)) {
+                showError(otpInput, otpError, 'Please enter a valid 6-digit code');
+                return;
+            }
+            
+            // Clear any errors
+            clearError(otpInput, otpError);
+            
+            // Simulate OTP verification
+            simulateVerifyOtp(otp)
+                .then(() => {
+                    // Switch to password reset view
+                    switchView('reset-view');
+                    clearInterval(countdown);
+                })
+                .catch(error => {
+                    otpAttempts++;
+                    if (otpAttempts >= maxOtpAttempts) {
+                        showError(otpInput, otpError, 'Too many attempts. Please try again later.');
+                        otpInput.disabled = true;
+                        setTimeout(() => {
+                            clearError(otpInput, otpError);
+                            otpInput.disabled = false;
+                            otpAttempts = 0;
+                        }, 30000); // 30-second cooldown
+                    } else {
+                        showError(otpInput, otpError, error.message || 'Invalid OTP. Please try again.');
+                    }
+                });
+        }
+        
+        function handleResendOtp() {
+            const email = localStorage.getItem('passwordResetEmail');
+            if (!email) {
+                // Shouldn't happen in normal flow
+                switchView('email-view');
+                return;
+            }
+            
+            // Check rate limit
+            const lastOtpRequest = parseInt(localStorage.getItem('lastOtpRequest') || '0');
+            const currentTime = Date.now();
+            
+            if (currentTime - lastOtpRequest < 3600000 / maxOtpAttempts) { // 1 hour / max attempts
+                showError(otpInput, otpError, 'Too many OTP requests. Please wait before requesting another.');
+                return;
+            }
+            
+            // Simulate sending OTP again
+            simulateSendOtp(email)
+                .then(() => {
+                    localStorage.setItem('lastOtpRequest', currentTime.toString());
+                    clearError(otpInput, otpError);
+                    resendOtpButton.style.display = 'none';
+                    startCountdown();
+                })
+                .catch(error => {
+                    showError(otpInput, otpError, error.message || 'Failed to resend OTP. Please try again.');
+                });
+        }
+        
+        function handlePasswordReset(e) {
+            e.preventDefault();
+            
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            // Validate passwords
+            if (newPassword.length < 8) {
+                showError(newPasswordInput, passwordError, 'Password must be at least 8 characters');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showError(confirmPasswordInput, passwordError, 'Passwords do not match');
+                return;
+            }
+            
+            // Clear any errors
+            clearError(newPasswordInput, passwordError);
+            clearError(confirmPasswordInput, passwordError);
+            
+            // Simulate password reset
+            simulateResetPassword(newPassword)
+                .then(() => {
+                    // Show success message
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'success-message';
+                    successMessage.textContent = 'Password updated successfully!';
+                    resetForm.appendChild(successMessage);
+                    
+                    // Clear session
+                    clearSession();
+                    
+                    // Reset form
+                    setTimeout(() => {
+                        resetForm.reset();
+                        successMessage.remove();
+                        switchView('email-view');
+                    }, 3000);
+                })
+                .catch(error => {
+                    showError(newPasswordInput, passwordError, error.message || 'Failed to update password. Please try again.');
+                });
+        }
+        
+        function startCountdown() {
+            let timeLeft = 60;
+            countdownElement.textContent = timeLeft;
+            resendOtpButton.style.display = 'none';
+            
+            clearInterval(countdown);
+            countdown = setInterval(() => {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    countdownElement.textContent = '0';
+                    resendOtpButton.style.display = 'block';
+                }
+            }, 1000);
+        }
+        
+        function updatePasswordStrength() {
+            const password = newPasswordInput.value;
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength += 1;
+            if (password.length >= 12) strength += 1;
+            
+            // Character variety checks
+            if (/[A-Z]/.test(password)) strength += 1; // Uppercase
+            if (/[a-z]/.test(password)) strength += 1; // Lowercase
+            if (/\d/.test(password)) strength += 1;    // Number
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1; // Special char
+            
+            // Update strength meter
+            let width = 0;
+            let color = '#e74c3c'; // Red
+            
+            if (strength >= 6) {
+                width = 100;
+                color = '#2ecc71'; // Green
+            } else if (strength >= 4) {
+                width = 66;
+                color = '#f39c12'; // Orange
+            } else if (strength >= 2) {
+                width = 33;
+            }
+            
+            strengthMeter.style.width = `${width}%`;
+            strengthMeter.style.backgroundColor = color;
+        }
+        
+        function switchView(viewId) {
+            // Hide all views
+            emailView.classList.add('hidden');
+            otpView.classList.add('hidden');
+            resetView.classList.add('hidden');
+            
+            // Show the requested view
+            document.getElementById(viewId).classList.remove('hidden');
+        }
+        
+        function showError(inputElement, errorElement, message) {
+            inputElement.classList.add('error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function clearError(inputElement, errorElement) {
+            inputElement.classList.remove('error');
+            errorElement.style.display = 'none';
+        }
+        
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function clearSession() {
+            localStorage.removeItem('passwordResetSessionStart');
+            localStorage.removeItem('passwordResetEmail');
+            localStorage.removeItem('lastOtpRequest');
+            clearTimeout(sessionTimeout);
+        }
+        
+        // Simulated API functions
+        function simulateSendOtp(email) {
+            return new Promise((resolve, reject) => {
+                // Simulate network delay
+                setTimeout(() => {
+                    // In a real app, this would call your backend
+                    console.log(`OTP sent to ${email} (simulated)`);
+                    
+                    // For demo purposes, we'll always resolve
+                    // In a real app, you might reject if the email isn't registered
+                    resolve();
+                    
+                    // Example of how you might handle errors:
+                    // if (email === 'nonexistent@example.com') {
+                    //     reject(new Error('Email not found'));
+                    // } else {
+                    //     resolve();
+                    // }
+                }, 2000);
+            });
+        }
+        
+        function simulateVerifyOtp(otp) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // In a real app, this would verify against the stored OTP
+                    console.log(`Verifying OTP: ${otp} (simulated)`);
+                    
+                    // For demo purposes, we'll accept any 6-digit code that starts with 1
+                    // In a real app, you'd verify against the stored OTP
+                    if (otp.startsWith('1')) {
+                        resolve();
+                    } else {
+                        reject(new Error('Invalid OTP'));
+                    }
+                }, 1000);
+            });
+        }
+        
+        function simulateResetPassword(newPassword) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // In a real app, this would update the password in your database
+                    console.log(`Password updated to: ${newPassword} (simulated)`);
+                    
+                    // For demo purposes, we'll always resolve
+                    resolve();
+                }, 1000);
+            });
+        }
+    </script>
+</body>
+</html>

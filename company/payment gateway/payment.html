@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment Gateway</title>
+    <link rel="stylesheet" href="payment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <div class="security-badge">
+                <i class="fas fa-lock"></i>
+                <span>Secure Payment</span>
+            </div>
+            <h1>Complete Your Payment</h1>
+            <p>Choose your preferred payment method</p>
+        </div>
+
+        <form id="paymentForm" class="payment-form" method="POST" action="https://secure-payment-processor.com/api">
+            <div class="payment-methods">
+                <h2>Local Payment Options</h2>
+                <div class="payment-cards">
+                    <div class="payment-card" data-method="telebirr">
+                        <div class="card-logo">
+                            <img src="./image/telebirr.png" alt="Telebirr">
+                        </div>
+                        <div class="card-name">Telebirr</div>
+                        <i class="fas fa-check selected-icon"></i>
+                    </div>
+
+                    <div class="payment-card" data-method="cbe">
+                        <div class="card-logo">
+                            <img src="./image/cbe.png" alt="CBE">
+                        </div>
+                        <div class="card-name">CBE</div>
+                        <i class="fas fa-check selected-icon"></i>
+                    </div>
+
+                    <div class="payment-card" data-method="awash">
+                        <div class="card-logo">
+                            <img src="./image/awash.png" alt="Awash">
+                        </div>
+                        <div class="card-name">Awash</div>
+                        <i class="fas fa-check selected-icon"></i>
+                    </div>
+                </div>
+                <input type="hidden" id="selectedMethod" name="payment_method" required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount (ETB)</label>
+                <input type="number" id="amount" name="amount" class="form-control" placeholder="Enter amount" required>
+                <span class="error-message" id="amountError">Please enter a valid amount</span>
+            </div>
+
+            <div class="form-group">
+                <label for="reference">Reference Number</label>
+                <div class="input-group">
+                    <input type="text" id="reference" name="reference" class="form-control" placeholder="Enter reference number" required>
+                    <button type="button" id="copyReference" class="copy-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                <span class="error-message" id="referenceError">Reference number is required</span>
+            </div>
+
+            <div class="form-group">
+                <label for="receipt">Upload Payment Receipt (PDF/PNG only)</label>
+                <div class="file-upload">
+                    <input type="file" id="receipt" name="receipt" accept=".pdf,.png" required>
+                    <label for="receipt" class="file-label">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span id="file-name">Choose file</span>
+                    </label>
+                </div>
+                <span class="error-message" id="receiptError">Please upload a valid PDF or PNG file</span>
+            </div>
+
+            <div class="form-footer">
+                <button type="submit" class="btn btn-pay" id="submitBtn">
+                    <span id="btnText">Submit Payment</span>
+                    <div class="spinner hidden" id="spinner">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                </button>
+                <p class="secure-note">
+                    <i class="fas fa-lock"></i>
+                    Your payment is secured with 256-bit SSL encryption
+                </p>
+            </div>
+        </form>
+
+        <div class="attempts-warning hidden" id="attemptsWarning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Too many failed attempts. You will be redirected shortly.</span>
+        </div>
+    </div>
+
+    <script src="payment.js"></script>
+</body>
+</html>
