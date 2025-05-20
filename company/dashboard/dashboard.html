@@ -4,289 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Dashboard | Sira Gebeya</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2563EB;
-            --secondary: #16A34A;
-            --accent: #EA580C;
-            --bg: #F3F4F6;
-            --text: #4B5563;
-            --card-bg: #FFFFFF;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg);
-            color: var(--text);
-        }
-
-        .dashboard-container {
-            display: grid;
-            grid-template-rows: auto 1fr;
-            min-height: 100vh;
-        }
-
-        .dashboard-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-        }
-
-        .dashboard-content {
-            padding: 2rem;
-            display: grid;
-            gap: 2rem;
-        }
-
-        .stats-widgets {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .widget {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary);
-        }
-
-        .widget-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .trend {
-            width: 20px;
-            height: 20px;
-            position: relative;
-        }
-
-        .trend.up::before {
-            content: "↑";
-            color: var(--secondary);
-        }
-
-        .trend.down::before {
-            content: "↓";
-            color: var(--accent);
-        }
-
-        .trend.neutral::before {
-            content: "→";
-            color: var(--text);
-        }
-
-        .counter {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .bar-chart, .donut-chart {
-            height: 100px;
-            background-color: var(--bg);
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .quick-actions {
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .action-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .action-btn.pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .badge {
-            background-color: var(--accent);
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            margin-left: 0.5rem;
-        }
-
-        .activity-feed {
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .export-btn {
-            background-color: var(--secondary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .feed-items {
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        .feed-item {
-            padding: 1rem;
-            border-bottom: 1px solid var(--bg);
-            display: flex;
-            gap: 1rem;
-        }
-
-        .feed-item i {
-            color: var(--primary);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 8px;
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            justify-content: flex-end;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-secondary {
-            background-color: var(--bg);
-            color: var(--text);
-        }
-
-        [data-role] {
-            display: none;
-        }
-
-        [data-role="admin"] {
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-content {
-                padding: 1rem;
-            }
-            
-            .stats-widgets {
-                grid-template-columns: 1fr;
-            }
-            
-            .action-buttons {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard.css">
 </head>
-<body data-role="company">
+<body>
     <div class="dashboard-container">
-        <header class="dashboard-header">
-            <h1>Company Dashboard</h1>
-            <div class="user-info">
-                <span class="username" id="companyName">Loading...</span>
-                <div class="avatar" id="companyInitials">CU</div>
+        <header>
+            <div class="header-container">
+                <div class="logo-container">
+                    <a href="/" class="logo">
+                        <span class="logo-icon">💼</span>
+                        <span>የስራ</span>-<span>ገበያ</span>
+                    </a>
+                </div>
+                
+                <nav class="nav-container">
+                    <ul class="nav-links">
+                        <li><a href="../dashboard/dashboard.html">HOME</a></li>
+                    <li><a href="../job management/job.html">Jobs</a></li>
+                    <li><a href="../interview schedule/interview.html">Interviews</a></li>
+                    <li><a href="../application tracking/app.html">Applications</a></li>
+                    <li><a href="../candidate pepline/pepline.html">Candidates</a></li>
+                    <li><a href="../message/message.html">Messages</a></li>
+                    <li><a href="../payment gateway/payment.html">Payments</a></li>
+                    </ul>
+                    
+                    <div class="user-actions">
+                        <div class="guest-actions">
+                            <a href="../login/login.html" class="btn btn-logout">Logout</a>
+                        </div>
+                        <div class="user-dropdown">
+                            <div class="user-profile">
+                                <a href="../profile/profile.html"><img src="image.png" alt="Profile" class="profile-photo"></a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
             </div>
+          
+            <div class="mobile-sidebar">
+                <div class="sidebar-header">
+                    <div class="logo">
+                        <span class="logo-icon">💼</span>
+                        <span>የስራ</span>-<span>ገበያ</span>
+                    </div>
+                    <button class="close-sidebar">×</button>
+                </div>
+                
+                <div class="mobile-profile">
+                    <img src="image.png" alt="Profile" class="profile-photo">
+                    <span>Profile</span>
+                </div>
+                
+                <ul class="mobile-nav-links">
+                    <li><a href="../dashboard/dashboard.html">HOME</a></li>
+                    <li><a href="../job management/job.html">Jobs</a></li>
+                    <li><a href="../interview schedule/interview.html">Interview Scheduling</a></li>
+                    <li><a href="../application tracking/app.html">Application Tracking</a></li>
+                    <li><a href="../candidate pepline/pepline.html">Candidate Pipeline</a></li>
+                    <li><a href="../message/message.html">Messages</a></li>
+                    <li><a href="../payment gateway/payment.html">Payments</a></li>
+                    <li class="guest-actions"><a href="../login/login.html">Logout</a></li>
+                </ul>
+            </div>
+          
+            <div class="overlay"></div>
         </header>
 
         <div class="dashboard-content">
@@ -294,59 +79,113 @@
                 <div class="widget">
                     <div class="widget-header">
                         <h3>Active Jobs</h3>
-                        <div class="trend up"></div>
+                        <div class="trend" id="jobsTrend"></div>
                     </div>
                     <div class="widget-body">
                         <div class="counter" id="activeJobsCounter">0</div>
-                        <div class="bar-chart" id="jobsChart"></div>
+                        <div class="chart" id="jobsChart"></div>
                     </div>
                 </div>
 
                 <div class="widget">
                     <div class="widget-header">
                         <h3>New Applicants</h3>
-                        <div class="trend down"></div>
+                        <div class="trend" id="applicantsTrend"></div>
                     </div>
                     <div class="widget-body">
                         <div class="counter" id="applicantsCounter">0</div>
-                        <div class="bar-chart" id="applicantsChart"></div>
+                        <div class="chart" id="applicantsChart"></div>
                     </div>
                 </div>
 
                 <div class="widget">
                     <div class="widget-header">
                         <h3>Hiring Rate</h3>
-                        <div class="trend neutral"></div>
+                        <div class="trend" id="hiringRateTrend"></div>
                     </div>
                     <div class="widget-body">
                         <div class="counter" id="hiringRateCounter">0%</div>
-                        <div class="donut-chart" id="hiringRateChart"></div>
+                        <div class="chart" id="hiringRateChart"></div>
                     </div>
                 </div>
             </section>
 
-            <section class="quick-actions">
-                <h2>Quick Actions</h2>
-                <div class="action-buttons">
-                    <button class="action-btn pulse" id="postJobBtn">
-                        <i class="fas fa-plus"></i>
-                        <span>Post New Job</span>
-                    </button>
-                    <button class="action-btn" id="viewApplicantsBtn">
-                        <i class="fas fa-users"></i>
-                        <span>View Applicants</span>
-                        <span class="badge" id="newApplicantsBadge">0</span>
-                    </button>
-                    <button class="action-btn" id="companyProfileBtn">
-                        <i class="fas fa-building"></i>
-                        <span>Company Profile</span>
-                    </button>
-                    <button class="action-btn" id="messagingBtn">
-                        <i class="fas fa-envelope"></i>
-                        <span>Messaging</span>
-                        <span class="badge" id="unreadMessagesBadge">0</span>
-                    </button>
+            <!-- Job Performance Dashboard Section -->
+            <section class="job-performance">
+                <div class="section-header">
+                    <h2>Job Performance Dashboard</h2>
+                    <div class="export-controls">
+                        <button id="exportPdf" class="btn btn-export">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                        <button id="exportCsv" class="btn btn-export">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </button>
+                    </div>
                 </div>
+
+                <div class="performance-metrics">
+                    <div class="metric-card">
+                        <div class="metric-value">1,248</div>
+                        <div class="metric-label">Total Views</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i> 12% from last month
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">84</div>
+                        <div class="metric-label">Total Applicants</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i> 8% from last month
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">6.7%</div>
+                        <div class="metric-label">Conversion Rate</div>
+                        <div class="metric-change negative">
+                            <i class="fas fa-arrow-down"></i> 1.2% from last month
+                        </div>
+                    </div>
+                </div>
+
+                <div class="performance-charts" ;">
+                    <div class="chart-card" style="background-image: url(app.png)>
+                        <h3>Views vs Applicants</h3>
+                        <canvas id="viewsChart"></canvas>
+                    </div>
+                    <div class="chart-card" style="background-image: url(age.png);">
+                        <h3 style="color: aliceblue;">Applicant Age Distribution</h3>
+                        <canvas id="ageChart"></canvas>
+                    </div>
+                    <div class="chart-card" style="background-image: url(gender.png); ">
+                        <h3 style="color: aliceblue;" >Applicant Gender Distribution</h3>
+                        <canvas id="genderChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section class="job-analytics" tyle="background-image: url(gender.png); ">
+                <div class="section-header" >
+                    <h2>Job Analytics</h2>
+                    <select class="filter-select" id="jobStatusFilter">
+                        <option value="all">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="closed">Closed</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                </div>
+                <table class="job-table" id="jobTable">
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Views</th>
+                            <th>Applications</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobTableBody"></tbody>
+                </table>
             </section>
 
             <section class="activity-feed">
@@ -357,326 +196,56 @@
                         <span>Export</span>
                     </button>
                 </div>
-                <div class="feed-items" id="activityFeed">
-                    <!-- Activity items will be added here -->
-                </div>
+                <div class="feed-items" id="activityFeed"></div>
             </section>
         </div>
+
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Navigation</h3>
+                    <ul>
+                        <li><a href="../job management/job.html">Jobs</a></li>
+                        <li><a href="../profile/profile.html">Company Profile</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><a href="mailto:support@siragebeya.com">support@siragebeya.com</a></li>
+                        <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <div class="social-links">
+                        <a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+                        <a href="https://linkedin.com"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://instagram.com"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2025 Sira Gebeya. All rights reserved.
+            </div>
+        </footer>
     </div>
 
-    <!-- Session Timeout Modal -->
-    <div class="modal" id="sessionModal">
+    <div class="modal" id="demoModal">
         <div class="modal-content">
-            <h3>Session About to Expire</h3>
-            <p>Your session will expire in <span id="countdown">2:00</span>. Would you like to continue?</p>
+            <h3>Demo Mode</h3>
+            <p>This is a demo dashboard. Data is stored locally. Click below to reset or continue.</p>
             <div class="modal-actions">
-                <button class="btn" id="extendSessionBtn">Continue Session</button>
-                <button class="btn btn-secondary" id="logoutBtn">Logout</button>
+                <button class="btn btn-primary" id="continueDemoBtn">Continue</button>
+                <button class="btn btn-secondary" id="resetDemoBtn">Reset Data</button>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        
-        // Import Firebase services
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            query, 
-            where, 
-            getDocs,
-            onSnapshot
-        } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
-
-        // Your Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyD11ABaNYrhHo5clZDpmuIanlGGRsW1-eU",
-            authDomain: "sira-gebeya-job-market.firebaseapp.com",
-            projectId: "sira-gebeya-job-market",
-            storageBucket: "sira-gebeya-job-market.firebasestorage.app",
-            messagingSenderId: "460938974467",
-            appId: "1:460938974467:web:703df4960cbd9941ba0536",
-            measurementId: "G-65HYNHT5Q4"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // DOM elements
-        const companyNameEl = document.getElementById('companyName');
-        const companyInitialsEl = document.getElementById('companyInitials');
-        const activeJobsCounter = document.getElementById('activeJobsCounter');
-        const applicantsCounter = document.getElementById('applicantsCounter');
-        const hiringRateCounter = document.getElementById('hiringRateCounter');
-        const newApplicantsBadge = document.getElementById('newApplicantsBadge');
-        const unreadMessagesBadge = document.getElementById('unreadMessagesBadge');
-        const activityFeed = document.getElementById('activityFeed');
-        const postJobBtn = document.getElementById('postJobBtn');
-        const viewApplicantsBtn = document.getElementById('viewApplicantsBtn');
-        const companyProfileBtn = document.getElementById('companyProfileBtn');
-        const messagingBtn = document.getElementById('messagingBtn');
-        const exportActivityBtn = document.getElementById('exportActivityBtn');
-        const sessionModal = document.getElementById('sessionModal');
-        const extendSessionBtn = document.getElementById('extendSessionBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const countdownEl = document.getElementById('countdown');
-
-        // Session timeout variables
-        let sessionTimer;
-        let countdown = 120; // 2 minutes in seconds
-        let isSessionExtended = false;
-
-        // Initialize session timeout
-        function resetSessionTimer() {
-            clearTimeout(sessionTimer);
-            sessionTimer = setTimeout(showSessionModal, 14 * 60 * 1000); // 14 minutes
-            isSessionExtended = false;
-        }
-
-        function showSessionModal() {
-            sessionModal.style.display = 'flex';
-            startCountdown();
-        }
-
-        function startCountdown() {
-            let minutes = Math.floor(countdown / 60);
-            let seconds = countdown % 60;
-            countdownEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                minutes = Math.floor(countdown / 60);
-                seconds = countdown % 60;
-                countdownEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-                
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    handleLogout();
-                }
-            }, 1000);
-        }
-
-        // Load company data
-        function loadCompanyData(userId) {
-            // Fetch company profile
-            getDocs(query(collection(db, "users"), where("uid", "==", userId)))
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        const companyData = querySnapshot.docs[0].data();
-                        companyNameEl.textContent = companyData.companyName || "Company User";
-                        companyInitialsEl.textContent = companyData.companyName ? 
-                            companyData.companyName.charAt(0) : "CU";
-                        
-                        // Load company stats
-                        loadCompanyStats(userId);
-                        loadRecentActivity(userId);
-                        setupRealTimeListeners(userId);
-                    }
-                });
-        }
-
-        // Load company statistics
-        function loadCompanyStats(companyId) {
-            // Active jobs count
-            getDocs(query(collection(db, "jobs"), where("companyId", "==", companyId)))
-                .then((querySnapshot) => {
-                    const activeJobs = querySnapshot.docs.filter(doc => doc.data().status === 'active');
-                    activeJobsCounter.textContent = activeJobs.length;
-                    renderJobsChart(activeJobs.length);
-                });
-
-            // Applicants count
-            getDocs(query(collection(db, "applications"), where("companyId", "==", companyId)))
-                .then((querySnapshot) => {
-                    const totalApplicants = querySnapshot.size;
-                    const newApplicants = querySnapshot.docs.filter(doc => 
-                        doc.data().status === 'applied').length;
-                    
-                    applicantsCounter.textContent = totalApplicants;
-                    newApplicantsBadge.textContent = newApplicants;
-                    renderApplicantsChart(totalApplicants, newApplicants);
-                });
-            
-            // Hiring rate (mock calculation)
-            const hiringRate = Math.floor(Math.random() * 30) + 10; // 10-40%
-            hiringRateCounter.textContent = `${hiringRate}%`;
-            renderHiringRateChart(hiringRate);
-        }
-
-        // Load recent activity
-        function loadRecentActivity(companyId) {
-            getDocs(query(collection(db, "activity"), where("companyId", "==", companyId), orderBy("timestamp", "desc"), limit(5))
-                .then((querySnapshot) => {
-                    activityFeed.innerHTML = '';
-                    querySnapshot.forEach((doc) => {
-                        const activity = doc.data();
-                        const activityItem = document.createElement('div');
-                        activityItem.className = 'feed-item';
-                        activityItem.innerHTML = `
-                            <i class="fas fa-${getActivityIcon(activity.type)}"></i>
-                            <div>
-                                <p>${activity.message}</p>
-                                <small>${new Date(activity.timestamp?.toDate()).toLocaleString()}</small>
-                            </div>
-                        `;
-                        activityFeed.appendChild(activityItem);
-                    });
-                }));
-        }
-
-        // Setup real-time listeners
-        function setupRealTimeListeners(companyId) {
-            // Listen for new applicants
-            const applicantsQuery = query(
-                collection(db, "applications"), 
-                where("companyId", "==", companyId),
-                where("status", "==", "applied")
-            );
-            
-            onSnapshot(applicantsQuery, (snapshot) => {
-                newApplicantsBadge.textContent = snapshot.size;
-            });
-
-            // Listen for new messages (simplified)
-            const messagesQuery = query(
-                collection(db, "messages"), 
-                where("companyId", "==", companyId),
-                where("read", "==", false)
-            );
-            
-            onSnapshot(messagesQuery, (snapshot) => {
-                unreadMessagesBadge.textContent = snapshot.size;
-            });
-        }
-
-        // Helper functions
-        function getActivityIcon(type) {
-            const icons = {
-                'job_posted': 'briefcase',
-                'application': 'user-plus',
-                'message': 'envelope',
-                'payment': 'money-bill-wave',
-                'profile_update': 'user-edit'
-            };
-            return icons[type] || 'bell';
-        }
-
-        function renderJobsChart(count) {
-            const chart = document.getElementById('jobsChart');
-            chart.innerHTML = '';
-            
-            // Simple bar chart visualization
-            const bar = document.createElement('div');
-            bar.style.height = '100%';
-            bar.style.width = `${Math.min(count * 10, 100)}%`;
-            bar.style.backgroundColor = 'var(--primary)';
-            bar.style.transition = 'width 1s';
-            
-            chart.appendChild(bar);
-        }
-
-        function renderApplicantsChart(total, newApplicants) {
-            const chart = document.getElementById('applicantsChart');
-            chart.innerHTML = '';
-            
-            // Two bars for total vs new
-            const totalBar = document.createElement('div');
-            totalBar.style.height = '60%';
-            totalBar.style.width = `${Math.min(total * 2, 100)}%`;
-            totalBar.style.backgroundColor = 'var(--primary)';
-            totalBar.style.position = 'absolute';
-            totalBar.style.bottom = '0';
-            totalBar.style.left = '0';
-            
-            const newBar = document.createElement('div');
-            newBar.style.height = '40%';
-            newBar.style.width = `${Math.min(newApplicants * 5, 100)}%`;
-            newBar.style.backgroundColor = 'var(--secondary)';
-            newBar.style.position = 'absolute';
-            newBar.style.bottom = '60%';
-            newBar.style.left = '0';
-            
-            chart.appendChild(totalBar);
-            chart.appendChild(newBar);
-        }
-
-        function renderHiringRateChart(rate) {
-            const chart = document.getElementById('hiringRateChart');
-            chart.innerHTML = '';
-            
-            // Simple donut chart
-            const segment = document.createElement('div');
-            segment.style.position = 'absolute';
-            segment.style.width = '100%';
-            segment.style.height = '100%';
-            segment.style.borderRadius = '50%';
-            segment.style.border = '10px solid var(--bg)';
-            segment.style.borderTopColor = 'var(--secondary)';
-            segment.style.borderRightColor = 'var(--secondary)';
-            segment.style.transform = `rotate(${rate * 3.6}deg)`;
-            segment.style.transition = 'transform 1s';
-            
-            chart.appendChild(segment);
-        }
-
-        function handleLogout() {
-            signOut(auth).then(() => {
-                window.location.href = 'login.html';
-            });
-        }
-
-        // Event listeners
-        postJobBtn.addEventListener('click', () => {
-            window.location.href = 'post-job.html';
-        });
-
-        viewApplicantsBtn.addEventListener('click', () => {
-            window.location.href = 'applicants.html';
-        });
-
-        companyProfileBtn.addEventListener('click', () => {
-            window.location.href = 'company-profile.html';
-        });
-
-        messagingBtn.addEventListener('click', () => {
-            window.location.href = 'messaging.html';
-        });
-
-        exportActivityBtn.addEventListener('click', () => {
-            alert('Export functionality would be implemented here');
-        });
-
-        extendSessionBtn.addEventListener('click', () => {
-            sessionModal.style.display = 'none';
-            resetSessionTimer();
-            isSessionExtended = true;
-            countdown = 120;
-        });
-
-        logoutBtn.addEventListener('click', handleLogout);
-
-        // Reset session timer on any user activity
-        document.addEventListener('mousemove', resetSessionTimer);
-        document.addEventListener('keypress', resetSessionTimer);
-        document.addEventListener('click', resetSessionTimer);
-
-        // Initialize auth state listener
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                loadCompanyData(user.uid);
-                resetSessionTimer();
-            } else {
-                window.location.href = '../login/login.html?redirect=company-dashboard';
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

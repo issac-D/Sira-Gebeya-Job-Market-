@@ -5,356 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Company Registration</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',secondary:'#16A34A'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#16A34A',
+                        accent: '#EA580C'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
-    <!-- Cloudinary Upload Widget -->
-    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Firebase Imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword,
-            sendEmailVerification
-        } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc 
-        } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
-
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD11ABaNYrhHo5clZDpmuIanlGGRsW1-eU",
-            authDomain: "sira-gebeya-job-market.firebaseapp.com",
-            projectId: "sira-gebeya-job-market",
-            storageBucket: "sira-gebeya-job-market.appspot.com",
-            messagingSenderId: "460938974467",
-            appId: "1:460938974467:web:703df4960cbd9941ba0536",
-            measurementId: "G-65HYNHT5Q4"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Cloudinary Configuration
-        const cloudinaryConfig = {
-            cloudName: 'dbw2rypb0',
-            uploadPreset: 'your_upload_preset', // Create this in Cloudinary settings
-            apiKey: 'your_cloudinary_api_key'   // Add your Cloudinary API key
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('registrationForm');
-            const dropzone = document.getElementById('dropzone');
-            const fileInput = document.getElementById('licenseFile');
-            const filePreview = document.getElementById('filePreview');
-            const fileName = document.getElementById('fileName');
-            const removeFile = document.getElementById('removeFile');
-            const submitBtn = document.querySelector('.submit-btn');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            const togglePassword = document.querySelectorAll('.toggle-password');
-            
-            let licenseFileUrl = '';
-            let uploadedFile = null;
-
-            // Initialize Cloudinary widget
-            const myWidget = cloudinary.createUploadWidget({
-                cloudName: cloudinaryConfig.cloudName,
-                uploadPreset: cloudinaryConfig.uploadPreset,
-                sources: ['local', 'url', 'camera'],
-                multiple: false,
-                clientAllowedFormats: ['pdf', 'jpg', 'jpeg', 'png'],
-                maxFileSize: 5000000, // 5MB
-                cropping: false,
-                showAdvancedOptions: false,
-                styles: {
-                    palette: {
-                        window: "#FFFFFF",
-                        sourceBg: "#F4F4F5",
-                        windowBorder: "#90a0b3",
-                        tabIcon: "#2563EB",
-                        inactiveTabIcon: "#9BA6B2",
-                        menuIcons: "#2563EB",
-                        link: "#2563EB",
-                        action: "#16A34A",
-                        inProgress: "#2563EB",
-                        complete: "#16A34A",
-                        error: "#EF4444",
-                        textDark: "#1E293B",
-                        textLight: "#FFFFFF"
-                    }
-                }
-            }, (error, result) => {
-                if (!error && result && result.event === "success") {
-                    // Handle successful upload
-                    licenseFileUrl = result.info.secure_url;
-                    fileName.textContent = result.info.original_filename;
-                    filePreview.classList.remove('hidden');
-                    dropzone.classList.add('hidden');
-                    clearError(fileInput);
-                    uploadedFile = result.info;
-                } else if (error) {
-                    showError(fileInput, 'File upload failed: ' + error.message);
-                }
-            });
-
-            // Dropzone functionality
-            dropzone.addEventListener('click', () => {
-                myWidget.open();
-            });
-            
-            dropzone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropzone.classList.add('dragover');
-            });
-            
-            dropzone.addEventListener('dragleave', () => {
-                dropzone.classList.remove('dragover');
-            });
-            
-            dropzone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropzone.classList.remove('dragover');
-                myWidget.open();
-            });
-            
-            removeFile.addEventListener('click', () => {
-                licenseFileUrl = '';
-                filePreview.classList.add('hidden');
-                dropzone.classList.remove('hidden');
-                clearError(fileInput);
-            });
-
-            // Toggle password visibility
-            togglePassword.forEach(button => {
-                button.addEventListener('click', function() {
-                    const input = this.previousElementSibling;
-                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                    input.setAttribute('type', type);
-                    this.querySelector('i').classList.toggle('ri-eye-line');
-                    this.querySelector('i').classList.toggle('ri-eye-off-line');
-                });
-            });
-
-            // Form submission
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="loader"></span> Processing...';
-                
-                if (!validateForm()) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Register Company';
-                    return;
-                }
-
-                try {
-                    // 1. Create user in Firebase Auth
-                    const email = document.getElementById('email').value.trim();
-                    const password = document.getElementById('password').value;
-                    
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-                    
-                    // 2. Send email verification
-                    await sendEmailVerification(user);
-                    
-                    // 3. Save company data to Firestore
-                    const companyData = {
-                        companyName: document.getElementById('companyName').value.trim(),
-                        email: email,
-                        phone: document.getElementById('phone').value.trim(),
-                        licenseFileUrl: licenseFileUrl,
-                        licenseFileName: uploadedFile.original_filename,
-                        licenseFileType: uploadedFile.format,
-                        licenseFileSize: uploadedFile.bytes,
-                        userId: user.uid,
-                        createdAt: new Date().toISOString(),
-                        role: 'company',
-                        status: 'pending' // For admin approval
-                    };
-                    
-                    await setDoc(doc(db, "companies", user.uid), companyData);
-                    
-                    // 4. Show success message
-                    showSuccessMessage(user.uid);
-                } catch (error) {
-                    console.error("Registration error:", error);
-                    handleFirebaseError(error);
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Register Company';
-                }
-            });
-            
-            function validateForm() {
-                let isValid = true;
-                
-                // Validate company name
-                const companyName = document.getElementById('companyName');
-                if (!companyName.value.trim()) {
-                    showError(companyName, 'Company name is required');
-                    isValid = false;
-                } else {
-                    clearError(companyName);
-                }
-                
-                // Validate email
-                const email = document.getElementById('email');
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!email.value.trim()) {
-                    showError(email, 'Email address is required');
-                    isValid = false;
-                } else if (!emailRegex.test(email.value.trim())) {
-                    showError(email, 'Please enter a valid email address');
-                    isValid = false;
-                } else {
-                    clearError(email);
-                }
-                
-                // Validate phone
-                const phone = document.getElementById('phone');
-                const phoneRegex = /^\+?[0-9\s\-()]{8,20}$/;
-                if (!phone.value.trim()) {
-                    showError(phone, 'Phone number is required');
-                    isValid = false;
-                } else if (!phoneRegex.test(phone.value.trim())) {
-                    showError(phone, 'Please enter a valid phone number');
-                    isValid = false;
-                } else {
-                    clearError(phone);
-                }
-                
-                // Validate password
-                const password = document.getElementById('password');
-                if (!password.value) {
-                    showError(password, 'Password is required');
-                    isValid = false;
-                } else if (password.value.length < 6) {
-                    showError(password, 'Password must be at least 6 characters');
-                    isValid = false;
-                } else {
-                    clearError(password);
-                }
-                
-                // Validate confirm password
-                const confirmPassword = document.getElementById('confirmPassword');
-                if (!confirmPassword.value) {
-                    showError(confirmPassword, 'Please confirm your password');
-                    isValid = false;
-                } else if (confirmPassword.value !== password.value) {
-                    showError(confirmPassword, 'Passwords do not match');
-                    isValid = false;
-                } else {
-                    clearError(confirmPassword);
-                }
-                
-                // Validate file upload
-                if (!licenseFileUrl) {
-                    showError(fileInput, 'Business license is required');
-                    isValid = false;
-                } else {
-                    clearError(fileInput);
-                }
-                
-                // Validate terms checkbox
-                const terms = document.getElementById('terms');
-                if (!terms.checked) {
-                    showError(terms, 'You must agree to the terms and conditions');
-                    isValid = false;
-                } else {
-                    clearError(terms);
-                }
-                
-                return isValid;
-            }
-            
-            function handleFirebaseError(error) {
-                let errorMessage = 'Registration failed. Please try again.';
-                
-                switch(error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'This email is already registered';
-                        showError(document.getElementById('email'), errorMessage);
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Please enter a valid email address';
-                        showError(document.getElementById('email'), errorMessage);
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password should be at least 6 characters';
-                        showError(document.getElementById('password'), errorMessage);
-                        break;
-                    default:
-                        errorMessage = error.message || errorMessage;
-                }
-                
-                showToast(errorMessage, 'error');
-            }
-            
-            function showError(input, message) {
-                const formGroup = input.closest('.form-group');
-                const errorElement = formGroup.querySelector('.error-message');
-                
-                input.classList.add('error');
-                errorElement.textContent = message;
-                errorElement.classList.remove('hidden');
-            }
-            
-            function clearError(input) {
-                const formGroup = input.closest('.form-group');
-                const errorElement = formGroup.querySelector('.error-message');
-                
-                input.classList.remove('error');
-                errorElement.classList.add('hidden');
-            }
-            
-            function showToast(message, type = 'error') {
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.textContent = message;
-                document.body.appendChild(toast);
-                
-                setTimeout(() => {
-                    toast.classList.add('fade-out');
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
-            }
-            
-            function showSuccessMessage(userId) {
-                const formContainer = document.querySelector('.form-container');
-                formContainer.innerHTML = `
-                    <div class="bg-white rounded-md shadow-lg p-8 text-center">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="ri-check-line ri-2x text-secondary"></i>
-                        </div>
-                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Registration Successful!</h2>
-                        <p class="text-gray-600 mb-4">Your company registration has been submitted successfully.</p>
-                        <p class="text-gray-600 mb-6">We've sent a verification email to your address. Please verify your email to complete registration.</p>
-                        <div class="ethiopian-border mb-6 mx-auto w-32"></div>
-                        <p class="text-sm text-gray-500">User ID: ${userId}</p>
-                    </div>
-                `;
-            }
-        });
-    </script>
     <style>
         :where([class^="ri-"])::before { content: "\f3c2"; }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: #F3F4F6;
-            background-image: url("./image.png");
-            background-repeat: no-repeat;
-            background-size:auto;
         }
 
         .form-container {
@@ -444,12 +130,6 @@
             transform: rotate(45deg);
         }
 
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
         .ethiopian-border {
             background-image: linear-gradient(to right, #EA580C, #16A34A, #2563EB);
             height: 3px;
@@ -528,7 +208,7 @@
 <body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
     <div class="w-full max-w-md form-container">
         <div class="mb-6 text-center">
-            <h1 class="text-3xl font-['Pacifico'] text-primary mb-2">logo</h1>
+            <h1 class="text-3xl font-['Pacifico'] text-primary mb-2">ስራ-ገበያ</h1>
             <div class="ethiopian-border mb-4 mx-auto w-32"></div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Company Registration</h2>
             <p class="text-gray-600">Complete the form below to register your company with us</p>
@@ -586,6 +266,7 @@
                         <p class="text-gray-500 text-center">Click to upload your business license</p>
                         <p class="text-xs text-gray-400 mt-1">Supported formats: PDF, JPG, PNG (Max 5MB)</p>
                     </div>
+                    <input type="file" id="licenseFile" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
                     <div id="filePreview" class="hidden mt-3 p-3 bg-gray-50 rounded flex items-center">
                         <div class="w-8 h-8 flex items-center justify-center text-primary mr-2">
                             <i class="ri-file-line ri-lg"></i>
@@ -603,6 +284,7 @@
                     <label for="terms" class="text-sm text-gray-700 cursor-pointer">
                         I agree to the <a href="#" class="text-[#EA580C] hover:underline">Terms and Conditions</a> and <a href="#" class="text-[#EA580C] hover:underline">Privacy Policy</a>
                     </label>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
                 </div>
                 
                 <button type="submit" class="submit-btn w-full bg-primary text-white py-3 px-4 rounded-button font-medium hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed !whitespace-nowrap">
@@ -615,5 +297,311 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('licenseFile');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const removeFile = document.getElementById('removeFile');
+            const submitBtn = document.querySelector('.submit-btn');
+            const togglePassword = document.querySelectorAll('.toggle-password');
+            
+            let licenseFileUrl = '';
+            let uploadedFile = null;
+
+            // Simple database simulation using localStorage
+            const db = {
+                users: JSON.parse(localStorage.getItem('users')) || [],
+                
+                saveUsers: function() {
+                    localStorage.setItem('users', JSON.stringify(this.users));
+                },
+                
+                addUser: function(user) {
+                    this.users.push(user);
+                    this.saveUsers();
+                    return user;
+                },
+                
+                findUserByEmail: function(email) {
+                    return this.users.find(user => user.email === email);
+                }
+            };
+
+            // File upload handling
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Validate file type and size
+                    const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+                    
+                    if (!validTypes.includes(file.type)) {
+                        showError(fileInput, 'Invalid file type. Please upload PDF, JPG, or PNG.');
+                        return;
+                    }
+                    
+                    if (file.size > maxSize) {
+                        showError(fileInput, 'File size exceeds 5MB limit.');
+                        return;
+                    }
+                    
+                    // Simulate upload (in a real app, you would upload to a server)
+                    licenseFileUrl = URL.createObjectURL(file);
+                    fileName.textContent = file.name;
+                    filePreview.classList.remove('hidden');
+                    dropzone.classList.add('hidden');
+                    clearError(fileInput);
+                    
+                    uploadedFile = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        lastModified: file.lastModified
+                    };
+                }
+            });
+
+            // Dropzone functionality
+            dropzone.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+            
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('dragover');
+            });
+            
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                fileInput.files = e.dataTransfer.files;
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            });
+            
+            removeFile.addEventListener('click', () => {
+                licenseFileUrl = '';
+                fileInput.value = '';
+                filePreview.classList.add('hidden');
+                dropzone.classList.remove('hidden');
+                clearError(fileInput);
+            });
+
+            // Toggle password visibility
+            togglePassword.forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.querySelector('i').classList.toggle('ri-eye-line');
+                    this.querySelector('i').classList.toggle('ri-eye-off-line');
+                });
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loader"></span> Processing...';
+                
+                if (!validateForm()) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register Company';
+                    return;
+                }
+
+                try {
+                    // Get form values
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    
+                    // Check if user already exists
+                    if (db.findUserByEmail(email)) {
+                        throw new Error('This email is already registered');
+                    }
+                    
+                    // Create user object
+                    const user = {
+                        id: Date.now().toString(),
+                        companyName: document.getElementById('companyName').value.trim(),
+                        email: email,
+                        phone: document.getElementById('phone').value.trim(),
+                        password: password, // Note: In a real app, you would hash the password
+                        licenseFile: uploadedFile,
+                        licenseFileUrl: licenseFileUrl,
+                        role: 'company',
+                        status: 'pending',
+                        createdAt: new Date().toISOString(),
+                        verified: false
+                    };
+                    
+                    // Save user to "database"
+                    const savedUser = db.addUser(user);
+                    
+                    // Show success message
+                    showSuccessMessage(savedUser);
+                } catch (error) {
+                    console.error("Registration error:", error);
+                    handleError(error);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register Company';
+                }
+            });
+            
+            function validateForm() {
+                let isValid = true;
+                
+                // Validate company name
+                const companyName = document.getElementById('companyName');
+                if (!companyName.value.trim()) {
+                    showError(companyName, 'Company name is required');
+                    isValid = false;
+                } else {
+                    clearError(companyName);
+                }
+                
+                // Validate email
+                const email = document.getElementById('email');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email.value.trim()) {
+                    showError(email, 'Email address is required');
+                    isValid = false;
+                } else if (!emailRegex.test(email.value.trim())) {
+                    showError(email, 'Please enter a valid email address');
+                    isValid = false;
+                } else {
+                    clearError(email);
+                }
+                
+                // Validate phone
+                const phone = document.getElementById('phone');
+                const phoneRegex = /^\+?[0-9\s\-()]{8,20}$/;
+                if (!phone.value.trim()) {
+                    showError(phone, 'Phone number is required');
+                    isValid = false;
+                } else if (!phoneRegex.test(phone.value.trim())) {
+                    showError(phone, 'Please enter a valid phone number');
+                    isValid = false;
+                } else {
+                    clearError(phone);
+                }
+                
+                // Validate password
+                const password = document.getElementById('password');
+                if (!password.value) {
+                    showError(password, 'Password is required');
+                    isValid = false;
+                } else if (password.value.length < 6) {
+                    showError(password, 'Password must be at least 6 characters');
+                    isValid = false;
+                } else {
+                    clearError(password);
+                }
+                
+                // Validate confirm password
+                const confirmPassword = document.getElementById('confirmPassword');
+                if (!confirmPassword.value) {
+                    showError(confirmPassword, 'Please confirm your password');
+                    isValid = false;
+                } else if (confirmPassword.value !== password.value) {
+                    showError(confirmPassword, 'Passwords do not match');
+                    isValid = false;
+                } else {
+                    clearError(confirmPassword);
+                }
+                
+                // Validate file upload
+                if (!licenseFileUrl) {
+                    showError(fileInput, 'Business license is required');
+                    isValid = false;
+                } else {
+                    clearError(fileInput);
+                }
+                
+                // Validate terms checkbox
+                const terms = document.getElementById('terms');
+                const termsError = terms.closest('.form-group').querySelector('.error-message');
+                if (!terms.checked) {
+                    termsError.textContent = 'You must agree to the terms and conditions';
+                    termsError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    termsError.classList.add('hidden');
+                }
+                
+                return isValid;
+            }
+            
+            function handleError(error) {
+                let errorMessage = 'Registration failed. Please try again.';
+                
+                if (error.message.includes('email is already registered')) {
+                    errorMessage = error.message;
+                    showError(document.getElementById('email'), errorMessage);
+                } else {
+                    errorMessage = error.message || errorMessage;
+                }
+                
+                showToast(errorMessage, 'error');
+            }
+            
+            function showError(input, message) {
+                const formGroup = input.closest('.form-group');
+                const errorElement = formGroup.querySelector('.error-message');
+                
+                if (input) input.classList.add('error');
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+            
+            function clearError(input) {
+                const formGroup = input.closest('.form-group');
+                const errorElement = formGroup.querySelector('.error-message');
+                
+                if (input) input.classList.remove('error');
+                errorElement.classList.add('hidden');
+            }
+            
+            function showToast(message, type = 'error') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.add('fade-out');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+            
+            function showSuccessMessage(user) {
+                const formContainer = document.querySelector('.form-container');
+                formContainer.innerHTML = `
+                    <div class="bg-white rounded-md shadow-lg p-8 text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ri-check-line ri-2x text-secondary"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Registration Successful!</h2>
+                        <p class="text-gray-600 mb-4">Your company registration has been submitted successfully.</p>
+                        <div class="ethiopian-border mb-6 mx-auto w-32"></div>
+                        <p class="text-sm text-gray-500 mb-6">Company: ${user.companyName}</p>
+                        <div class="mt-6">
+                            <a href="../subscription/subscription.html" class="inline-block bg-primary text-white py-2 px-6 rounded-button font-medium hover:bg-primary/90 transition-all">
+                                Go to Login
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    </script>
 </body>
 </html>

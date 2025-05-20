@@ -11,6 +11,291 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <header>
+        <style>
+          /* CSS Styles */
+          :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+          }
+          
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          }
+          
+          header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+          }
+          
+          .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+          }
+          
+          .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+          
+          .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+          }
+          
+          .logo span:first-child {
+            color: var(--accent-color);
+          }
+          
+          .logo-icon {
+            font-size: 2rem;
+            margin-right: 8px;
+          }
+          
+          .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+          }
+          
+          .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+          }
+          
+          .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 1rem;
+          }
+          
+          .nav-links a:hover {
+            color: var(--secondary-color);
+          }
+          
+          .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            width: 300px;
+          }
+          
+          .search-bar input {
+            border: none;
+            padding: 0.6rem 1rem;
+            width: 100%;
+            outline: none;
+            font-size: 0.9rem;
+          }
+          
+          .search-bar button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          }
+          
+          .search-bar button:hover {
+            background-color: #2980b9;
+          }
+          
+          .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          }
+          
+          .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 0.9rem;
+          }
+          
+          .btn-login {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+          }
+          
+          .btn-login:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+          
+          .btn-register {
+            background-color: var(--accent-color);
+            color: white;
+            border: 1px solid var(--accent-color);
+          }
+          
+          .btn-register:hover {
+            background-color: #c0392b;
+          }
+          
+          .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+          }
+          
+          @media (max-width: 992px) {
+            .nav-links {
+              display: none;
+            }
+            
+            .search-bar {
+              width: 200px;
+            }
+            
+            .mobile-menu-btn {
+              display: block;
+            }
+          }
+          
+          @media (max-width: 768px) {
+            .header-container {
+              flex-wrap: wrap;
+              gap: 1rem;
+            }
+            
+            .search-bar {
+              order: 3;
+              width: 100%;
+            }
+            
+            .user-actions {
+              margin-left: auto;
+            }
+          }
+        </style>
+      
+        <div class="header-container">
+          <div class="logo-container">
+            <a href="/" class="logo">
+              <span class="logo-icon">💼</span>
+              <span>ስራ</span>-<span>ገበያ</span>
+            </a>
+          </div>
+          
+          <nav class="nav-container">
+            <ul class="nav-links">
+              <li><a href="/jobs">Jobs</a></li>
+              <li><a href="/companies">Companies</a></li>
+              <li><a href="/career-advice">Career Advice</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+            
+            <div class="search-bar">
+              <input type="text" placeholder="Search jobs..." aria-label="Search jobs">
+              <button type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div class="user-actions">
+              <a href="/login" class="btn btn-login">Login</a>
+              <a href="/register" class="btn btn-register">Register</a>
+            </div>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+          </nav>
+        </div>
+      
+        <script>
+          // JavaScript functionality
+          document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+              if (navLinks.style.display === 'flex') {
+                navLinks.style.display = 'none';
+              } else {
+                navLinks.style.display = 'flex';
+                navLinks.style.flexDirection = 'column';
+                navLinks.style.position = 'absolute';
+                navLinks.style.top = '100%';
+                navLinks.style.left = '0';
+                navLinks.style.width = '100%';
+                navLinks.style.backgroundColor = 'var(--primary-color)';
+                navLinks.style.padding = '1rem 2rem';
+                navLinks.style.gap = '1rem';
+              }
+            });
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+              if (!e.target.closest('.nav-container') && window.innerWidth <= 992) {
+                navLinks.style.display = 'none';
+              }
+            });
+            
+            // Search functionality
+            const searchForm = document.querySelector('.search-bar');
+            const searchInput = document.querySelector('.search-bar input');
+            
+            searchForm.addEventListener('submit', function(e) {
+              e.preventDefault();
+              const query = searchInput.value.trim();
+              if (query) {
+                window.location.href = `/search?q=${encodeURIComponent(query)}`;
+              }
+            });
+            
+            // Responsive adjustments
+            function handleResize() {
+              if (window.innerWidth > 992) {
+                navLinks.style.display = 'flex';
+                navLinks.style.flexDirection = 'row';
+                navLinks.style.position = 'static';
+                navLinks.style.backgroundColor = 'transparent';
+                navLinks.style.padding = '0';
+              } else {
+                navLinks.style.display = 'none';
+              }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            handleResize();
+          });
+        </script>
+      </header>
     <div class="dashboard-container">
         <header class="dashboard-header">
             <h1>Job Performance Dashboard</h1>

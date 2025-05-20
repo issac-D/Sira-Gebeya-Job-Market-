@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login Page</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --error: #f72585;
+            --success: #4cc9f0;
+            --text: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --dark-gray: #495057;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            background-image: url("./bg.png");
+            background-repeat: no-repeat;
+            background-size: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+            padding: 32px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            color: var(--text);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            padding: 12px 16px;
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        #password {
+            padding-right: 40px;
+            width: 100%;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            padding: 4px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 12px;
+            min-height: 18px;
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a56d4;
+        }
+
+        .btn-primary:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .btn-google {
+            background-color: white;
+            color: var(--text);
+            border: 1px solid var(--gray);
+            gap: 8px;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+        }
+
+        .google-logo {
+            width: 16px;
+            height: 16px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background-color: var(--gray);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.error {
+            background-color: var(--error);
+        }
+
+        .toast.success {
+            background-color: var(--success);
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; }
+        }
+
+        /* Enhanced Mobile Styles */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 24px 20px;
+                border-radius: 8px;
+            }
+            
+            .login-header h1 {
+                font-size: 24px;
+            }
+            
+            .form-control {
+                padding: 14px 12px;
+                font-size: 16px;
+            }
+            
+            #password {
+                padding-right: 36px;
+            }
+            
+            .password-toggle {
+                right: 8px;
+                width: 20px;
+                height: 20px;
+            }
+            
+            .btn {
+                padding: 14px 16px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-container {
+                padding: 20px 15px;
+            }
+            
+            .form-control {
+                padding: 12px 10px;
+            }
+            
+            .login-header h1 {
+                font-size: 22px;
+            }
+        }
+
+        /* CAPTCHA Styling */
+        .captcha-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .captcha-question {
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .captcha-error {
+            color: var(--error);
+            font-size: 12px;
+            text-align: center;
+            min-height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Welcome back</h1>
+            <p>Please enter your details to sign in</p>
+        </div>
+
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="form-control" 
+                    placeholder="Enter your email" 
+                    required
+                    autocomplete="username"
+                >
+                <span class="error-message" id="emailError"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-control" 
+                        placeholder="Enter your password" 
+                        required
+                        minlength="6"
+                        autocomplete="current-password"
+                        name="password"
+                    >
+                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/>
+                        </svg>
+                    </button>
+                </div>
+                <span class="error-message" id="passwordError"></span>
+            </div>
+
+            <!-- Text-based CAPTCHA -->
+            <div class="captcha-container">
+                <span class="captcha-question" id="captchaQuestion"></span>
+                <input 
+                    type="number" 
+                    id="captchaInput" 
+                    class="form-control" 
+                    placeholder="Enter your answer" 
+                    required
+                >
+                <span class="captcha-error" id="captchaError"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary pulse" id="loginBtn">
+                <span id="btnText">Sign in</span>
+                <span id="spinner" class="spinner hidden"></span>
+            </button>
+
+            <div class="divider">or</div>
+
+            <button type="button" class="btn btn-google" id="googleSignInBtn">
+                <img src="https://www.google.com/favicon.ico" alt="Google Logo" class="google-logo">
+                Continue with Google
+            </button>
+
+            <div class="login-footer">
+                <p>Don't have an account? <a href="../register/register.html">Sign up</a></p>
+                <p><a href="../forgot_password/forgot.html">Forgot password?</a></p>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simple database access
+            const db = {
+                users: JSON.parse(localStorage.getItem('users')) || [],
+                
+                findUserByEmail: function(email) {
+                    return this.users.find(user => user.email === email);
+                }
+            };
+
+            // DOM Elements
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const captchaQuestion = document.getElementById('captchaQuestion');
+            const captchaInput = document.getElementById('captchaInput');
+            const captchaError = document.getElementById('captchaError');
+            const loginBtn = document.getElementById('loginBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const googleSignInBtn = document.getElementById('googleSignInBtn');
+
+            // Generate CAPTCHA
+            let captchaAnswer;
+            function generateCaptcha() {
+                const num1 = Math.floor(Math.random() * 10) + 1;
+                const num2 = Math.floor(Math.random() * 10) + 1;
+                captchaAnswer = num1 + num2;
+                captchaQuestion.textContent = `What is ${num1} + ${num2}?`;
+                captchaInput.value = '';
+                captchaError.textContent = '';
+                console.log(`CAPTCHA Answer: ${captchaAnswer}`); // Debug
+            }
+            generateCaptcha();
+
+            // Remove pulse animation after 2 seconds
+            setTimeout(() => {
+                loginBtn.classList.remove('pulse');
+            }, 2000);
+
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Update icon
+                const icon = this.querySelector('svg');
+                if (type === 'password') {
+                    icon.innerHTML = '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>';
+                } else {
+                    icon.innerHTML = '<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/>';
+                }
+            });
+
+            // Form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Form submitted'); // Debug
+
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const captchaResponse = captchaInput.value.trim();
+                
+                // Reset errors
+                emailError.textContent = '';
+                passwordError.textContent = '';
+                captchaError.textContent = '';
+                emailInput.style.borderColor = '';
+                passwordInput.style.borderColor = '';
+                captchaInput.style.borderColor = '';
+                
+                // Validate inputs
+                let isValid = true;
+                
+                if (!email) {
+                    emailError.textContent = 'Email is required';
+                    emailInput.style.borderColor = 'var(--error)';
+                    isValid = false;
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    emailError.textContent = 'Please enter a valid email';
+                    emailInput.style.borderColor = 'var(--error)';
+                    isValid = false;
+                }
+                
+                if (!password) {
+                    passwordError.textContent = 'Password is required';
+                    passwordInput.style.borderColor = 'var(--error)';
+                    isValid = false;
+                } else if (password.length < 6) {
+                    passwordError.textContent = 'Password must be at least 6 characters';
+                    passwordInput.style.borderColor = 'var(--error)';
+                    isValid = false;
+                }
+                
+                // Validate CAPTCHA
+                const captchaValue = parseInt(captchaResponse, 10);
+                if (!captchaResponse || isNaN(captchaValue) || captchaValue !== captchaAnswer) {
+                    captchaError.textContent = 'Incorrect or missing CAPTCHA answer';
+                    captchaInput.style.borderColor = 'var(--error)';
+                    isValid = false;
+                    console.log(`CAPTCHA Input: ${captchaResponse}, Expected: ${captchaAnswer}`); // Debug
+                }
+                
+                if (!isValid) {
+                    loginForm.classList.add('shake');
+                    setTimeout(() => {
+                        loginForm.classList.remove('shake');
+                    }, 500);
+                    console.log('Validation failed'); // Debug
+                    return;
+                }
+                
+                // Show loading state
+                setLoadingState(true);
+                console.log('Processing login...'); // Debug
+                
+                try {
+                    // Check credentials against our "database"
+                    const user = db.findUserByEmail(email);
+                    
+                    if (!user) {
+                        throw new Error('No account found with this email');
+                    }
+                    
+                    if (user.password !== password) {
+                        throw new Error('Incorrect password');
+                    }
+                    
+                    // Store current user in session
+                    sessionStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Reset CAPTCHA
+                    generateCaptcha();
+                    
+                    console.log('Login successful, redirecting...'); // Debug
+                    // Redirect based on role
+                    window.location.href = user.role === 'company' 
+                        ? '../dashboard/dashboard.html' 
+                        : '../dashboard/dashboard.html';
+                    
+                } catch (error) {
+                    handleAuthError(error);
+                } finally {
+                    setLoadingState(false);
+                }
+            });
+
+            // Google Sign-In (simulated)
+            googleSignInBtn.addEventListener('click', function() {
+                setLoadingState(true, true);
+                
+                // Simulate Google sign-in after delay
+                setTimeout(() => {
+                    try {
+                        // Create a mock user for demo purposes
+                        const mockUser = {
+                            id: 'google_' + Date.now(),
+                            email: 'demo@example.com',
+                            displayName: 'Google User',
+                            photoURL: 'https://via.placeholder.com/150',
+                            role: 'jobSeeker',
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        // Store in our database if not exists
+                        if (!db.findUserByEmail(mockUser.email)) {
+                            db.users.push(mockUser);
+                            localStorage.setItem('users', JSON.stringify(db.users));
+                        }
+                        
+                        // Store current user in session
+                        sessionStorage.setItem('currentUser', JSON.stringify(mockUser));
+                        
+                        // Redirect
+                        window.location.href = '../dashboard/dashboard.html';
+                    } catch (error) {
+                        handleAuthError(error);
+                    } finally {
+                        setLoadingState(false, true);
+                    }
+                }, 1500);
+            });
+
+            function handleAuthError(error) {
+                let errorMessage = 'Authentication failed. Please try again.';
+                
+                if (error.message.includes('No account found')) {
+                    errorMessage = error.message;
+                    emailError.textContent = errorMessage;
+                    emailInput.style.borderColor = 'var(--error)';
+                } else if (error.message.includes('Incorrect password')) {
+                    errorMessage = error.message;
+                    passwordError.textContent = errorMessage;
+                    passwordInput.style.borderColor = 'var(--error)';
+                } else {
+                    errorMessage = error.message || errorMessage;
+                }
+                
+                showToast(errorMessage, 'error');
+                loginForm.classList.add('shake');
+                setTimeout(() => loginForm.classList.remove('shake'), 500);
+                console.error('Auth error:', errorMessage); // Debug
+            }
+
+            function setLoadingState(isLoading, isGoogle = false) {
+                if (isGoogle) {
+                    googleSignInBtn.disabled = isLoading;
+                    googleSignInBtn.innerHTML = isLoading
+                        ? '<span class="spinner"></span> Continuing with Google'
+                        : '<img src="https://www.google.com/favicon.ico" alt="Google Logo" class="google-logo"> Continue with Google';
+                } else {
+                    loginBtn.disabled = isLoading;
+                    btnText.textContent = isLoading ? 'Signing in...' : 'Sign in';
+                    spinner.classList.toggle('hidden', !isLoading);
+                }
+                console.log(`Loading state: ${isLoading}`); // Debug
+            }
+
+            function showToast(message, type = 'error') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.add('fade-out');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+
+            // Auto-scroll on mobile for input focus
+            if (window.innerWidth <= 480) {
+                const inputs = [emailInput, passwordInput, captchaInput];
+                
+                inputs.forEach(input => {
+                    input.addEventListener('focus', () => {
+                        window.scrollTo({
+                            top: input.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

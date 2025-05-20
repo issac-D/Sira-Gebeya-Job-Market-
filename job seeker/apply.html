@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application - Tech Solutions Ethiopia</title>
+    <style>
+        /* Basic CSS for layout and styling - you'll likely have a more comprehensive stylesheet */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem 0;
+            margin-bottom: 20px;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-right: 0.5rem;
+        }
+        .back-btn {
+            background: none;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            margin-right: 0.25rem;
+        }
+        .motivational-header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 20px;
+        }
+        .motivational-text {
+            font-size: 1.75rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+        .subtext {
+            color: #777;
+        }
+        .job-summary-card {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        .job-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+        .job-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+        .company-name {
+            color: #007bff;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .verified-badge {
+            background-color: #28a745;
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 5px;
+            margin-left: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .verified-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+            margin-right: 0.2rem;
+        }
+        .job-meta {
+            display: flex;
+            gap: 1rem;
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+        }
+        .meta-item svg {
+            width: 16px;
+            height: 16px;
+            fill: #777;
+            margin-right: 0.25rem;
+        }
+        .application-form {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #ddd;
+        }
+        .form-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .form-title svg {
+            width: 24px;
+            height: 24px;
+            fill: #007bff;
+            margin-right: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        .form-group label svg {
+            width: 18px;
+            height: 18px;
+            fill: #777;
+            margin-right: 0.25rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .document-options {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .document-option {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+        .document-option.active {
+            background-color: #e9ecef;
+            border-color: #007bff;
+        }
+        .document-option svg {
+            width: 18px;
+            height: 18px;
+            fill: #555;
+            margin-right: 0.5rem;
+        }
+        .document-info {
+            flex-grow: 1;
+        }
+        .document-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .document-meta {
+            color: #777;
+            font-size: 0.8rem;
+        }
+        .upload-new {
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #007bff;
+            background-color: #f0f8ff;
+            transition: background-color 0.3s ease;
+        }
+        .upload-new:hover {
+            background-color: #e0f2fe;
+        }
+        .upload-new svg {
+            width: 18px;
+            height: 18px;
+            fill: #007bff;
+            margin-right: 0.5rem;
+        }
+        .file-input {
+            display: none;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+            align-items: center;
+        }
+        .error-message svg {
+            width: 16px;
+            height: 16px;
+            fill: #dc3545;
+            margin-right: 0.25rem;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            margin-left: 0.5rem;
+        }
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 0.75rem;
+        }
+        .loading-text {
+            color: #555;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .floating-submit-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: none; /* Hidden by default, shown on scroll (mobile) */
+        }
+        .floating-submit-btn .submit-btn {
+            border-radius: 50px;
+            padding: 0.75rem 1.25rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .success-container {
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid #d4edda;
+            background-color: #d1e7dd;
+            color: #155724;
+            border-radius: 8px;
+        }
+        .success-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #28a745;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        .success-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+        .success-title {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .success-message {
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .success-actions .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        .success-actions .btn-outline {
+            border: 1px solid #007bff;
+            color: #007bff;
+            background-color: transparent;
+        }
+        .success-actions .btn-outline:hover {
+            background-color: #e0f2fe;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            .header-content {
+                padding: 0 10px;
+            }
+            .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .company-logo {
+                margin-bottom: 0.5rem;
+            }
+            .job-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .floating-submit-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+                <span>SIRA GEBEYA</span>
+            </div>
+            <button class="back-btn" id="backBtn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                Back to Home
+            </button>
+        </div>
+    </header>
+
+    <section class="motivational-header">
+        <h2 class="motivational-text">Let's take the next step toward your career in Ethiopia</h2>
+        <p class="subtext">Submit your application to Tech Solutions Ethiopia. Make it count.</p>
+    </section>
+
+    <div class="container">
+        <section class="job-summary-card">
+            <div class="job-header">
+                <img src="https://images.unsplash.com/photo-1641302109113-67653c0fd208?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c29mdHdhcmUlMjBjb21wYW55JTIwbG9nb3xlbnwwfHwwfHx8MA%3D%3D" alt="Company Logo" class="company-logo">
+                <div>
+                    <h1 class="job-title">Senior Software Engineer</h1>
+                    <p class="company-name">
+                        Tech Solutions Ethiopia
+                        <span class="verified-badge">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.4810 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                            Verified
+                        </span>
+                    </p>
+                    <div class="job-meta">
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                            </svg>
+                            Addis Ababa
+                        </div>
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
+                            </svg>
+                            $2,000 - $3,000
+                        </div>
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                            Full-time
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="application-form" id="applicationFormSection">
+            <h2 class="form-title">
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+                Application Form
+            </h2>
+
+            <form id="applicationForm">
+                <div class="form-group">
+                    <label for="fullName">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        Full Name
+                    </label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required name="fullName">
+                    <div id="nameError" class="error-message">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Please enter your full name
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        Email Address
+                    </label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email address" required name="email">
+                    <div id="emailError" class="error-message">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Please enter a valid email address
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                        </svg>
+                        Curriculum Vitae (CV)
+                    </label>
+                    <div class="document-options" id="cvOptions">
+                        <div class="document-option active" data-document-id="cv1">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                            </svg>
+                            <div class="document-info">
+                                <div class="document-name">John_Doe_CV.pdf</div>
+                                <div class="document-meta">Uploaded: Jan 15, 2023</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-new" id="uploadNewCV">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        <span>Upload New CV</span>
+                    </div>
+                    <input type="file" id="cvUpload" class="file-input" accept=".pdf,.doc,.docx" hidden>
+                    <div id="cvError" class="error-message">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Please select a CV
+                    </div>
+                    <input type="hidden" id="selectedCvId" name="selectedCvId" value="cv1">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                        </svg>
+                        Educational Document
+                    </label>
+                    <div class="document-options" id="eduOptions">
+                        <div class="document-option active" data-document-id="edu1">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                            </svg>
+                            <div class="document-info">
+                                <div class="document-name">John_Doe_Degree.pdf</div>
+                                <div class="document-meta">Uploaded: Feb 10, 2023</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-new" id="uploadNewEdu">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        <span>Upload New Educational Document</span>
+                    </div>
+                    <input type="file" id="eduUpload" class="file-input" accept=".pdf,.doc,.docx" hidden>
+                    <div id="eduError" class="error-message">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Please select an educational document
+                    </div>
+                    <input type="hidden" id="selectedEduId" name="selectedEduId" value="edu1">
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                        </svg>
+                        Extracurricular Certificate
+                    </label>
+                    <div class="document-options" id="certOptions">
+                        <div class="document-option active" data-document-id="cert1">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                            </svg>
+                            <div class="document-info">
+                                <div class="document-name">John_Doe_Certificate.pdf</div>
+                                <div class="document-meta">Uploaded: Mar 5, 2023</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upload-new" id="uploadNewCert">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        <span>Upload New Certificate</span>
+                    </div>
+                    <input type="file" id="certUpload" class="file-input" accept=".pdf,.doc,.docx" hidden>
+                    <div id="certError" class="error-message">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        Please select an extracurricular certificate
+                    </div>
+                    <input type="hidden" id="selectedCertId" name="selectedCertId" value="cert1">
+                </div>
+
+                <div class="form-group">
+                    <label for="coverLetter">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+                        </svg>
+                        Cover Letter (Optional)
+                    </label>
+                    <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 0.75rem;">
+                        Tell the employer why you're a great fit for this position. Highlight your relevant skills and experience.
+                    </p>
+                    <textarea id="coverLetter" class="form-control" placeholder="Write your cover letter here..." name="coverLetter"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreeTerms" required name="agreeTerms">
+                        <label for="agreeTerms">I agree to share my profile with Tech Solutions Ethiopia and agree to the <a href="#" style="color: var(--primary-blue);">Terms of Service</a> and <a href="#" style="color: var(--primary-blue);">Privacy Policy</a></label>
+                    </div>
+                    <div id="termsError" class="error-message">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        You must agree to the terms
+                    </div>
+                </div>
+
+                <div class="loading" id="loadingIndicator">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Submitting your application...</p>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Submit Application</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <div class="floating-submit-btn">
+            <button type="submit" form="applicationForm" class="submit-btn">
+                <span class="btn-text">Submit Application</span>
+                <svg class="btn-icon" viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="container" id="successPage" style="display: none;">
+        <div class="success-container">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                </svg>
+            </div>
+            <h1 class="success-title">Application Submitted!</h1>
+            <p class="success-message">
+                Your application for <strong>Senior Software Engineer</strong> at <strong>Tech Solutions Ethiopia</strong> has been successfully submitted.
+                <br><br>
+                You're one step closer to your next opportunity.
+            </p>
+            <div class="success-actions">
+                <button class="btn btn-outline btn-lg" id="backToSearchBtn">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 0.5rem;">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                    Back to Job Search
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const backBtn = document.getElementById('backBtn');
+        const applicationForm = document.getElementById('applicationForm');
+        const successPage = document.getElementById('successPage');
+        const applicationFormSection = document.getElementById('applicationFormSection');
+        const backToSearchBtn = document.getElementById('backToSearchBtn');
+        const uploadNewCV = document.getElementById('uploadNewCV');
+        const cvUpload = document.getElementById('cvUpload');
+        const uploadNewEdu = document.getElementById('uploadNewEdu');
+        const eduUpload = document.getElementById('eduUpload');
+        const uploadNewCert = document.getElementById('uploadNewCert');
+        const certUpload = document.getElementById('certUpload');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const selectedCvIdInput = document.getElementById('selectedCvId');
+        const selectedEduIdInput = document.getElementById('selectedEduId');
+        const selectedCertIdInput = document.getElementById('selectedCertId');
+
+        // Event Listeners
+        backBtn.addEventListener('click', () => {
+            // Redirect to search page
+            window.location.href = 'search.html';
+        });
+
+        applicationForm.addEventListener('submit', handleFormSubmit);
+
+        backToSearchBtn.addEventListener('click', () => {
+            // Redirect to search page
+            window.location.href = 'search.html';
+        });
+
+        // Document option selection
+        ['cv', 'edu', 'cert'].forEach(type => {
+            document.querySelectorAll(`#${type}Options .document-option`).forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll(`#${type}Options .document-option`).forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    const documentId = this.dataset.documentId;
+                    switch (type) {
+                        case 'cv':
+                            selectedCvIdInput.value = documentId;
+                            break;
+                        case 'edu':
+                            selectedEduIdInput.value = documentId;
+                            break;
+                        case 'cert':
+                            selectedCertIdInput.value = documentId;
+                            break;
+                    }
+                });
+            });
+        });
+
+        uploadNewCV.addEventListener('click', () => cvUpload.click());
+        cvUpload.addEventListener('change', (e) => handleDocumentUpload(e, 'cv'));
+
+        uploadNewEdu.addEventListener('click', () => eduUpload.click());
+        eduUpload.addEventListener('change', (e) => handleDocumentUpload(e, 'edu'));
+
+        uploadNewCert.addEventListener('click', () => certUpload.click());
+        certUpload.addEventListener('change', (e) => handleDocumentUpload(e, 'cert'));
+
+        // Functions
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            // Validate form
+            const fullName = document.getElementById('fullName');
+            const email = document.getElementById('email');
+            const selectedCV = document.querySelector('#cvOptions .document-option.active');
+            const selectedEdu = document.querySelector('#eduOptions .document-option.active');
+            const selectedCert = document.querySelector('#certOptions .document-option.active');
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            let isValid = true;
+
+            // Reset errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+            if (!fullName.value.trim()) {
+                document.getElementById('nameError').style.display = 'flex';
+                isValid = false;
+            }
+
+            if (!email.value.trim() || !/^\S+@\S+\.\S+$/.test(email.value)) {
+                document.getElementById('emailError').style.display = 'flex';
+                isValid = false;
+            }
+
+            if (!selectedCV) {
+                document.getElementById('cvError').style.display = 'flex';
+                isValid = false;
+            }
+
+            if (!selectedEdu) {
+                document.getElementById('eduError').style.display = 'flex';
+                isValid = false;
+            }
+
+            if (!selectedCert) {
+                document.getElementById('certError').style.display = 'flex';
+                isValid = false;
+            }
+
+            if (!agreeTerms) {
+                document.getElementById('termsError').style.display = 'flex';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                // Scroll to first error
+                const firstError = document.querySelector('.error-message[style*="display: flex"]');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+
+            const formData = new FormData(applicationForm);
+            fetch('https://script.google.com/macros/s/AKfycbwgKDHt8J4BbvDgbIUj28CaTgwWji6OATevtlpZAUDmEJXykYVaru6iqXPgNSHevCGfJQ/exec', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Success:', data);
+                applicationFormSection.style.display = 'none';
+                successPage.style.display = 'block';
+                loadingIndicator.style.display = 'none';
+                successPage.scrollIntoView({ behavior: 'smooth' });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                loadingIndicator.style.display = 'none';
+                alert('An error occurred while submitting the application.');
+            });
+        }
+
+        function handleDocumentUpload(e, type) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!validTypes.includes(file.type)) {
+                alert('Please upload a PDF or Word document (PDF, DOC, DOCX).');
+                return;
+            }
+
+            // Validate file size (5MB max)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size exceeds 5MB limit.');
+                return;
+            }
+
+            // Create new document option
+            const optionsContainer = document.querySelector(`#${type}Options`);
+            const newOption = document.createElement('div');
+            newOption.className = 'document-option active';
+            newOption.dataset.documentId = `${type}${document.querySelectorAll(`#${type}Options .document-option`).length + 1}`;
+
+            // Remove active class from other options
+            document.querySelectorAll(`#${type}Options .document-option`).forEach(opt => opt.classList.remove('active'));
+
+            newOption.innerHTML = `
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+                </svg>
+                <div class="document-info">
+                    <div class="document-name">${file.name}</div>
+                    <div class="document-meta">Uploaded: ${new Date().toLocaleDateString()}</div>
+                </div>
+            `;
+
+            // Add click handler
+            newOption.addEventListener('click', function() {
+                document.querySelectorAll(`#${type}Options .document-option`).forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                const documentId = this.dataset.documentId;
+                switch (type) {
+                    case 'cv':
+                        selectedCvIdInput.value = documentId;
+                        break;
+                    case 'edu':
+                        selectedEduIdInput.value = documentId;
+                        break;
+                    case 'cert':
+                        selectedCertIdInput.value = documentId;
+                        break;
+                }
+            });
+
+            // Insert before the "Upload New" link
+            optionsContainer.appendChild(newOption);
+
+            // Update the hidden input value immediately after a new upload is selected
+            switch (type) {
+                case 'cv':
+                    selectedCvIdInput.value = newOption.dataset.documentId;
+                    break;
+                case 'edu':
+                    selectedEduIdInput.value = newOption.dataset.documentId;
+                    break;
+                case 'cert':
+                    selectedCertIdInput.value = newOption.dataset.documentId;
+                    break;
+            }
+
+            // Clear file input
+            e.target.value = '';
+        }
+
+        // Show floating submit button when form is scrolled out of view
+        window.addEventListener('scroll', () => {
+            const floatingBtn = document.querySelector('.floating-submit-btn');
+            if (!floatingBtn) return;
+
+            const formRect = applicationForm.getBoundingClientRect();
+            if (formRect.bottom < 0) {
+                floatingBtn.style.display = 'block';
+            } else {
+                floatingBtn.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

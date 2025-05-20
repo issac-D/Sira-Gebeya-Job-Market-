@@ -8,8 +8,73 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="scheduler-container">
-        <header class="scheduler-header">
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="/" class="logo">
+                    <span class="logo-icon">💼</span>
+                    <span>የስራ</span>-<span>ገበያ</span>
+                </a>
+            </div>
+            
+            <nav class="nav-container">
+                <ul class="nav-links">
+                    <li><a href="../dashboard/dashboard.html">HOME</a></li>
+                    <li><a href="../job management/job.html">Jobs</a></li>
+                    <li><a href="../interview schedule/interview.html">Interviews</a></li>
+                    <li><a href="../application tracking/app.html">Applications</a></li>
+                    <li><a href="../candidate pepline/pepline.html">Candidates</a></li>
+                    <li><a href="../message/message.html">Messages</a></li>
+                    <li><a href="../payment gateway/payment.html">Payments</a></li>
+                </ul>
+                
+                <div class="user-actions">
+                    <div class="guest-actions">
+                        <a href="../login/login.html" class="btn btn-logout">Logout</a>
+                    </div>
+                    <div class="user-dropdown">
+                        <div class="user-profile">
+                            <a href="../profile/profile.html"><img src="image.png" alt="Profile" class="profile-photo"></a>
+                            <span>Profile</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+        </div>
+      
+        <div class="mobile-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💼</span>
+                    <span>የስራ</span>-<span>ገበያ</span>
+                </div>
+                <button class="close-sidebar">×</button>
+            </div>
+            
+            <div class="mobile-profile">
+                <img src="image.png" alt="Profile" class="profile-photo">
+                <span>Profile</span>
+            </div>
+            
+            <ul class="mobile-nav-links">
+                <li><a href="../dashboard/dashboard.html">HOME</a></li>
+                <li><a href="../job management/job.html">Jobs</a></li>
+                <li><a href="../interview schedule/interview.html">Interview Scheduling</a></li>
+                <li><a href="../application tracking/app.html">Application Tracking</a></li>
+                <li><a href="../candidate pepline/pepline.html">Candidate Pipeline</a></li>
+                <li><a href="../message/message.html">Messages</a></li>
+                <li><a href="../payment gateway/payment.html">Payments</a></li>
+                <li class="guest-actions"><a href="../login/login.html">Logout</a></li>
+            </ul>
+        </div>
+      
+        <div class="overlay"></div>
+    </header>
+
+    <main class="scheduler-container">
+        <div class="scheduler-header">
             <h1>Interview Scheduler</h1>
             <div class="header-controls">
                 <button id="prevMonth" class="btn btn-icon">
@@ -20,7 +85,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
-        </header>
+        </div>
 
         <div class="calendar-container">
             <div class="calendar-header">
@@ -47,7 +112,7 @@
         <!-- Event Modal -->
         <div class="modal" id="eventModal">
             <div class="modal-content">
-                <h3>Schedule Interview</h3>
+                <h3 id="modalTitle">Schedule Interview</h3>
                 <div class="form-group">
                     <label for="eventTitle">Candidate Name</label>
                     <input type="text" id="eventTitle" placeholder="Enter candidate name">
@@ -71,7 +136,8 @@
                     </select>
                 </div>
                 <div class="modal-actions">
-                    <button id="saveEvent" class="btn btn-primary">Schedule</button>
+                    <button id="saveEvent" class="btn btn-primary">Save</button>
+                    <button id="updateEvent" class="btn btn-primary" style="display: none;">Update</button>
                     <button id="cancelEvent" class="btn btn-secondary">Cancel</button>
                 </div>
             </div>
@@ -82,11 +148,15 @@
             <div class="modal-content">
                 <h3 id="detailTitle">Interview Details</h3>
                 <div class="event-details">
+                    <p><strong>Candidate:</strong> <span id="detailCandidate"></span></p>
                     <p><strong>Date:</strong> <span id="detailDate"></span></p>
                     <p><strong>Time:</strong> <span id="detailTime"></span></p>
                     <p><strong>Duration:</strong> <span id="detailDuration"></span> minutes</p>
                 </div>
                 <div class="modal-actions">
+                    <button id="editEvent" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
                     <button id="startMeeting" class="btn btn-primary">
                         <i class="fas fa-video"></i> Start Meeting
                     </button>
@@ -97,7 +167,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="interview.js"></script>
 </body>

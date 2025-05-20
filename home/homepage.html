@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ስራ-ገበያ (Sira-Gebeya) - Empowering Dreams, One Job at a Time</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@300;400&display=swap');
+
+    :root {
+      --bg-dark: #0f1217;
+      --bg-gradient-start: #1c1f29;
+      --bg-gradient-end: #12151c;
+      --primary-color: #5a8dee;
+      --secondary-color: #47d6ac;
+      --accent-color: #ea580c;
+      --text-light: #e0e6f2;
+      --text-muted: #8a8e99;
+      --glow-color: #5a8dee88;
+      --hover-glow: 0 0 20px var(--primary-color);
+      --shadow-glow: 0 0 30px var(--primary-color);
+      --font-heading: 'Montserrat', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+      --transition-speed: 0.4s ease;
+      --border-radius: 20px;
+      --max-width: 1100px;
+      --section-padding: 4rem 1.5rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      z-index: 1100;
+      box-shadow: var(--shadow-glow);
+      backdrop-filter: saturate(180%) blur(12px);
+    }
+    nav .logo {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: 0.15em;
+      color: var(--primary-color);
+      user-select: none;
+      user-drag: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    nav .logo::before {
+      content: '💼';
+      font-size: 1.8rem;
+    }
+    nav ul {
+      display: flex;
+      gap: 2.5rem;
+    }
+    nav ul li a {
+      font-weight: 600;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: relative;
+      padding-bottom: 5px;
+      color: var(--text-light);
+      transition: color var(--transition-speed);
+      user-select: none;
+      user-drag: none;
+    }
+    nav ul li a:focus,
+    nav ul li a:hover {
+      color: var(--secondary-color);
+    }
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 3px;
+      bottom: 0;
+      left: 0;
+      background: var(--secondary-color);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+    nav ul li a:focus::after,
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    main {
+      margin-top: 72px;
+    }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(12,15,22,0.85) 0%, rgba(12,15,22,0.85) 100%),
+        url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80')
+        center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 1rem;
+      user-select: none;
+    }
+    .hero-content {
+      max-width: var(--max-width);
+      color: var(--text-light);
+      animation: fadeUp 1.4s ease forwards;
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      margin: 0 0 1rem;
+      line-height: 1.1;
+      user-select: none;
+    }
+    .hero h1 .amharic {
+      color: var(--secondary-color);
+      display: block;
+    }
+    .hero p.slogan {
+      font-size: 1.75rem;
+      font-weight: 300;
+      margin-bottom: 3rem;
+      color: var(--text-muted);
+      user-select: none;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 1.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.25rem;
+      padding: 1rem 3rem;
+      border-radius: 50px;
+      border: 3px solid var(--primary-color);
+      background: transparent;
+      color: var(--primary-color);
+      box-shadow: 0 0 12px transparent;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      transition:
+        background-color 0.35s ease,
+        color 0.35s ease,
+        box-shadow 0.35s ease,
+        transform 0.2s ease;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 100%;
+      background: var(--primary-color);
+      opacity: 0.15;
+      border-radius: 50px;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease;
+      z-index: 0;
+    }
+    .btn:hover::before,
+    .btn:focus::before {
+      width: 120%;
+    }
+    .btn:hover,
+    .btn:focus {
+      color: var(--bg-dark);
+      background-color: var(--primary-color);
+      box-shadow: var(--hover-glow);
+      outline: none;
+      transform: translateY(-4px);
+      z-index: 1;
+    }
+    .btn.secondary {
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+    .btn.secondary:hover,
+    .btn.secondary:focus {
+      color: var(--bg-dark);
+      background-color: var(--secondary-color);
+      box-shadow: 0 0 25px var(--secondary-color);
+    }
+
+    /* Features */
+    .features-section {
+      padding: var(--section-padding);
+      background: var(--bg-gradient-end);
+    }
+    .features-section h2 {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--secondary-color);
+      user-select: none;
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 15px var(--secondary-color);
+    }
+    .features-section p {
+      max-width: var(--max-width);
+      margin: 0 auto 4rem auto;
+      font-size: 1.2rem;
+      font-weight: 300;
+      text-align: center;
+      color: var(--text-muted);
+      user-select: none;
+      letter-spacing: 0.02em;
+    }
+    .features-grid {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: var(--max-width);
+      margin: auto;
+    }
+    .feature-card {
+      flex: 1 1 300px;
+      border-radius: var(--border-radius);
+      padding: 3rem 2.5rem;
+      text-align: center;
+      color: var(--text-light);
+      background-blend-mode: overlay;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 0 30px rgb(0 0 0 / 0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 350px;
+      transition: transform 0.3s ease, box-shadow 0.35s ease;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-glow);
+      z-index: 2;
+    }
+    .feature-card img {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 1.25rem;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary-color);
+      filter: drop-shadow(0 0 10px var(--primary-color));
+      background: rgba(0,0,0,0.25);
+      transition: filter 0.3s ease;
+      z-index: 2;
+    }
+    .feature-card h3 {
+      font-weight: 700;
+      font-size: 1.7rem;
+      margin-bottom: 1rem;
+      z-index: 2;
+    }
+    .feature-card p {
+      font-weight: 300;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      z-index: 2;
+    }
+    .feature-1 {
+      background-image:
+        linear-gradient(rgba(36,87,159,0.85), rgba(36,87,159,0.85)),
+        url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+    }
+    .feature-2 {
+      background-image:
+        linear-gradient(rgba(70,196,172,0.85), rgba(70,196,172,0.85)),
+        url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+    }
+    .feature-3 {
+      background-image:
+        linear-gradient(rgba(234,88,12,0.85), rgba(234,88,12,0.85)),
+        url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+      background-position: center center;
+    }
+
+    /* About */
+    section.about {
+      max-width: var(--max-width);
+      margin: 6rem auto 3rem;
+      padding: 4rem 3rem;
+      color: var(--text-light);
+      background: linear-gradient(135deg, #1e293b 0%, #0f1217 90%);
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 30px rgba(58, 107, 201, 0.85);
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUp 1.2s ease forwards;
+      animation-delay: 1.2s;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+      user-select: none;
+    }
+    section.about h2 {
+      grid-column: 1 / -1;
+      font-family: var(--font-heading);
+      color: var(--secondary-color);
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+      position: relative;
+      user-select: none;
+      text-shadow: 0 0 15px var(--secondary-color);
+    }
+    section.about h2::after {
+      content: '';
+      display: block;
+      width: 90px;
+      height: 5px;
+      background: var(--primary-color);
+      margin: 0.8rem auto 0;
+      border-radius: 4px;
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+    .text-content {
+      font-weight: 300;
+      font-size: 1.3rem;
+      line-height: 1.85;
+      max-width: 480px;
+      color: #c0c7d5;
+      letter-spacing: 0.02em;
+    }
+    .text-content strong, .text-content span.highlight {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 1.35rem;
+    }
+    .text-content p + p {
+      margin-top: 1.25rem;
+    }
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 0 25px var(--primary-color);
+    }
+    .image-container img {
+      width: 100%;
+      max-width: 500px;
+      object-fit: cover;
+      display: block;
+      border-radius: var(--border-radius);
+    }
+
+    /* Testimonial Slideshow */
+    .testimony-section {
+      background: var(--bg-gradient-start);
+      padding: var(--section-padding);
+      max-width: var(--max-width);
+      margin: 4rem auto;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-glow);
+      color: var(--text-light);
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeUp 1.2s ease forwards;
+      animation-delay: 0.9s;
+      user-select: none;
+      overflow: hidden;
+      position: relative;
+    }
+    .testimony-section h2 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 2.75rem;
+      margin-bottom: 2rem;
+      color: var(--primary-color);
+      text-align: center;
+      user-select: none;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 15px var(--primary-color);
+    }
+    .testimonial-slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      width: 100%;
+    }
+    .testimonial {
+      min-width: 100%;
+      padding: 2rem 3rem;
+      background: #12151c;
+      border-radius: var(--border-radius);
+      box-shadow: 0 0 20px #474d60aa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .testimonial img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 12px var(--primary-color);
+    }
+    .testimonial .name {
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+      color: var(--secondary-color);
+      user-select: text;
+    }
+    .testimonial .role {
+      font-size: 1rem;
+      color: var(--accent-color);
+      margin-bottom: 1.25rem;
+      font-weight: 600;
+      user-select: text;
+    }
+    .testimonial .text {
+      font-style: italic;
+      font-weight: 300;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 740px;
+      user-select: text;
+      letter-spacing: 0.02em;
+    }
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+      gap: 14px;
+    }
+    .slider-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      opacity: 0.4;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      user-select: none;
+      border: 2px solid transparent;
+    }
+    .slider-dot.active {
+      opacity: 1;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 14px var(--primary-color);
+    }
+
+    /* Contact Section */
+    section.contact {
+      background: var(--bg-gradient-end);
+      padding: var(--section-padding);
+      color: var(--text-light);
+      max-width: 900px;
+      margin: 3rem auto 6rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-glow);
+      user-select: none;
+    }
+    section.contact h2 {
+      font-family: var(--font-heading);
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 10px var(--primary-color);
+    }
+    section.contact p {
+      font-weight: 300;
+      font-size: 1.3rem;
+      max-width: 720px;
+      margin: 0 auto 3rem auto;
+      text-align: center;
+      color: var(--text-muted);
+      user-select: text;
+      letter-spacing: 0.02em;
+    }
+    .contact-info {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      font-weight: 400;
+      font-size: 1.1rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--secondary-color);
+      transition: color 0.3s ease;
+      cursor: pointer;
+      user-select: text;
+    }
+    .contact-item:hover {
+      color: var(--primary-color);
+    }
+    .contact-item svg {
+      fill: currentColor;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 3px var(--secondary-color));
+      transition: filter 0.3s ease;
+      user-select: none;
+    }
+
+    /* Footer */
+    footer {
+      background: #12151c;
+      color: var(--text-muted);
+      padding: 3rem 1.5rem;
+      font-size: 0.95rem;
+      user-select: none;
+      border-top: 1px solid #22293a;
+    }
+    footer .footer-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    footer .footer-section {
+      flex: 1 1 220px;
+      min-width: 200px;
+    }
+    footer h3 {
+      color: var(--primary-color);
+      font-family: var(--font-heading);
+      margin-bottom: 1rem;
+      font-size: 1.75rem;
+    }
+    footer ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    footer li {
+      margin-bottom: 0.7rem;
+    }
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      user-select: none;
+    }
+    footer a:hover {
+      color: var(--primary-color);
+    }
+    footer .social-icons {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 1rem;
+    }
+    footer .social-icons a {
+      font-size: 1.3rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    footer .social-icons a svg {
+      fill: currentColor;
+      width: 22px;
+      height: 22px;
+    }
+    footer .footer-bottom {
+      text-align: center;
+      margin-top: 2.5rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* Scroll reveal and glow hover effect */
+    .glow-hover {
+      transition: box-shadow 0.3s ease;
+    }
+    .glow-hover:hover,
+    .glow-hover:focus {
+      box-shadow: var(--hover-glow);
+      outline: none;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+      nav ul {
+        gap: 1.5rem;
+      }
+      .feature-card {
+        min-width: 280px;
+      }
+    }
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 3rem;
+      }
+      .hero p.slogan {
+        font-size: 1.25rem;
+      }
+      .features-section h2 {
+        font-size: 2rem;
+      }
+      section.about {
+        display: block;
+        padding: 3rem 2rem;
+      }
+      .text-content {
+        max-width: 100%;
+        font-size: 1.2rem;
+      }
+      .image-container {
+        margin-top: 2.5rem;
+      }
+      footer .footer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 2.5rem;
+      }
+      footer .footer-section {
+        min-width: auto;
+      }
+    }
+    @media (max-width: 480px) {
+      nav ul {
+        font-size: 0.9rem;
+        gap: 1rem;
+      }
+      .hero h1 {
+        font-size: 2.25rem;
+        letter-spacing: 0.06em;
+      }
+      .hero p.slogan {
+        font-size: 1rem;
+      }
+      .btn {
+        font-size: 1rem;
+        padding: 0.75rem 2rem;
+      }
+      .features-grid {
+        flex-direction: column;
+        gap: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav role="navigation" aria-label="Main navigation">
+    <div class="logo" aria-label="Website logo">ስራ-ገበያ</div>
+    <ul>
+      <li><a href="#home" class="glow-hover">Home</a></li>
+      <li><a href="#about" class="glow-hover">About</a></li>
+      <li><a href="#features" class="glow-hover">Features</a></li>
+      <li><a href="#testimonials" class="glow-hover">Testimonials</a></li>
+      <li><a href="#contact" class="glow-hover">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section id="home" class="hero" role="banner" aria-label="Hero section with site introduction">
+      <div class="hero-content">
+        <h1><span class="amharic">ስራ-ገበያ</span><br />Sira-Gebeya</h1>
+        <p class="slogan">Empowering Dreams, One Job at a Time</p>
+        <div class="cta-buttons" role="group" aria-label="Call to action buttons">
+          <a href="../job seeker/search.html" class="btn glow-hover" role="button" tabindex="0">Find a Work</a>
+          <a href="../company/login/login.html" class="btn secondary glow-hover" role="button" tabindex="0">Start Hiring</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features-section">
+      <h2>Why Choose ስራ-ገበያ?</h2>
+      <p>Connecting Ethiopia's top talent with the best employers through our innovative platform.</p>
+      <div class="features-grid">
+        <div class="feature-card feature-1">
+          <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=80&amp;q=80" alt="Quality Jobs" loading="lazy" />
+          <h3>Quality Jobs</h3>
+          <p>Access to thousands of verified job listings from Ethiopia's top companies.</p>
+        </div>
+        <div class="feature-card feature-2">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=80&amp;q=80" alt="Top Talent" loading="lazy" />
+          <h3>Top Talent</h3>
+          <p>Employers can find the most qualified candidates for their open positions.</p>
+        </div>
+        <div class="feature-card feature-3">
+          <img src="https://images.unsplash.com/photo-1532635248-1d6637043413?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=80&amp;q=80" alt="Career Growth" loading="lazy" />
+          <h3>Career Growth</h3>
+          <p>Resources and tools to help you advance in your professional journey.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about" aria-labelledby="about-title">
+      <h2 id="about-title">About ስራ-ገበያ</h2>
+      <div class="text-content">
+        <p><strong>Elevating Careers</strong> and <span class="highlight">Empowering Ethiopia</span>, ስራ-ገበያ is your digital gateway to meaningful employment opportunities across the nation.</p>
+        <p>Our platform seamlessly bridges the divide between talented job seekers and visionary employers, fostering dynamic connections that fuel growth and success.</p>
+        <p>Through a sleek, modern design coupled with interactive user experience, we provide a vibrant marketplace where skills and opportunity unite to shape brighter futures.</p>
+        <p><strong>Join us</strong> in transforming employment across Ethiopia — unleashing potential, inspiring dreams, and creating impact.</p>
+      </div>
+      <div class="image-container">
+        <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Ethiopian professional working at laptop" loading="lazy" />
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimony-section" aria-label="User testimonies and trust building">
+      <h2>What Our Users Say</h2>
+      <div class="testimonial-slider" aria-live="polite" aria-atomic="true" aria-roledescription="carousel">
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="1 of 10">
+          <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Photo of Jessica Santos" loading="lazy" />
+          <div class="name">Jessica Santos</div>
+          <div class="role">Marketing Specialist</div>
+          <div class="text">"Sira-Gebeya connected me with my dream job. The platform is so intuitive and the support team helped every step of the way."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="2 of 10">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Photo of Alemayehu Kebede" loading="lazy" />
+          <div class="name">Alemayehu Kebede</div>
+          <div class="role">Software Engineer</div>
+          <div class="text">"This platform made my job search efficient and straightforward. Highly recommend to job seekers in Ethiopia."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="3 of 10">
+          <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Photo of Selamawit Assefa" loading="lazy" />
+          <div class="name">Selamawit Assefa</div>
+          <div class="role">HR Manager</div>
+          <div class="text">"Our company found exceptional talent through this site. The recruitment process became much easier and faster."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="4 of 10">
+          <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Photo of Michael Johnson" loading="lazy" />
+          <div class="name">Michael Johnson</div>
+          <div class="role">Project Manager</div>
+          <div class="text">"The diversity and quality of candidates available impressed me. A must-use for employers."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="5 of 10">
+          <img src="https://randomuser.me/api/portraits/women/78.jpg" alt="Photo of Fatima Ibrahim" loading="lazy" />
+          <div class="name">Fatima Ibrahim</div>
+          <div class="role">Graphic Designer</div>
+          <div class="text">"Finding freelance gigs has never been this simple. Great platform for creatives."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="6 of 10">
+          <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="Photo of Binyam Tesfaye" loading="lazy" />
+          <div class="name">Binyam Tesfaye</div>
+          <div class="role">Data Analyst</div>
+          <div class="text">"Thanks to Sira-Gebeya, I transitioned into a new career smoothly. The resources provided really helped."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="7 of 10">
+          <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Photo of Helen Smith" loading="lazy" />
+          <div class="name">Helen Smith</div>
+          <div class="role">Recruiter</div>
+          <div class="text">"The platform’s candidate management tools are excellent, saving us time and improving hiring quality."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="8 of 10">
+          <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Photo of Dawit Kebede" loading="lazy" />
+          <div class="name">Dawit Kebede</div>
+          <div class="role">Entrepreneur</div>
+          <div class="text">"Posting job openings and managing applications is seamless and efficient. Highly recommended."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="9 of 10">
+          <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Photo of Sara Ahmed" loading="lazy" />
+          <div class="name">Sara Ahmed</div>
+          <div class="role">Customer Support Specialist</div>
+          <div class="text">"I found a supportive community and great job leads here. It’s a wonderful place for career growth."</div>
+        </div>
+        <div class="testimonial" role="group" aria-roledescription="slide" aria-label="10 of 10">
+          <img src="https://randomuser.me/api/portraits/men/15.jpg" alt="Photo of Daniel Morgan" loading="lazy" />
+          <div class="name">Daniel Morgan</div>
+          <div class="role">IT Consultant</div>
+          <div class="text">"The platform helped me connect with multiple clients and expand my professional network."</div>
+        </div>
+      </div>
+      <div class="slider-dots" role="tablist" aria-label="Select testimonial slide"></div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Contact Us</h2>
+      <p>Have questions or want to connect? Reach out to us — we’re here to help build your future.</p>
+      <div class="contact-info" role="list">
+        <a href="mailto:support@sira-gebeya.et" class="contact-item glow-hover" role="listitem" aria-label="Email support@sira-gebeya.et">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22"><path d="M2 6v12h20V6H2zm18 2l-8 5-8-5V8l8 5 8-5v.91z"/></svg>
+          support@sira-gebeya.et
+        </a>
+        <a href="tel:+251911000000" class="contact-item glow-hover" role="listitem" aria-label="Phone number +251 911 000000">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22"><path d="M6.6 10.8L8 9.4c.1-.1.1-.3 0-.4L5.4 5c-.1-.1-.4-.1-.4 0l-2 2c-.6 3.5 1.7 6.8 5.1 7.3l2-2c.1-.1 0-.4 0-.4zM19 15v-2.2l-3-3V6.1l-2 2v9h7v-.1z"/></svg>
+          +251 911 000000
+        </a>
+        <div class="contact-item" role="listitem" aria-label="Location">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22"><path d="M12 2C8.1 2 5 5.1 5 9c0 5 7 13 7 13s7-8.1 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>
+          Addis Ababa, Ethiopia
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>ስራ-ገበያ</h3>
+        <p>Ethiopia's premier job marketplace connecting talent with opportunity.</p>
+        <div class="social-icons" role="list" aria-label="Social media links">
+          <a href="#" aria-label="Facebook" role="listitem" tabindex="0">
+            <svg fill="currentColor" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M22.675 0h-21.35C.581 0 0 .58 0 1.299v21.403c0 .72.581 1.298 1.325 1.298h11.495v-9.294h-3.125v-3.622h3.125v-2.672c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.466.099 2.797.142v3.243h-1.919c-1.505 0-1.796.715-1.796 1.763v2.311h3.59l-.467 3.622h-3.123V24h6.116c.737 0 1.324-.576 1.324-1.298V1.3c0-.718-.587-1.298-1.308-1.298z"/></svg>
+          </a>
+          <a href="#" aria-label="Twitter" role="listitem" tabindex="0">
+            <svg fill="currentColor" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M24 4.557a9.9 9.9 0 01-2.828.775 4.932 4.932 0 002.165-2.724c-.951.565-2.005.974-3.127 1.195a4.918 4.918 0 00-8.381 4.482C7.691 8.094 4.066 6.13 1.64 3.161a4.904 4.904 0 00-.666 2.475 4.918 4.918 0 002.188 4.096 4.903 4.903 0 01-2.228-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.936 4.936 0 01-2.224.084 4.92 4.92 0 004.6 3.419A9.867 9.867 0 010 19.54a13.933 13.933 0 007.548 2.209c9.056 0 14.01-7.506 14.01-14.009 0-.213-.005-.425-.014-.636A9.936 9.936 0 0024 4.557z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn" role="listitem" tabindex="0">
+            <svg fill="currentColor" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20.447 20.452h-3.554V14.7c0-1.385-.028-3.167-1.931-3.167-1.933 0-2.23 1.508-2.23 3.063v5.856H9.158V9h3.414v1.561h.047c.476-.9 1.637-1.85 3.369-1.85 3.602 0 4.267 2.37 4.267 5.451v6.29zM5.337 7.433a2.07 2.07 0 110-4.139 2.07 2.07 0 010 4.139zm1.777 13.019H3.56V9h3.554v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.543C0 23.23.792 24 1.771 24h20.451c.98 0 1.773-.77 1.773-1.728V1.729C24 .774 23.204 0 22.225 0z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram" role="listitem" tabindex="0">
+            <svg fill="currentColor" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.849.07 1.366.061 2.633.34 3.608 1.315.974.975 1.249 2.243 1.315 3.608.059 1.265.069 1.645.069 4.849s-.011 3.584-.069 4.849c-.066 1.366-.341 2.633-1.315 3.608s-2.242 1.254-3.608 1.315c-1.265.059-1.645.07-4.849.07s-3.584-.011-4.849-.07c-1.366-.064-2.633-.34-3.608-1.315s-1.248-2.242-1.315-3.608c-.06-1.265-.07-1.645-.07-4.849s.011-3.584.07-4.849c.064-1.366.34-2.633 1.315-3.608s2.242-1.249 3.608-1.315c1.265-.059 1.645-.07 4.849-.07zm0-2.163C8.737 0 8.332.013 7.052.073 5.772.132 4.563.412 3.513 1.463 2.462 2.514 2.18 3.722 2.121 5.002c-.06 1.28-.073 1.685-.073 5.002s.013 3.722.073 5.002c.059 1.28.341 2.489 1.392 3.54 1.05 1.05 2.258 1.332 3.538 1.391 1.281.059 1.686.073 5.003.073s3.722-.014 5.002-.073c1.28-.059 2.489-.341 3.54-1.391s1.332-2.258 1.391-3.538c.059-1.281.073-1.686.073-5.003s-.014-3.722-.073-5.002c-.059-1.281-.341-2.491-1.391-3.54-1.05-1.05-2.258-1.332-3.538-1.391C15.668.013 15.264 0 12 0z"/><circle cx="12" cy="12" r="3.6"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Contact Info</h3>
+        <ul>
+          <li>📍 Addis Ababa, Ethiopia</li>
+          <li>📞 +251 911 000000</li>
+          <li>📧 info@siragebeya.com</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom" style="text-align:center; margin-top:2.5rem; color: var(--text-muted); font-size: 0.85rem; letter-spacing: 0.06em;">
+      &copy; 2024 ስራ-ገበያ (Sira-Gebeya). All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // Intersection Observer animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const animatedElements = document.querySelectorAll('section.about, section.features-section, section.testimony-section, section.contact');
+      const observerOptions = { root:null, rootMargin:'0px', threshold:0.15 };
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            obs.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+      animatedElements.forEach(el => observer.observe(el));
+    });
+
+    // Testimonial slider logic - 2 second interval
+    document.addEventListener('DOMContentLoaded', () => {
+      const slider = document.querySelector('.testimonial-slider');
+      const testimonials = slider.children;
+      const total = testimonials.length;
+      const dotsContainer = document.querySelector('.slider-dots');
+      let currentIndex = 0;
+      const intervalTime = 2000;
+      let interval;
+
+      for(let i=0; i<total; i++){
+        const dot = document.createElement('button');
+        dot.classList.add('slider-dot');
+        dot.setAttribute('aria-label', `Show slide ${i+1}`);
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('tabindex', i === 0 ? '0' : '-1');
+        if(i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => {
+          currentIndex = i;
+          updateSlider();
+          resetInterval();
+        });
+        dotsContainer.appendChild(dot);
+      }
+      const dots = dotsContainer.children;
+
+      function updateSlider() {
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        for(let i=0; i<dots.length; i++){
+          dots[i].classList.toggle('active', i === currentIndex);
+          dots[i].setAttribute('tabindex', i === currentIndex ? '0' : '-1');
+        }
+      }
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % total;
+        updateSlider();
+      }
+      function resetInterval() {
+        clearInterval(interval);
+        interval = setInterval(nextSlide, intervalTime);
+      }
+      interval = setInterval(nextSlide, intervalTime);
+    });
+  </script>
+</body>
+</html>
+

@@ -313,9 +313,69 @@ body {
     animation: slideUp 0.3s ease;
 }
 
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--shadow);
+}
+
+.modal-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.modal-icon.success {
+    color: var(--success);
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text);
+}
+
+.modal-message {
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.modal-redirect {
+    font-size: 14px;
+    color: var(--text);
+    opacity: 0.8;
+    margin-top: 16px;
+}
+
+/* Animations */
 @keyframes slideUp {
     from { transform: translateY(100%); }
     to { transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @media (max-width: 480px) {
@@ -325,5 +385,21 @@ body {
 
     .payment-cards {
         grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        padding: 24px;
+    }
+    
+    .modal-icon {
+        font-size: 50px;
+    }
+    
+    .modal-title {
+        font-size: 20px;
+    }
+    
+    .modal-message {
+        font-size: 14px;
     }
 }

@@ -8,6 +8,471 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body data-role="hr">
+  <header>
+    <style>
+      /* CSS Styles */
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --text-color: #333;
+        --light-color: #f8f9fa;
+        --dark-color: #2c3e50;
+        --sidebar-width: 280px;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      
+      header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        gap: 2rem;
+      }
+      
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 150px;
+      }
+      
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+      
+      .logo span:first-child {
+        color: var(--accent-color);
+      }
+      
+      .logo-icon {
+        font-size: 2rem;
+        margin-right: 8px;
+      }
+      
+      .nav-container {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+      }
+      
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 1.5rem;
+        margin-left: 2rem;
+      }
+      
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+        font-size: 1rem;
+        white-space: nowrap;
+      }
+      
+      .nav-links a:hover {
+        color: var(--secondary-color);
+      }
+      
+      .user-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+      
+      .btn-login {
+        background-color: transparent;
+        color: white;
+        border: 1px solid white;
+      }
+      
+      .btn-login:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .btn-register {
+        background-color: var(--accent-color);
+        color: white;
+        border: 1px solid var(--accent-color);
+      }
+      
+      .btn-register:hover {
+        background-color: #c0392b;
+      }
+      
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-left: auto;
+      }
+      
+      /* User dropdown styles */
+      .user-dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: white;
+      }
+      
+      .user-icon {
+        font-size: 2rem;
+      }
+      
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: white;
+        min-width: 200px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      
+      .dropdown-content a {
+        color: var(--text-color);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s;
+      }
+      
+      .dropdown-content a:hover {
+        background-color: #f1f1f1;
+      }
+      
+      .user-dropdown:hover .dropdown-content {
+        display: block;
+      }
+      
+      /* Mobile sidebar styles */
+      .mobile-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: var(--sidebar-width);
+        height: 100vh;
+        background-color: var(--primary-color);
+        transition: left 0.3s ease;
+        z-index: 1001;
+        padding: 1rem;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        overflow-y: auto;
+      }
+      
+      .mobile-sidebar.active {
+        left: 0;
+      }
+      
+      .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 1rem;
+      }
+      
+      .close-sidebar {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      
+      .mobile-nav-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .mobile-nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        display: block;
+        padding: 0.75rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      
+      .mobile-nav-links a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: none;
+      }
+      
+      .overlay.active {
+        display: block;
+      }
+      
+      /* Responsive styles */
+      @media (max-width: 1200px) {
+        .nav-links {
+          gap: 1rem;
+          margin-left: 1rem;
+        }
+      }
+      
+      @media (max-width: 992px) {
+        .nav-links {
+          display: none;
+        }
+        
+        .user-actions {
+          display: none;
+        }
+        
+        .mobile-menu-btn {
+          display: block;
+        }
+        
+        .header-container {
+          gap: 1rem;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        header {
+          padding: 1rem;
+        }
+        
+        .logo {
+          font-size: 1.5rem;
+        }
+        
+        .logo-icon {
+          font-size: 1.5rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        :root {
+          --sidebar-width: 75%;
+        }
+        
+        .logo-container {
+          min-width: auto;
+        }
+      }
+    </style>
+
+    <div class="header-container">
+      <div class="logo-container">
+        <a href="/" class="logo">
+          <span class="logo-icon">💼</span>
+          <span>ስራ</span>-<span>ገበያ</span>
+        </a>
+      </div>
+      
+      <nav class="nav-container">
+        <ul class="nav-links">
+          <li><a href="../dashboard/dashboard.html">HOME</a></li>
+                    <li><a href="../job management/job.html">Jobs</a></li>
+                    <li><a href="../interview schedule/interview.html">Interviews</a></li>
+                    <li><a href="../application tracking/app.html">Applications</a></li>
+                    <li><a href="../candidate pepline/pepline.html">Candidates</a></li>
+                    <li><a href="../message/message.html">Messages</a></li>
+                    <li><a href="../payment gateway/payment.html">Payments</a></li>
+        </ul>
+        
+        <div class="user-actions">
+          <!-- Shown when user is NOT logged in -->
+          <div class="guest-actions">
+            <a href="/login" class="btn btn-login">Login</a>
+            <a href="/register" class="btn btn-register">Register</a>
+          </div>
+          
+          <!-- Shown when user IS logged in -->
+          <div class="user-dropdown" style="display: none;">
+            <div class="user-profile">
+              <i class="fas fa-user-circle user-icon"></i>
+              <span>Profile</span>
+            </div>
+            <div class="dropdown-content">
+              <a href="/profile">My Profile</a>
+              <a href="/application-tracking">My Applications</a>
+              <a href="/interview-scheduling">My Interviews</a>
+              <a href="/messages">Messages</a>
+              <a href="/settings">Settings</a>
+              <a href="/logout">Logout</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+      
+      <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+    </div>
+  
+    <!-- Mobile sidebar -->
+    <div class="mobile-sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">💼</span>
+          <span>ስራ</span>-<span>ገበያ</span>
+        </div>
+        <button class="close-sidebar">×</button>
+      </div>
+      
+      <ul class="mobile-nav-links">
+        <li><a href="../profile/profile.html">Profile</a></li>
+        <li><a href="../job management/job.html">Jobs</a></li>
+        <li><a href="../interview schedule/interview.html">Interview Scheduling</a></li>
+        <li><a href="../application tracking/app.html">Application Tracking</a></li>
+        <li><a href="../candidate pipeline/pepline.html">Candidate Pipeline</a></li>
+        <li><a href="./message/message.html">Messages</a></li>
+        <li><a href="../payment gateway/payment.html">Payments</a></li>
+        <li class="guest-actions"><a href="../login/login.html">logout</a></li>
+      </ul>
+    </div>
+  
+    <!-- Overlay for sidebar -->
+    <div class="overlay"></div>
+  
+    <script>
+      // JavaScript functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        // Initialize login state from localStorage
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        // Elements
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileSidebar = document.querySelector('.mobile-sidebar');
+        const closeSidebar = document.querySelector('.close-sidebar');
+        const overlay = document.querySelector('.overlay');
+        const guestActions = document.querySelectorAll('.guest-actions');
+        const userDropdown = document.querySelector('.user-dropdown');
+        const userActions = document.querySelectorAll('.user-actions');
+
+        // Validate DOM elements
+        if (!mobileMenuBtn || !mobileSidebar || !closeSidebar || !overlay || !userDropdown) {
+          console.error('One or more DOM elements are missing');
+          return;
+        }
+
+        // Set initial state based on login status
+        function updateLoginState() {
+          if (isLoggedIn) {
+            guestActions.forEach(el => el.style.display = 'none');
+            userDropdown.style.display = 'block';
+            userActions.forEach(el => el.style.display = 'block');
+          } else {
+            guestActions.forEach(el => el.style.display = 'block');
+            userDropdown.style.display = 'none';
+            userActions.forEach(el => el.style.display = 'none');
+          }
+        }
+        updateLoginState();
+
+        // Mobile sidebar toggle
+        mobileMenuBtn.addEventListener('click', function() {
+          mobileSidebar.classList.add('active');
+          overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+
+        // Close sidebar
+        closeSidebar.addEventListener('click', closeMobileSidebar);
+        overlay.addEventListener('click', closeMobileSidebar);
+
+        function closeMobileSidebar() {
+          mobileSidebar.classList.remove('active');
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+
+        // Close sidebar when clicking a link
+        const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileLinks.forEach(link => {
+          link.addEventListener('click', closeMobileSidebar);
+        });
+
+        // Responsive adjustments
+        function handleResize() {
+          if (window.innerWidth > 992) {
+            closeMobileSidebar();
+          }
+        }
+        
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        // Simulate login/logout for demo
+        window.toggleLogin = function() {
+          isLoggedIn = !isLoggedIn;
+          localStorage.setItem('isLoggedIn', isLoggedIn);
+          updateLoginState();
+        };
+
+        // Handle logout link clicks
+        const logoutLinks = document.querySelectorAll('a[href="/logout"]');
+        logoutLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.toggleLogin();
+          });
+        });
+      });
+    </script>
+</header>
     <div class="pipeline-container">
         <header class="pipeline-header">
             <h1>Candidate Pipeline</h1>

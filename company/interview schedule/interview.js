@@ -8,16 +8,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const eventModal = document.getElementById('eventModal');
     const eventDetailModal = document.getElementById('eventDetailModal');
     const saveEventBtn = document.getElementById('saveEvent');
+    const updateEventBtn = document.getElementById('updateEvent');
     const cancelEventBtn = document.getElementById('cancelEvent');
     const closeDetailBtn = document.getElementById('closeDetail');
     const deleteEventBtn = document.getElementById('deleteEvent');
+    const editEventBtn = document.getElementById('editEvent');
     const startMeetingBtn = document.getElementById('startMeeting');
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileSidebar = document.querySelector('.mobile-sidebar');
+    const closeSidebar = document.querySelector('.close-sidebar');
+    const overlay = document.querySelector('.overlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const eventTitleInput = document.getElementById('eventTitle');
+    const eventDateInput = document.getElementById('eventDate');
+    const eventTimeSelect = document.getElementById('eventTime');
+    const eventDurationSelect = document.getElementById('eventDuration');
+    const detailTitleEl = document.getElementById('detailTitle');
+    const detailCandidateEl = document.getElementById('detailCandidate');
+    const detailDateEl = document.getElementById('detailDate');
+    const detailTimeEl = document.getElementById('detailTime');
+    const detailDurationEl = document.getElementById('detailDuration');
 
     // State
     let currentDate = new Date();
     let selectedDate = null;
     let selectedEvent = null;
     let db = null;
+    let isEditing = false;
 
     // Initialize the scheduler
     initScheduler();
@@ -38,10 +55,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         saveEventBtn.addEventListener('click', saveEvent);
-        cancelEventBtn.addEventListener('click', () => eventModal.classList.remove('active'));
-        closeDetailBtn.addEventListener('click', () => eventDetailModal.classList.remove('active'));
+        updateEventBtn.addEventListener('click', updateEvent);
+        cancelEventBtn.addEventListener('click', closeEventModal);
+        closeDetailBtn.addEventListener('click', closeEventDetailModal);
         deleteEventBtn.addEventListener('click', deleteEvent);
+        editEventBtn.addEventListener('click', editEvent);
         startMeetingBtn.addEventListener('click', startMeeting);
+
+        // Mobile menu toggle
+        mobileMenuBtn.addEventListener('click', openMobileSidebar);
+        closeSidebar.addEventListener('click', closeMobileSidebar);
+        overlay.addEventListener('click', closeMobileSidebar);
+
+        // Close sidebar when clicking a link
+        const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileSidebar);
+        });
 
         // Request notification permission
         if ('Notification' in window) {
@@ -50,6 +80,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Render initial calendar
         renderCalendar();
+    }
+
+    function openMobileSidebar() {
+        mobileSidebar.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileSidebar() {
+        mobileSidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
     }
 
     function initDB() {
@@ -216,9 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-
-        // Re-render events to show conflicts
-        loadEvents();
     }
 
     function markConflictInDB(eventId) {
@@ -253,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
             day: 'numeric' 
         }).format(date);
         
-        document.getElementById('eventDate').value = dateStr;
+        eventDateInput.value = dateStr;
         
         // Generate time slots (9AM-5PM in 30 minute increments)
         timeSlots.innerHTML = '';
@@ -292,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                 }
                 
-                timeSlot.addEventListener('click', () => openEventModal(time));
                 timeSlots.appendChild(timeSlot);
             }
         }
@@ -301,37 +339,58 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('timeSlotsContainer').style.display = 'block';
     }
 
-    function openEventModal(time) {
-        const eventTime = document.getElementById('eventTime');
-        eventTime.innerHTML = '';
+    function openEventModal(time = null) {
+        isEditing = false;
+        modalTitle.textContent = 'Schedule Interview';
+        saveEventBtn.style.display = 'block';
+        updateEventBtn.style.display = 'none';
         
-        // Add the selected time as the first option
-        const selectedOption = document.createElement('option');
-        selectedOption.value = time;
-        selectedOption.textContent = time;
-        selectedOption.selected = true;
-        eventTime.appendChild(selectedOption);
+        eventTitleInput.value = '';
+        eventDurationSelect.value = '60';
+        eventTimeSelect.innerHTML = '';
         
-        // Add other time options around the selected time
-        for (let i = 1; i <= 2; i++) {
-            const earlierTime = subtractMinutes(time, i * 30);
-            if (earlierTime >= '09:00') {
-                const option = document.createElement('option');
-                option.value = earlierTime;
-                option.textContent = earlierTime;
-                eventTime.appendChild(option);
-            }
+        if (time) {
+            // Add the selected time as the first option
+            const selectedOption = document.createElement('option');
+            selectedOption.value = time;
+            selectedOption.textContent = time;
+            selectedOption.selected = true;
+            eventTimeSelect.appendChild(selectedOption);
             
-            const laterTime = addMinutes(time, i * 30);
-            if (laterTime <= '17:00') {
+            // Add other time options around the selected time
+            for (let i = 1; i <= 2; i++) {
+                const earlierTime = subtractMinutes(time, i * 30);
+                if (earlierTime >= '09:00') {
+                    const option = document.createElement('option');
+                    option.value = earlierTime;
+                    option.textContent = earlierTime;
+                    eventTimeSelect.appendChild(option);
+                }
+                
+                const laterTime = addMinutes(time, i * 30);
+                if (laterTime <= '17:00') {
+                    const option = document.createElement('option');
+                    option.value = laterTime;
+                    option.textContent = laterTime;
+                    eventTimeSelect.appendChild(option);
+                }
+            }
+        } else {
+            // Add default time options if no specific time is selected
+            for (let hour = 9; hour <= 16; hour++) {
+                const time = `${String(hour).padStart(2, '0')}:00`;
                 const option = document.createElement('option');
-                option.value = laterTime;
-                option.textContent = laterTime;
-                eventTime.appendChild(option);
+                option.value = time;
+                option.textContent = time;
+                eventTimeSelect.appendChild(option);
             }
         }
         
         eventModal.classList.add('active');
+    }
+
+    function closeEventModal() {
+        eventModal.classList.remove('active');
     }
 
     function subtractMinutes(time, minutes) {
@@ -342,9 +401,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function saveEvent() {
-        const title = document.getElementById('eventTitle').value.trim();
-        const time = document.getElementById('eventTime').value;
-        const duration = document.getElementById('eventDuration').value;
+        const title = eventTitleInput.value.trim();
+        const time = eventTimeSelect.value;
+        const duration = eventDurationSelect.value;
         
         if (!title) {
             alert('Please enter a candidate name');
@@ -368,8 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         store.add(event);
         
         transaction.oncomplete = function() {
-            eventModal.classList.remove('active');
-            document.getElementById('eventTitle').value = '';
+            closeEventModal();
             renderCalendar();
             
             // Show notification
@@ -384,17 +442,112 @@ document.addEventListener('DOMContentLoaded', function() {
     function showEventDetails(event) {
         selectedEvent = event;
         
-        document.getElementById('detailTitle').textContent = event.title;
-        document.getElementById('detailDate').textContent = new Date(event.date).toLocaleDateString('en-US', { 
+        detailTitleEl.textContent = 'Interview Details';
+        detailCandidateEl.textContent = event.title;
+        detailDateEl.textContent = new Date(event.date).toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
         });
-        document.getElementById('detailTime').textContent = event.time;
-        document.getElementById('detailDuration').textContent = event.duration;
+        detailTimeEl.textContent = event.time;
+        detailDurationEl.textContent = event.duration;
         
         eventDetailModal.classList.add('active');
+    }
+
+    function closeEventDetailModal() {
+        eventDetailModal.classList.remove('active');
+    }
+
+    function editEvent() {
+        isEditing = true;
+        modalTitle.textContent = 'Edit Interview';
+        saveEventBtn.style.display = 'none';
+        updateEventBtn.style.display = 'block';
+        
+        eventTitleInput.value = selectedEvent.title;
+        eventDateInput.value = new Date(selectedEvent.date).toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        // Set up time options
+        eventTimeSelect.innerHTML = '';
+        const currentTime = selectedEvent.time;
+        const selectedOption = document.createElement('option');
+        selectedOption.value = currentTime;
+        selectedOption.textContent = currentTime;
+        selectedOption.selected = true;
+        eventTimeSelect.appendChild(selectedOption);
+        
+        // Add surrounding time options
+        for (let i = 1; i <= 2; i++) {
+            const earlierTime = subtractMinutes(currentTime, i * 30);
+            if (earlierTime >= '09:00') {
+                const option = document.createElement('option');
+                option.value = earlierTime;
+                option.textContent = earlierTime;
+                eventTimeSelect.appendChild(option);
+            }
+            
+            const laterTime = addMinutes(currentTime, i * 30);
+            if (laterTime <= '17:00') {
+                const option = document.createElement('option');
+                option.value = laterTime;
+                option.textContent = laterTime;
+                eventTimeSelect.appendChild(option);
+            }
+        }
+        
+        eventDurationSelect.value = selectedEvent.duration;
+        
+        closeEventDetailModal();
+        eventModal.classList.add('active');
+    }
+
+    function updateEvent() {
+        const title = eventTitleInput.value.trim();
+        const time = eventTimeSelect.value;
+        const duration = eventDurationSelect.value;
+        
+        if (!title) {
+            alert('Please enter a candidate name');
+            return;
+        }
+        
+        // Get the latest version of the event from the database
+        const transaction = db.transaction(['events'], 'readwrite');
+        const store = transaction.objectStore('events');
+        
+        const getRequest = store.get(selectedEvent.id);
+        
+        getRequest.onsuccess = function() {
+            const event = getRequest.result;
+            if (event) {
+                // Update the event properties
+                event.title = title;
+                event.time = time;
+                event.duration = duration;
+                event.conflict = false; // Reset conflict flag
+                
+                // Put the updated event back in the database
+                const putRequest = store.put(event);
+                
+                putRequest.onsuccess = function() {
+                    closeEventModal();
+                    renderCalendar();
+                    
+                    // Show notification
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        new Notification('Interview Updated', {
+                            body: `Interview with ${title} has been updated`
+                        });
+                    }
+                };
+            }
+        };
     }
 
     function deleteEvent() {
@@ -410,13 +563,16 @@ document.addEventListener('DOMContentLoaded', function() {
         store.delete(selectedEvent.id);
         
         transaction.oncomplete = function() {
-            eventDetailModal.classList.remove('active');
+            closeEventDetailModal();
             renderCalendar();
+            
+            // Show notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Interview Cancelled', {
+                    body: `Interview with ${selectedEvent.title} has been cancelled`
+                });
+            }
         };
-    }
-
-    function generateZoomLink() {
-        return `https://zoom.us/j/${Math.random().toString(36).slice(2,11)}`;
     }
 
     function startMeeting() {
@@ -429,5 +585,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Open the Zoom link in a new tab
         window.open(zoomLink, '_blank');
+    }
+
+    function generateZoomLink() {
+        return `https://zoom.us/j/${Math.random().toString(36).slice(2,11)}`;
     }
 });

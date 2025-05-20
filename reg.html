@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Registration</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#16A34A',
+                        accent: '#EA580C',
+                        'light-gray': '#f3f4f6'
+                    },
+                    borderRadius: {
+                        'button': '8px'
+                    },
+                    boxShadow: {
+                        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+    <style>
+        /* Custom CSS for enhanced styling and animations */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #374151;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(22, 163, 74, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .form-container {
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-input {
+            transition: all 0.3s ease;
+            border: 1px solid #d1d5db;
+            background-color: #fff;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        .form-input.error {
+            border-color: #EF4444;
+            animation: shake 0.3s linear;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .submit-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        .dropzone {
+            transition: all 0.3s ease;
+            border: 2px dashed #d1d5db;
+            background-color: #fff;
+        }
+
+        .dropzone.dragover {
+            background-color: #f0f9ff;
+            border-color: #2563EB;
+        }
+
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            margin-right: 8px;
+            position: relative;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #2563EB;
+            border-color: #2563EB;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .ethiopian-border {
+            background-image: linear-gradient(to right, #EA580C, #16A34A, #2563EB);
+            height: 3px;
+            border-radius: 3px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+            max-width: 90%;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .toast.error {
+            background-color: #EF4444;
+        }
+
+        .toast.success {
+            background-color: #16A34A;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.3s forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+            }
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .toggle-password:hover {
+            color: #2563EB;
+        }
+
+        .form-card {
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .input-label {
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+            transition: color 0.2s;
+        }
+
+        .input-focused {
+            color: #2563EB;
+        }
+
+        .floating-icon {
+            position: absolute;
+            opacity: 0.5;
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8">
+    <!-- Decorative floating elements -->
+    <div class="floating-icon text-primary opacity-10" style="top: 10%; left: 10%; font-size: 5rem;"><i class="ri-building-line"></i></div>
+    <div class="floating-icon text-secondary opacity-10" style="top: 70%; left: 80%; font-size: 4rem; animation-delay: 1s;"><i class="ri-mail-line"></i></div>
+    <div class="floating-icon text-accent opacity-10" style="top: 30%; left: 85%; font-size: 6rem; animation-delay: 2s;"><i class="ri-user-line"></i></div>
+
+    <div class="w-full max-w-md form-container">
+        <div class="mb-6 text-center">
+            <h1 class="text-4xl font-['Pacifico'] text-primary mb-2 drop-shadow-md">ስራ-ገበያ</h1>
+            <div class="ethiopian-border mb-4 mx-auto w-32"></div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Company Registration</h2>
+            <p class="text-gray-600">Complete the form below to register your company with us</p>
+        </div>
+        
+        <div class="form-card p-6 md:p-8">
+            <form id="registrationForm" class="space-y-6">
+                <div class="form-group">
+                    <label for="companyName" class="input-label text-sm text-gray-700">Company Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="companyName" name="companyName" class="form-input w-full px-4 py-3 rounded-lg text-gray-800 bg-white shadow-sm" required>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="input-label text-sm text-gray-700">Email Address <span class="text-red-500">*</span></label>
+                    <input type="email" id="email" name="email" class="form-input w-full px-4 py-3 rounded-lg text-gray-800 bg-white shadow-sm" required>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="input-label text-sm text-gray-700">Phone Number <span class="text-red-500">*</span></label>
+                    <input type="tel" id="phone" name="phone" class="form-input w-full px-4 py-3 rounded-lg text-gray-800 bg-white shadow-sm" required>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="input-label text-sm text-gray-700">Password <span class="text-red-500">*</span></label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" class="form-input w-full px-4 py-3 rounded-lg text-gray-800 bg-white shadow-sm pr-10" required>
+                        <button type="button" class="toggle-password">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
+                    </div>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
+                    <p class="text-xs text-gray-500 mt-1">Password must be at least 6 characters</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword" class="input-label text-sm text-gray-700">Confirm Password <span class="text-red-500">*</span></label>
+                    <div class="password-container">
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-input w-full px-4 py-3 rounded-lg text-gray-800 bg-white shadow-sm pr-10" required>
+                        <button type="button" class="toggle-password">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
+                    </div>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="input-label text-sm text-gray-700">Business License <span class="text-red-500">*</span></label>
+                    <div id="dropzone" class="dropzone flex flex-col items-center justify-center h-40 rounded-lg p-4 cursor-pointer bg-white shadow-sm">
+                        <div class="w-12 h-12 flex items-center justify-center text-secondary mb-2">
+                            <i class="ri-upload-cloud-line ri-2x"></i>
+                        </div>
+                        <p class="text-gray-500 text-center">Click to upload your business license</p>
+                        <p class="text-xs text-gray-400 mt-1">Supported formats: PDF, JPG, PNG (Max 5MB)</p>
+                    </div>
+                    <input type="file" id="licenseFile" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
+                    <div id="filePreview" class="hidden mt-3 p-3 bg-white rounded-lg shadow-sm flex items-center">
+                        <div class="w-8 h-8 flex items-center justify-center text-primary mr-2">
+                            <i class="ri-file-line ri-lg"></i>
+                        </div>
+                        <span id="fileName" class="text-sm text-gray-700 flex-1 truncate"></span>
+                        <button type="button" id="removeFile" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-red-500">
+                            <i class="ri-close-line"></i>
+                        </button>
+                    </div>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                
+                <div class="form-group flex items-start">
+                    <input type="checkbox" id="terms" name="terms" class="custom-checkbox" required>
+                    <label for="terms" class="text-sm text-gray-700 cursor-pointer">
+                        I agree to the <a href="#" class="text-primary hover:underline">Terms and Conditions</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                    </label>
+                    <p class="error-message text-red-500 text-sm mt-1 hidden"></p>
+                </div>
+                
+                <button type="submit" class="submit-btn w-full bg-primary text-white py-3 px-4 rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    Register Company
+                </button>
+            </form>
+            
+            <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+                <p class="text-sm text-gray-600">Already registered? <a href="../login/login.html" class="text-primary font-medium hover:underline">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('licenseFile');
+            const filePreview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            const removeFile = document.getElementById('removeFile');
+            const submitBtn = document.querySelector('.submit-btn');
+            const togglePassword = document.querySelectorAll('.toggle-password');
+            const formInputs = document.querySelectorAll('.form-input');
+            const inputLabels = document.querySelectorAll('.input-label');
+            
+            let licenseFileUrl = '';
+            let uploadedFile = null;
+
+            // Add focus effects to inputs
+            formInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const label = this.closest('.form-group').querySelector('.input-label');
+                    if (label) label.classList.add('input-focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    const label = this.closest('.form-group').querySelector('.input-label');
+                    if (label) label.classList.remove('input-focused');
+                });
+            });
+
+            // Simple database simulation using localStorage
+            const db = {
+                users: JSON.parse(localStorage.getItem('users')) || [],
+                
+                saveUsers: function() {
+                    localStorage.setItem('users', JSON.stringify(this.users));
+                },
+                
+                addUser: function(user) {
+                    this.users.push(user);
+                    this.saveUsers();
+                    return user;
+                },
+                
+                findUserByEmail: function(email) {
+                    return this.users.find(user => user.email === email);
+                }
+            };
+
+            // File upload handling
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Validate file type and size
+                    const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+                    
+                    if (!validTypes.includes(file.type)) {
+                        showError(fileInput, 'Invalid file type. Please upload PDF, JPG, or PNG.');
+                        return;
+                    }
+                    
+                    if (file.size > maxSize) {
+                        showError(fileInput, 'File size exceeds 5MB limit.');
+                        return;
+                    }
+                    
+                    // Simulate upload (in a real app, you would upload to a server)
+                    licenseFileUrl = URL.createObjectURL(file);
+                    fileName.textContent = file.name;
+                    filePreview.classList.remove('hidden');
+                    dropzone.classList.add('hidden');
+                    clearError(fileInput);
+                    
+                    uploadedFile = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        lastModified: file.lastModified
+                    };
+                }
+            });
+
+            // Dropzone functionality
+            dropzone.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+            
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('dragover');
+            });
+            
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                fileInput.files = e.dataTransfer.files;
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            });
+            
+            removeFile.addEventListener('click', () => {
+                licenseFileUrl = '';
+                fileInput.value = '';
+                filePreview.classList.add('hidden');
+                dropzone.classList.remove('hidden');
+                clearError(fileInput);
+            });
+
+            // Toggle password visibility
+            togglePassword.forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.querySelector('i').classList.toggle('ri-eye-line');
+                    this.querySelector('i').classList.toggle('ri-eye-off-line');
+                });
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loader"></span> Processing...';
+                
+                if (!validateForm()) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register Company';
+                    return;
+                }
+
+                try {
+                    // Get form values
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    
+                    // Check if user already exists
+                    if (db.findUserByEmail(email)) {
+                        throw new Error('This email is already registered');
+                    }
+                    
+                    // Create user object
+                    const user = {
+                        id: Date.now().toString(),
+                        companyName: document.getElementById('companyName').value.trim(),
+                        email: email,
+                        phone: document.getElementById('phone').value.trim(),
+                        password: password, // Note: In a real app, you would hash the password
+                        licenseFile: uploadedFile,
+                        licenseFileUrl: licenseFileUrl,
+                        role: 'company',
+                        status: 'pending',
+                        createdAt: new Date().toISOString(),
+                        verified: false
+                    };
+                    
+                    // Save user to "database"
+                    const savedUser = db.addUser(user);
+                    
+                    // Show success message
+                    showSuccessMessage(savedUser);
+                } catch (error) {
+                    console.error("Registration error:", error);
+                    handleError(error);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register Company';
+                }
+            });
+            
+            function validateForm() {
+                let isValid = true;
+                
+                // Validate company name
+                const companyName = document.getElementById('companyName');
+                if (!companyName.value.trim()) {
+                    showError(companyName, 'Company name is required');
+                    isValid = false;
+                } else {
+                    clearError(companyName);
+                }
+                
+                // Validate email
+                const email = document.getElementById('email');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email.value.trim()) {
+                    showError(email, 'Email address is required');
+                    isValid = false;
+                } else if (!emailRegex.test(email.value.trim())) {
+                    showError(email, 'Please enter a valid email address');
+                    isValid = false;
+                } else {
+                    clearError(email);
+                }
+                
+                // Validate phone
+                const phone = document.getElementById('phone');
+                const phoneRegex = /^\+?[0-9\s\-()]{8,20}$/;
+                if (!phone.value.trim()) {
+                    showError(phone, 'Phone number is required');
+                    isValid = false;
+                } else if (!phoneRegex.test(phone.value.trim())) {
+                    showError(phone, 'Please enter a valid phone number');
+                    isValid = false;
+                } else {
+                    clearError(phone);
+                }
+                
+                // Validate password
+                const password = document.getElementById('password');
+                if (!password.value) {
+                    showError(password, 'Password is required');
+                    isValid = false;
+                } else if (password.value.length < 6) {
+                    showError(password, 'Password must be at least 6 characters');
+                    isValid = false;
+                } else {
+                    clearError(password);
+                }
+                
+                // Validate confirm password
+                const confirmPassword = document.getElementById('confirmPassword');
+                if (!confirmPassword.value) {
+                    showError(confirmPassword, 'Please confirm your password');
+                    isValid = false;
+                } else if (confirmPassword.value !== password.value) {
+                    showError(confirmPassword, 'Passwords do not match');
+                    isValid = false;
+                } else {
+                    clearError(confirmPassword);
+                }
+                
+                // Validate file upload
+                if (!licenseFileUrl) {
+                    showError(fileInput, 'Business license is required');
+                    isValid = false;
+                } else {
+                    clearError(fileInput);
+                }
+                
+                // Validate terms checkbox
+                const terms = document.getElementById('terms');
+                const termsError = terms.closest('.form-group').querySelector('.error-message');
+                if (!terms.checked) {
+                    termsError.textContent = 'You must agree to the terms and conditions';
+                    termsError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    termsError.classList.add('hidden');
+                }
+                
+                return isValid;
+            }
+            
+            function handleError(error) {
+                let errorMessage = 'Registration failed. Please try again.';
+                
+                if (error.message.includes('email is already registered')) {
+                    errorMessage = error.message;
+                    showError(document.getElementById('email'), errorMessage);
+                } else {
+                    errorMessage = error.message || errorMessage;
+                }
+                
+                showToast(errorMessage, 'error');
+            }
+            
+            function showError(input, message) {
+                const formGroup = input.closest('.form-group');
+                const errorElement = formGroup.querySelector('.error-message');
+                
+                if (input) input.classList.add('error');
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+            
+            function clearError(input) {
+                const formGroup = input.closest('.form-group');
+                const errorElement = formGroup.querySelector('.error-message');
+                
+                if (input) input.classList.remove('error');
+                errorElement.classList.add('hidden');
+            }
+            
+            function showToast(message, type = 'error') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.classList.add('fade-out');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+            
+            function showSuccessMessage(user) {
+                const formContainer = document.querySelector('.form-container');
+                formContainer.innerHTML = `
+                    <div class="form-card p-8 text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ri-check-line ri-2x text-secondary"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Registration Successful!</h2>
+                        <p class="text-gray-600 mb-4">Your company registration has been submitted successfully.</p>
+                        <div class="ethiopian-border mb-6 mx-auto w-32"></div>
+                        <p class="text-sm text-gray-500 mb-6">Company: ${user.companyName}</p>
+                        <div class="mt-6">
+                            <a href="../subscription/subscription.html" class="inline-block bg-primary text-white py-2 px-6 rounded-lg shadow-md font-medium hover:bg-primary/90 transition-all hover:shadow-lg hover:transform hover:-translate-y-1">
+                                Go to Login
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

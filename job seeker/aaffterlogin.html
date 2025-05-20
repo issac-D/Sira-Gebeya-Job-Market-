@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | EthioJobs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Color Palette */
+            --primary: #2563EB;
+            --primary-hover: #1E40AF;
+            --secondary: #16A34A;
+            --secondary-hover: #15803D;
+            --alert: #EA580C;
+            --text-dark: #1F2937;
+            --text-medium: #4B5563;
+            --text-light: #6B7280;
+            --bg-white: #FFFFFF;
+            --bg-light: #F3F4F6;
+            --border: #E5E7EB;
+            --error-color: #d32f2f;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .welcome-banner {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.5rem;
+            position: relative;
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .user-avatar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.5);
+            animation: pulse 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .welcome-text h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .welcome-text p {
+            color: var(--text-medium);
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .edit-profile-btn, .logout-btn {
+            background-color: var(--bg-white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: var(--space-xs) var(--space-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            text-decoration: none;
+        }
+
+        .logout-btn {
+            background-color: var(--error-color);
+            color: white;
+            border: none;
+        }
+
+        .edit-profile-btn:hover, .logout-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .logout-btn:hover {
+            background-color: #b71c1c;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            padding: var(--space-md);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .stat-card.applications::before {
+            background-color: var(--primary);
+        }
+
+        .stat-card.viewed::before {
+            background-color: var(--alert);
+        }
+
+        .stat-card.hired::before {
+            background-color: var(--secondary);
+        }
+
+        .stat-card:hover::before {
+            animation: borderGrow 0.5s ease-out forwards;
+        }
+
+        @keyframes borderGrow {
+            0% { width: 0; left: 50%; }
+            100% { width: 100%; left: 0; }
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-sm);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1);
+        }
+
+        .stat-icon.applications {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.viewed {
+            background-color: rgba(234, 88, 12, 0.1);
+            color: var(--alert);
+        }
+
+        .stat-icon.hired {
+            background-color: rgba(22, 163, 74, 0.1);
+            color: var(--secondary);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            transition: color 0.3s ease;
+        }
+
+        .stat-card:hover .stat-value {
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-medium);
+        }
+
+        .stat-tooltip {
+            position: absolute;
+            bottom: -30px;
+            background-color: var(--text-dark);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .stat-card:hover .stat-tooltip {
+            opacity: 1;
+            bottom: -40px;
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            padding: var(--space-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--space-lg);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .view-all-link {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            transition: all 0.2s;
+        }
+
+        .view-all-link:hover {
+            gap: var(--space-sm);
+        }
+
+        /* Job Cards */
+        .job-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .job-card {
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            padding: var(--space-md);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .job-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(37,99,235,0.1) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .job-card:hover::after {
+            opacity: 1;
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .job-company {
+            color: var(--text-medium);
+            margin-bottom: var(--space-xs);
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+
+        .job-meta-item i {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .job-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-sm);
+            padding-top: var(--space-sm);
+            border-top: 1px solid var(--border);
+        }
+
+        .job-recommendation-reason {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .apply-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .apply-btn:hover {
+            background-color: var(--secondary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .view-details-btn {
+            background-color: var(--bg-white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-details-btn:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Notifications */
+        .notifications-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(243, 244, 246, 0.5);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Expanded Sections */
+        .expanded-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .expanded-content.show {
+            max-height: 1000px;
+            margin-top: var(--space-md);
+        }
+
+        .no-more-message {
+            text-align: center;
+            padding: var(--space-md);
+            color: var(--text-medium);
+            font-style: italic;
+        }
+
+        /* Profile Details */
+        .profile-details {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-details h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+
+        .profile-details p {
+            margin-bottom: var(--space-xs);
+            color: var(--text-medium);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+
+        .skill-tag {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: var(--space-sm);
+        }
+
+        .experience-item h4, .education-item h4 {
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        /* Profile Details Enhancements */
+        .profile-details .resume-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background-color: rgba(22, 163, 74, 0.1);
+            padding: var(--space-sm);
+            border-radius: 6px;
+            margin-top: var(--space-xs);
+        }
+
+        .profile-details .file-icon {
+            color: var(--secondary);
+            font-size: 1rem;
+        }
+
+        .profile-details .file-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .profile-details .file-size {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Ethiopian Flag Accent */
+        .ethiopian-flag-colors {
+            position: relative;
+        }
+
+        .ethiopian-flag-colors::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                #078930 0%, #078930 33%, 
+                #fcdd09 33%, #fcdd09 66%, 
+                #da121a 66%, #da121a 100%);
+            border-radius: 3px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-md);
+            }
+
+            .welcome-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-sm);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .job-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .job-actions {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
+
+            .apply-btn, .view-details-btn {
+                width: 100%;
+                justify-content: center;
+                padding: var(--space-sm);
+            }
+        }
+
+        /* Accessibility */
+        button:focus, a:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="welcome-banner">
+                <img class="user-avatar" id="userAvatar" src="https://via.placeholder.com/60" alt="User Avatar">
+                <div class="welcome-text">
+                    <h1 id="welcomeMessage">Welcome back!</h1>
+                    <p>Here's what's happening with your job search</p>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <a href="Edit.html" class="edit-profile-btn">
+                    <i class="fas fa-user-edit"></i> Edit Profile
+                </a>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card applications">
+                <div class="stat-icon applications">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Applications Sent</div>
+                <div class="stat-tooltip">Total jobs you've applied to</div>
+            </div>
+            <div class="stat-card viewed">
+                <div class="stat-icon viewed">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="stat-value">7</div>
+                <div class="stat-label">Viewed by Employer</div>
+                <div class="stat-tooltip">Employers who viewed your profile</div>
+            </div>
+            <div class="stat-card hired">
+                <div class="stat-icon hired">
+                    <i class="fas fa-badge-check"></i>
+                </div>
+                <div class="stat-value">1</div>
+                <div class="stat-label">Hired</div>
+                <div class="stat-tooltip">Successful job placements</div>
+            </div>
+        </div>
+
+        <!-- Profile Details Section -->
+        <section class="dashboard-section profile-details">
+            <h3 class="ethiopian-flag-colors">Your Profile</h3>
+            <p><strong>Full Name:</strong> <span id="profileFullName">Loading...</span></p>
+            <p><strong>Email:</strong> <span id="profileEmail">Loading...</span></p>
+            <p><strong>Phone:</strong> <span id="profilePhone">Loading...</span></p>
+            <p><strong>Resume:</strong> <span id="profileResume">Not uploaded</span></p>
+            <p><strong>Job Preferences:</strong> <span id="profileOpenToWork">Not specified</span></p>
+            <h4>Skills</h4>
+            <div class="skills-list" id="profileSkills"></div>
+            <h4>Work Experience</h4>
+            <div id="profileWorkExperience"></div>
+            <h4>Education</h4>
+            <div id="profileEducation"></div>
+        </section>
+
+        <!-- Saved Jobs Section -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Saved Jobs</h2>
+                <a href="#" class="view-all-link" id="viewAllSavedJobs">
+                    <span>View all saved jobs</span> <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            <div class="job-cards">
+                <!-- Saved Job 1 -->
+                <div class="job-card" onclick="handleJobCardClick(1, event)">
+                    <h3 class="job-title">Senior Software Engineer</h3>
+                    <div class="job-company">TechJitu Ethiopia</div>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Addis Ababa (Remote)
+                        </div>
+                        <div class="job-meta-item">
+                            <i class="fas fa-money-bill-wave"></i> ETB 45,000 - 60,000
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <button class="view-details-btn" data-job-id="1">View Details</button>
+                        <button class="apply-btn" data-job-id="1"><i class="fas fa-paper-plane"></i> Apply Now</button>
+                    </div>
+                </div>
+                
+                <!-- Saved Job 2 -->
+                <div class="job-card" onclick="handleJobCardClick(2, event)">
+                    <h3 class="job-title">Product Manager</h3>
+                    <div class="job-company">Ahadu Bank</div>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Addis Ababa
+                        </div>
+                        <div class="job-meta-item">
+                            <i class="fas fa-money-bill-wave"></i> ETB 35,000 - 45,000
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <button class="view-details-btn" data-job-id="2">View Details</button>
+                        <button class="apply-btn" data-job-id="2"><i class="fas fa-paper-plane"></i> Apply Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Expanded Saved Jobs -->
+            <div class="expanded-content" id="expandedSavedJobs">
+                <div class="job-cards">
+                    <!-- Additional saved jobs would appear here -->
+                </div>
+                <div class="no-more-message" id="noMoreSavedJobs">
+                    This is your only saved job at the moment.
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Jobs Section -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Recommended For You</h2>
+                <a href="#" class="view-all-link" id="viewAllRecommendedJobs">
+                    <span>View all recommendations</span> <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            <div class="job-cards">
+                <!-- Recommended Job 1 -->
+                <div class="job-card" onclick="handleJobCardClick(3, event)">
+                    <h3 class="job-title">Full Stack Developer</h3>
+                    <div class="job-company">SafariSoft</div>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Addis Ababa
+                        </div>
+                        <div class="job-meta-item">
+                            <i class="fas fa-money-bill-wave"></i> ETB 40,000 - 55,000
+                        </div>
+                    </div>
+                    <div class="job-recommendation-reason">
+                        <i class="fas fa-lightbulb"></i> Because you applied to similar roles
+                    </div>
+                    <div class="job-actions">
+                        <button class="view-details-btn" data-job-id="3">View Details</button>
+                        <button class="apply-btn" data-job-id="3"><i class="fas fa-bolt"></i> Quick Apply</button>
+                    </div>
+                </div>
+                
+                <!-- Recommended Job 2 -->
+                <div class="job-card" onclick="handleJobCardClick(4, event)">
+                    <h3 class="job-title">DevOps Engineer</h3>
+                    <div class="job-company">TechJitu Ethiopia</div>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Addis Ababa
+                        </div>
+                        <div class="job-meta-item">
+                            <i class="fas fa-money-bill-wave"></i> ETB 50,000 - 65,000
+                        </div>
+                    </div>
+                    <div class="job-recommendation-reason">
+                        <i class="fas fa-lightbulb"></i> Based on your skills (AWS, Docker)
+                    </div>
+                    <div class="job-actions">
+                        <button class="view-details-btn" data-job-id="4">View Details</button>
+                        <button class="apply-btn" data-job-id="4"><i class="fas fa-bolt"></i> Quick Apply</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Expanded Recommended Jobs -->
+            <div class="expanded-content" id="expandedRecommendedJobs">
+                <div class="job-cards">
+                    <!-- Additional recommended jobs would appear here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Notifications Section -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title">Notifications</h2>
+                <a href="#" class="view-all-link" id="viewAllNotifications">
+                    <span>View all notifications</span> <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+            <div class="notifications-list">
+                <div class="notification-item">
+                    <div class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="notification-content">
+                        <p>Your application for <strong>Senior Software Engineer</strong> at TechJitu was viewed by the employer.</p>
+                        <div class="notification-time">2 hours ago</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="notification-content">
+                        <p>5 new jobs match your profile and skills.</p>
+                        <div class="notification-time">Yesterday</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Expanded Notifications -->
+            <div class="expanded-content" id="expandedNotifications">
+                <div class="notifications-list">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="notification-content">
+                            <p>Stay connected  You application is on under review  for <strong> Software Engineer</strong> at Ahadu Bank.</p>
+                            <div class="notification-time">3 days ago</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="no-more-message" id="noMoreNotifications">
+                    No more notifications right now.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Default user profile structure
+        const defaultProfile = {
+            fullName: "Not provided",
+            email: "Not provided",
+            phone: "Not provided",
+            profilePicture: "https://via.placeholder.com/60",
+            resume: null,
+            workExperience: [],
+            education: [],
+            skills: [],
+            openToWork: false
+        };
+
+        // Job data for the demo
+        const jobData = {
+            1: {
+                id: 1,
+                title: "Senior Software Engineer",
+                company: "TechJitu Ethiopia",
+                location: "Addis Ababa (Remote)",
+                salary: "ETB 45,000 - 60,000",
+                type: "Full-time",
+                posted: "3 days ago",
+                description: "We're looking for an experienced Senior Software Engineer to join our team. You'll be responsible for designing and implementing complex software solutions while mentoring junior developers.",
+                requirements: [
+                    "5+ years of professional software development experience",
+                    "Strong expertise in JavaScript/TypeScript, Node.js, and React",
+                    "Experience with cloud platforms (AWS preferred)",
+                    "Excellent problem-solving skills",
+                    "Bachelor's degree in Computer Science or related field"
+                ],
+                responsibilities: [
+                    "Design and implement scalable software solutions",
+                    "Mentor junior team members",
+                    "Participate in code reviews",
+                    "Collaborate with product managers and designers",
+                    "Optimize applications for maximum speed and scalability"
+                ],
+                benefits: [
+                    "Competitive salary",
+                    "Health insurance",
+                    "Flexible work hours",
+                    "Remote work options",
+                    "Professional development budget"
+                ]
+            },
+            2: {
+                id: 2,
+                title: "Product Manager",
+                company: "Ahadu Bank",
+                location: "Addis Ababa",
+                salary: "ETB 35,000 - 45,000",
+                type: "Full-time",
+                posted: "1 week ago",
+                description: "Ahadu Bank is seeking a Product Manager to lead the development of our digital banking products. You'll work closely with engineering, design, and business teams to deliver exceptional customer experiences.",
+                requirements: [
+                    "3+ years of product management experience",
+                    "Background in banking or financial services",
+                    "Strong analytical and problem-solving skills",
+                    "Excellent communication and leadership abilities",
+                    "Bachelor's degree in Business, Finance, or related field"
+                ],
+                responsibilities: [
+                    "Define product vision and strategy",
+                    "Gather and prioritize product requirements",
+                    "Work with cross-functional teams to deliver products",
+                    "Analyze market trends and competition",
+                    "Measure product performance and iterate"
+                ],
+                benefits: [
+                    "Competitive banking sector salary",
+                    "Performance bonuses",
+                    "Comprehensive health coverage",
+                    "Pension plan",
+                    "Career growth opportunities"
+                ]
+            },
+            3: {
+                id: 3,
+                title: "Full Stack Developer",
+                company: "SafariSoft",
+                location: "Addis Ababa",
+                salary: "ETB 40,000 - 55,000",
+                type: "Full-time",
+                posted: "2 days ago",
+                description: "SafariSoft is looking for a Full Stack Developer to join our growing team. You'll work on both front-end and back-end development of our web applications.",
+                requirements: [
+                    "3+ years of full stack development experience",
+                    "Proficiency in JavaScript, Python, and SQL",
+                    "Experience with React and Django",
+                    "Understanding of RESTful APIs",
+                    "Bachelor's degree in Computer Science or equivalent"
+                ],
+                responsibilities: [
+                    "Develop new features for our web applications",
+                    "Write clean, maintainable code",
+                    "Collaborate with designers and product managers",
+                    "Troubleshoot and debug applications",
+                    "Optimize applications for performance"
+                ],
+                benefits: [
+                    "Competitive salary package",
+                    "Flexible working hours",
+                    "Team building activities",
+                    "Training and development opportunities",
+                    "Modern office environment"
+                ],
+                recommendationReason: "Because you applied to similar roles"
+            },
+            4: {
+                id: 4,
+                title: "DevOps Engineer",
+                company: "TechJitu Ethiopia",
+                location: "Addis Ababa",
+                salary: "ETB 50,000 - 65,000",
+                type: "Full-time",
+                posted: "5 days ago",
+                description: "We're seeking a DevOps Engineer to help us build and maintain our cloud infrastructure. You'll work with development teams to automate deployments and ensure system reliability.",
+                requirements: [
+                    "4+ years of DevOps or related experience",
+                    "Strong knowledge of AWS, Docker, and Kubernetes",
+                    "Experience with CI/CD pipelines",
+                    "Proficiency in scripting (Bash, Python)",
+                    "Understanding of infrastructure as code (Terraform)"
+                ],
+                responsibilities: [
+                    "Design and implement CI/CD pipelines",
+                    "Manage cloud infrastructure on AWS",
+                    "Monitor system performance and reliability",
+                    "Automate deployment and scaling processes",
+                    "Collaborate with development teams"
+                ],
+                benefits: [
+                    "Highly competitive salary",
+                    "Stock options",
+                    "Comprehensive health benefits",
+                    "Remote work flexibility",
+                    "Conference and training budget"
+                ],
+                recommendationReason: "Based on your skills (AWS, Docker)"
+            }
+        };
+
+        // Load user data from localStorage
+        function loadUserData() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            if (!currentUser.email) {
+                alert('No user logged in. Please log in.');
+                window.location.href = 'login.html';
+                return null;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === currentUser.email);
+            return user ? { ...defaultProfile, ...user.profile, email: user.email } : { ...defaultProfile, email: currentUser.email };
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (!bytes) return '0 KB';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // Initialize user data
+        function initUserData() {
+            const userData = loadUserData();
+            if (!userData) return;
+
+            const userAvatar = document.getElementById('userAvatar');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const profileFullName = document.getElementById('profileFullName');
+            const profileEmail = document.getElementById('profileEmail');
+            const profilePhone = document.getElementById('profilePhone');
+            const profileResume = document.getElementById('profileResume');
+            const profileOpenToWork = document.getElementById('profileOpenToWork');
+            const profileSkills = document.getElementById('profileSkills');
+            const profileWorkExperience = document.getElementById('profileWorkExperience');
+            const profileEducation = document.getElementById('profileEducation');
+
+            userAvatar.src = userData.profilePicture;
+            welcomeMessage.textContent = `Welcome back, ${userData.fullName || userData.email.split('@')[0] || 'User'}!`;
+            profileFullName.textContent = userData.fullName;
+            profileEmail.textContent = userData.email;
+            profilePhone.textContent = userData.phone || 'Not provided';
+            profileOpenToWork.textContent = userData.openToWork ? 'Open to Work' : 'Not Open to Work';
+
+            if (userData.resume) {
+                profileResume.innerHTML = `
+                    <div class="resume-info">
+                        <i class="fas fa-file-pdf file-icon"></i>
+                        <span class="file-name">${userData.resume.name}</span>
+                        <span class="file-size">(${formatFileSize(userData.resume.size)})</span>
+                    </div>
+                `;
+            } else {
+                profileResume.textContent = 'Not uploaded';
+            }
+
+            profileSkills.innerHTML = userData.skills.length
+                ? userData.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')
+                : '<p>No skills added</p>';
+
+            profileWorkExperience.innerHTML = userData.workExperience.length
+                ? userData.workExperience.map(exp => {
+                    const startDate = new Date(exp.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+                    const endDate = exp.currentlyWorking ? 'Present' : new Date(exp.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+                    return `
+                        <div class="experience-item">
+                            <h4>${exp.jobTitle} at ${exp.companyName}</h4>
+                            <p>${startDate} - ${endDate}</p>
+                            <p>${exp.description || 'No description'}</p>
+                        </div>
+                    `;
+                }).join('')
+                : '<p>No work experience added</p>';
+
+            profileEducation.innerHTML = userData.education.length
+                ? userData.education.map(edu => `
+                    <div class="education-item">
+                        <h4>${edu.degree}</h4>
+                        <p>${edu.institution}</p>
+                        <p>${new Date(edu.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })} - ${new Date(edu.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</p>
+                    </div>
+                `).join('')
+                : '<p>No education added</p>';
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.setItem('lastPage', 'aaffterlogin.html');
+            localStorage.removeItem('currentUser');
+            alert('You have been logged out.');
+            window.location.href = 'login.html';
+        }
+
+        // Handle entire job card click
+        function handleJobCardClick(jobId, event) {
+            // Check if the click was on a button (we don't want to interfere with button clicks)
+            if (event.target.closest('button')) {
+                return; // Let the button's own click handler deal with it
+            }
+            
+            const job = jobData[jobId];
+            if (job) {
+                localStorage.setItem('currentJob', JSON.stringify(job));
+                window.location.href = 'job_detal.html';
+            } else {
+                alert('Job details not found.');
+            }
+        }
+
+        // Handle View Details click (now only used for the button)
+        function handleViewDetails() {
+            const jobId = this.getAttribute('data-job-id');
+            const job = jobData[jobId];
+            if (job) {
+                localStorage.setItem('currentJob', JSON.stringify(job));
+                window.location.href = 'job_detal.html';
+            } else {
+                alert('Job details not found.');
+            }
+        }
+
+        // Handle Apply click (unchanged)
+        function handleApply() {
+            const jobId = this.getAttribute('data-job-id');
+            const job = jobData[jobId];
+            if (job) {
+                localStorage.setItem('currentJob', JSON.stringify(job));
+                window.location.href = 'job_detal.html?action=apply';
+            } else {
+                alert('Job details not found.');
+            }
+        }
+
+        // Update the attachJobCardListeners function to only attach to buttons
+        function attachJobCardListeners() {
+            document.querySelectorAll('.view-details-btn').forEach(btn => {
+                btn.removeEventListener('click', handleViewDetails);
+                btn.addEventListener('click', handleViewDetails);
+            });
+
+            document.querySelectorAll('.apply-btn').forEach(btn => {
+                btn.removeEventListener('click', handleApply);
+                btn.addEventListener('click', handleApply);
+            });
+        }
+
+        // DOM Elements
+        const viewAllSavedJobs = document.getElementById('viewAllSavedJobs');
+        const expandedSavedJobs = document.getElementById('expandedSavedJobs');
+        const noMoreSavedJobs = document.getElementById('noMoreSavedJobs');
+        const viewAllRecommendedJobs = document.getElementById('viewAllRecommendedJobs');
+        const expandedRecommendedJobs = document.getElementById('expandedRecommendedJobs');
+        const viewAllNotifications = document.getElementById('viewAllNotifications');
+        const expandedNotifications = document.getElementById('expandedNotifications');
+        const noMoreNotifications = document.getElementById('noMoreNotifications');
+
+        // View All Saved Jobs toggle
+        viewAllSavedJobs.addEventListener('click', function(e) {
+            e.preventDefault();
+            expandedSavedJobs.classList.toggle('show');
+            if (expandedSavedJobs.classList.contains('show')) {
+                setTimeout(() => {
+                    noMoreSavedJobs.style.display = 'block';
+                }, 300);
+            }
+        });
+
+        // View All Recommended Jobs toggle
+        viewAllRecommendedJobs.addEventListener('click', function(e) {
+            e.preventDefault();
+            expandedRecommendedJobs.classList.toggle('show');
+            if (expandedRecommendedJobs.classList.contains('show')) {
+                setTimeout(() => {
+                    const jobsContainer = expandedRecommendedJobs.querySelector('.job-cards');
+                    jobsContainer.innerHTML = `
+                        <div class="job-card" onclick="handleJobCardClick(5, event)">
+                            <h3 class="job-title">Frontend Developer (React)</h3>
+                            <div class="job-company">GreenTech Solutions</div>
+                            <div class="job-meta">
+                                <div class="job-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i> Remote
+                                </div>
+                                <div class="job-meta-item">
+                                    <i class="fas fa-money-bill-wave"></i> ETB 35,000 - 45,000
+                                </div>
+                            </div>
+                            <div class="job-recommendation-reason">
+                                <i class="fas fa-lightbulb"></i> Matches your profile preferences
+                            </div>
+                            <div class="job-actions">
+                                <button class="view-details-btn" data-job-id="5">View Details</button>
+                                <button class="apply-btn" data-job-id="5"><i class="fas fa-bolt"></i> Quick Apply</button>
+                            </div>
+                        </div>
+                    `;
+                    attachJobCardListeners();
+                }, 300);
+            }
+        });
+
+        // View All Notifications toggle
+        viewAllNotifications.addEventListener('click', function(e) {
+            e.preventDefault();
+            expandedNotifications.classList.toggle('show');
+            if (expandedNotifications.classList.contains('show')) {
+                setTimeout(() => {
+                    noMoreNotifications.style.display = 'block';
+                }, 300);
+            } else {
+                noMoreNotifications.style.display = 'none';
+            }
+        });
+
+        // Stat card hover tooltips
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const tooltip = this.querySelector('.stat-tooltip');
+                tooltip.style.opacity = '1';
+                tooltip.style.bottom = '-40px';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                const tooltip = this.querySelector('.stat-tooltip');
+                tooltip.style.opacity = '0';
+                tooltip.style.bottom = '-30px';
+            });
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initUserData();
+            attachJobCardListeners();
+            
+            // Add job IDs to all job cards
+            document.querySelectorAll('.job-card').forEach(card => {
+                const viewBtn = card.querySelector('.view-details-btn');
+                const applyBtn = card.querySelector('.apply-btn');
+                if (viewBtn && applyBtn) {
+                    const jobId = viewBtn.getAttribute('data-job-id');
+                    card.setAttribute('data-job-id', jobId);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

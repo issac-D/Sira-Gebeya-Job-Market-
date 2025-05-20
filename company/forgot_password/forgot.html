@@ -4,194 +4,400 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Reset Flow</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .view {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        input {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4a90e2;
-        }
-
-        input.error {
-            border-color: #e74c3c;
-        }
-
-        button {
-            padding: 12px;
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #357ab8;
-        }
-
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        .error-message {
-            color: #e74c3c;
-            font-size: 14px;
-            margin-top: -10px;
-            display: none;
-        }
-
-        .timer {
-            text-align: center;
-            margin-top: 10px;
-            color: #666;
-        }
-
-        #resend-otp {
-            display: none;
-            background-color: transparent;
-            color: #4a90e2;
-            text-decoration: underline;
-            padding: 0;
-        }
-
-        #resend-otp:hover {
-            background-color: transparent;
-            color: #357ab8;
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            padding: 0;
-            font-size: 14px;
-        }
-
-        .success-message {
-            color: #2ecc71;
-            text-align: center;
-            margin-top: 20px;
-            font-weight: bold;
-        }
-
-        .password-strength {
-            height: 4px;
-            background-color: #eee;
-            margin-top: -10px;
-            margin-bottom: 5px;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .strength-meter {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s, background-color 0.3s;
-        }
-    </style>
 </head>
 <body>
-    <!-- Email Input View -->
-    <div class="view" id="email-view">
-        <h2>Reset Password</h2>
-        <form id="email-form">
-            <input type="email" id="email" placeholder="Your registered email" required>
-            <div class="error-message" id="email-error"></div>
-            <button type="submit">Send Reset Link</button>
-        </form>
-    </div>
+    <header>
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --accent-color: #e74c3c;
+                --secondary-color: #4a90e2;
+                --text-color: #333;
+                --light-color: #f8f9fa;
+                --error-color: #e74c3c;
+                --success-color: #2ecc71;
+                --sidebar-width: 280px;
+            }
 
-    <!-- OTP Verification View -->
-    <div class="view hidden" id="otp-view">
-        <h2>Enter OTP</h2>
-        <form id="otp-form">
-            <input type="text" id="otp" placeholder="6-digit code" maxlength="6" pattern="\d{6}" inputmode="numeric">
-            <div class="error-message" id="otp-error"></div>
-            <button type="submit">Verify</button>
-        </form>
-        <p class="timer">Resend OTP in <span id="countdown">60</span>s</p>
-        <button id="resend-otp">Resend OTP</button>
-    </div>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Segoe UI', Arial, sans-serif;
+            }
 
-    <!-- Password Reset View -->
-    <div class="view hidden" id="reset-view">
-        <h2>New Password</h2>
-        <form id="reset-form">
-            <div class="password-container">
-                <input type="password" id="new-password" placeholder="New password" minlength="8" required>
-                <button type="button" class="toggle-password">Show</button>
+            body {
+                background-color: var(--light-color);
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            header {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 1rem 2rem;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                width: 100%;
+            }
+
+            .header-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+
+            .logo-container {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: white;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+            }
+
+            .logo span:first-child {
+                color: var(--accent-color);
+            }
+
+            .logo-icon {
+                font-size: 2rem;
+                margin-right: 8px;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+
+            .mobile-sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: var(--sidebar-width);
+                height: 100vh;
+                background-color: var(--primary-color);
+                transition: left 0.3s ease;
+                z-index: 1001;
+                padding: 1rem;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .mobile-sidebar.active {
+                left: 0;
+            }
+
+            .sidebar-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .close-sidebar {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                display: none;
+            }
+
+            .overlay.active {
+                display: block;
+            }
+
+            .container {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .view {
+                background-color: white;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 400px;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            h2 {
+                margin-bottom: 1.5rem;
+                color: var(--text-color);
+                text-align: center;
+                font-size: 1.5rem;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            input {
+                padding: 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                width: 100%;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: var(--secondary-color);
+                box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            }
+
+            input.error {
+                border-color: var(--error-color);
+            }
+
+            button {
+                padding: 12px;
+                background-color: var(--secondary-color);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            button:hover:not(:disabled) {
+                background-color: #357ab8;
+            }
+
+            button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
+
+            .error-message {
+                color: var(--error-color);
+                font-size: 14px;
+                margin-top: -8px;
+                display: none;
+            }
+
+            .timer {
+                text-align: center;
+                margin-top: 10px;
+                color: #666;
+                font-size: 14px;
+            }
+
+            #resend-otp {
+                display: none;
+                background-color: transparent;
+                color: var(--secondary-color);
+                text-decoration: underline;
+                padding: 0;
+                font-size: 14px;
+                margin-top: 10px;
+            }
+
+            #resend-otp:hover {
+                background-color: transparent;
+                color: #357ab8;
+            }
+
+            .password-container {
+                position: relative;
+            }
+
+            .toggle-password {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: #666;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+            .success-message {
+                color: var(--success-color);
+                text-align: center;
+                margin-top: 1rem;
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            .password-strength {
+                height: 4px;
+                background-color: #eee;
+                margin-top: -8px;
+                border-radius: 2px;
+                overflow: hidden;
+            }
+
+            .strength-meter {
+                height: 100%;
+                width: 0;
+                transition: width 0.3s, background-color 0.3s;
+            }
+
+            @media (max-width: 768px) {
+                header {
+                    padding: 1rem;
+                }
+
+                .mobile-menu-btn {
+                    display: block;
+                }
+
+                .logo {
+                    font-size: 1.5rem;
+                }
+
+                .logo-icon {
+                    font-size: 1.5rem;
+                }
+
+                .view {
+                    padding: 1.5rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                :root {
+                    --sidebar-width: 75%;
+                }
+
+                .container {
+                    padding: 10px;
+                }
+
+                h2 {
+                    font-size: 1.25rem;
+                }
+
+                input, button {
+                    font-size: 14px;
+                }
+            }
+        </style>
+
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="#" class="logo">
+                    <span class="logo-icon">💼</span>
+                    <span>ስራ</span>-<span>ገበያ</span>
+                </a>
             </div>
-            <div class="password-strength">
-                <div class="strength-meter" id="strength-meter"></div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+        </div>
+
+        <div class="mobile-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💼</span>
+                    <span>ስራ</span>-<span>ገበዤ</span>
+                </div>
+                <button class="close-sidebar" aria-label="Close menu">✕</button>
             </div>
-            <div class="password-container">
-                <input type="password" id="confirm-password" placeholder="Confirm password" required>
-                <button type="button" class="toggle-password">Show</button>
-            </div>
-            <div class="error-message" id="password-error"></div>
-            <button type="submit">Update Password</button>
-        </form>
+        </div>
+
+        <div class="overlay"></div>
+
+        <script>
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileSidebar = document.querySelector('.mobile-sidebar');
+            const closeSidebarBtn = document.querySelector('.close-sidebar');
+            const overlay = document.querySelector('.overlay');
+
+            function toggleMobileMenu() {
+                mobileSidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+            closeSidebarBtn.addEventListener('click', toggleMobileMenu);
+            overlay.addEventListener('click', toggleMobileMenu);
+        </script>
+    </header>
+
+    <div class="container">
+        <!-- Email Input View -->
+        <div class="view" id="email-view">
+            <h2>Reset Password</h2>
+            <form id="email-form">
+                <input type="email" id="email" placeholder="Your registered email" required>
+                <div class="error-message" id="email-error"></div>
+                <button type="submit">Send Reset Link</button>
+            </form>
+        </div>
+
+        <!-- OTP Verification View -->
+        <div class="view hidden" id="otp-view">
+            <h2>Enter OTP</h2>
+            <form id="otp-form">
+                <input type="text" id="otp" placeholder="6-digit code" maxlength="6" pattern="\d{6}" inputmode="numeric">
+                <div class="error-message" id="otp-error"></div>
+                <button type="submit">Verify</button>
+            </form>
+            <p class="timer">Resend OTP in <span id="countdown">60</span>s</p>
+            <button id="resend-otp">Resend OTP</button>
+        </div>
+
+        <!-- Password Reset View -->
+        <div class="view hidden" id="reset-view">
+            <h2>New Password</h2>
+            <form id="reset-form">
+                <div class="password-container">
+                    <input type="password" id="new-password" placeholder="New password" minlength="8" required>
+                    <button type="button" class="toggle-password">Show</button>
+                </div>
+                <div class="password-strength">
+                    <div class="strength-meter" id="strength-meter"></div>
+                </div>
+                <div class="password-container">
+                    <input type="password" id="confirm-password" placeholder="Confirm password" required>
+                    <button type="button" class="toggle-password">Show</button>
+                </div>
+                <div class="error-message" id="password-error"></div>
+                <button type="submit">Update Password</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -497,19 +703,8 @@
             return new Promise((resolve, reject) => {
                 // Simulate network delay
                 setTimeout(() => {
-                    // In a real app, this would call your backend
                     console.log(`OTP sent to ${email} (simulated)`);
-                    
-                    // For demo purposes, we'll always resolve
-                    // In a real app, you might reject if the email isn't registered
                     resolve();
-                    
-                    // Example of how you might handle errors:
-                    // if (email === 'nonexistent@example.com') {
-                    //     reject(new Error('Email not found'));
-                    // } else {
-                    //     resolve();
-                    // }
                 }, 2000);
             });
         }
@@ -517,11 +712,7 @@
         function simulateVerifyOtp(otp) {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    // In a real app, this would verify against the stored OTP
                     console.log(`Verifying OTP: ${otp} (simulated)`);
-                    
-                    // For demo purposes, we'll accept any 6-digit code that starts with 1
-                    // In a real app, you'd verify against the stored OTP
                     if (otp.startsWith('1')) {
                         resolve();
                     } else {
@@ -534,10 +725,7 @@
         function simulateResetPassword(newPassword) {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    // In a real app, this would update the password in your database
                     console.log(`Password updated to: ${newPassword} (simulated)`);
-                    
-                    // For demo purposes, we'll always resolve
                     resolve();
                 }, 1000);
             });

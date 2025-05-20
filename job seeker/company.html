@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechJitu Profile | EthioJobs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #2563EB;
+            --primary-blue-hover: #1E40AF;
+            --secondary-green: #16A34A;
+            --secondary-green-hover: #15803D;
+            --urgency-orange: #EA580C;
+            --text-dark: #1F2937;
+            --text-medium: #4B5563;
+            --text-light: #6B7280;
+            --bg-white: #FFFFFF;
+            --bg-light: #F3F4F6;
+            --border-color: #E5E7EB;
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-md);
+        }
+
+        .company-header {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: var(--space-xl);
+            margin-bottom: var(--space-md);
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .company-header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                #078930 0%, #078930 33%, 
+                #fcdd09 33%, #fcdd09 66%, 
+                #da121a 66%, #da121a 100%);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .company-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto var(--space-md) auto;
+            border: 4px solid var(--bg-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .company-logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .company-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+
+        .company-tagline {
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto var(--space-md) auto;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-verified {
+            background-color: rgba(22, 163, 74, 0.1);
+            color: var(--secondary-green);
+        }
+
+        .badge-industry {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary-blue);
+            margin-left: var(--space-sm);
+        }
+
+        .company-overview {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--text-dark);
+            position: relative;
+            padding-bottom: var(--space-xs);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-blue);
+            border-radius: 3px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .overview-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .overview-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(37, 99, 235, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            flex-shrink: 0;
+        }
+
+        .overview-label {
+            font-weight: 500;
+            color: var(--text-medium);
+        }
+
+        .overview-value {
+            font-weight: 600;
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--space-sm);
+            margin: var(--space-md) 0;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-medium);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-link.facebook:hover {
+            background-color: #1877F2;
+            color: white;
+        }
+
+        .social-link.twitter:hover {
+            background-color: #1DA1F2;
+            color: white;
+        }
+
+        .social-link.linkedin:hover {
+            background-color: #0077B5;
+            color: white;
+        }
+
+        .about-text {
+            color: var(--text-medium);
+            margin-bottom: var(--space-md);
+            line-height: 1.7;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            gap: var(--space-xs);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-blue-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .company-stats {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .stat-card {
+            background-color: var(--bg-light);
+            border-radius: 10px;
+            padding: var(--space-md);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(37, 99, 235, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-sm) auto;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .additional-stats {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+
+        .job-listings {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .job-card {
+            background-color: var(--bg-white);
+            border-radius: 10px;
+            padding: var(--space-md);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-blue);
+        }
+
+        .job-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .job-badge-verified {
+            background-color: rgba(22, 163, 74, 0.1);
+            color: var(--secondary-green);
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            color: var(--text-dark);
+        }
+
+        .job-meta {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-md);
+        }
+
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .job-meta-item i {
+            color: var(--text-light);
+            width: 16px;
+            text-align: center;
+        }
+
+        .job-salary {
+            color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        .job-applicants {
+            color: var(--urgency-orange);
+            font-weight: 500;
+        }
+
+        .job-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--space-md);
+            padding-top: var(--space-sm);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .job-posted {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .btn-apply {
+            background-color: var(--secondary-green);
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-apply:hover {
+            background-color: var(--secondary-green-hover);
+        }
+
+        .company-gallery {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 0.6s ease-out 0.5s both;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            height: 180px;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            color: white;
+            padding: var(--space-sm);
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+
+        .footer {
+            background-color: var(--text-dark);
+            color: white;
+            padding: var(--space-xl) 0;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-xl);
+        }
+
+        .footer-logo {
+            width: 120px;
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            position: relative;
+            padding-bottom: var(--space-xs);
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary-blue);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-link {
+            margin-bottom: var(--space-xs);
+        }
+
+        .footer-link a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-contact i {
+            width: 20px;
+            color: var(--primary-blue);
+            margin-right: var(--space-xs);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--space-lg);
+            margin-top: var(--space-lg);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .sticky-cta {
+            position: fixed;
+            bottom: -100px;
+            left: 0;
+            right: 0;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            text-align: center;
+            z-index: 100;
+            transition: bottom 0.3s ease;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sticky-cta.visible {
+            bottom: 0;
+        }
+
+        .sticky-cta .btn {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: var(--space-lg);
+            right: var(--space-lg);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background-color: var(--primary-blue-hover);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .company-header {
+                padding: var(--space-lg);
+            }
+
+            .company-logo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .company-name {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: var(--space-xs);
+            }
+
+            .badge-industry {
+                margin-left: 0;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid, .jobs-grid, .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+        }
+
+        @keyframes countUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .lightbox-caption {
+            color: white;
+            text-align: center;
+            margin-top: var(--space-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="company-header">
+            <div class="company-logo">
+                <img src="https://images.unsplash.com/photo-1641302109113-67653c0fd208?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c29mdHdhcmUlMjBjb21wYW55JTIwbG9nb3xlbnwwfHwwfHx8MA%3D%3D" alt="TechJitu Ethiopia">
+            </div>
+            <h1 class="company-name">
+                TechJitu Ethiopia
+                <span class="badge badge-verified">
+                    <i class="fas fa-check-circle"></i> Verified
+                </span>
+                <span class="badge badge-industry">Software Development</span>
+            </h1>
+            <p class="company-tagline">
+                Building innovative digital solutions while nurturing Ethiopia's tech talent
+            </p>
+        </header>
+
+        <section class="company-overview">
+            <h2 class="section-title">Company Overview</h2>
+            <div class="overview-grid">
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <div class="overview-label">Location</div>
+                        <div class="overview-value">Addis Ababa, Ethiopia</div>
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="overview-label">Company Size</div>
+                        <div class="overview-value">51-200 employees</div>
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div>
+                        <div class="overview-label">Founded</div>
+                        <div class="overview-value">2018</div>
+                    </div>
+                </div>
+                <div class="overview-item">
+                    <div class="overview-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div>
+                        <div class="overview-label">Website</div>
+                        <div class="overview-value">
+                            <a href="https://techjitu.com" style="color: var(--primary-blue);">techjitu.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-link linkedin" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" class="social-link facebook" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link twitter" aria-label="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+            <p class="about-text">
+                TechJitu is a leading software development company specializing in building innovative digital solutions for clients worldwide. With offices in Addis Ababa and Nairobi, we deliver high-quality software products while nurturing local tech talent.
+            </p>
+            <p class="about-text">
+                Our team of passionate engineers works on challenging projects across various industries, including fintech, healthcare, and e-commerce. We believe in creating meaningful impact through technology while maintaining a collaborative and inclusive work culture.
+            </p>
+            <a href="#" class="btn btn-primary" id="viewFullProfile">
+                <i class="fas fa-search"></i> View Full Profile
+            </a>
+        </section>
+
+        <section class="company-stats">
+            <h2 class="section-title">Company Stats</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-value" id="avgSalary">ETB 25K-60K</div>
+                    <div class="stat-label">Average Salary Range</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value" id="hiringProcess">2-4 Weeks</div>
+                    <div class="stat-label">Hiring Process</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="stat-value" id="remoteRoles">50%</div>
+                    <div class="stat-label">Remote Roles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value" id="employeeRating">4.8/5</div>
+                    <div class="stat-label">Employee Rating</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="additional-stats">
+            <h2 class="section-title">More About TechJitu</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value" id="totalEmployees">0</div>
+                    <div class="stat-label">Total Employees</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-value" id="branchLocations">0</div>
+                    <div class="stat-label">Branch Locations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="stat-value" id="totalCustomers">0</div>
+                    <div class="stat-label">Happy Clients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="stat-value">+251 912 345 678</div>
+                    <div class="stat-label">Contact Number</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="job-listings">
+            <div class="jobs-header">
+                <h2 class="section-title">Open Positions at TechJitu</h2>
+                <a href="#" class="btn btn-outline">
+                    <i class="fas fa-briefcase"></i> View All Jobs
+                </a>
+            </div>
+            <div class="jobs-grid">
+                <div class="job-card" data-job-id="1">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">Senior Software Engineer</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Addis Ababa (Remote)
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 45,000 - 60,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 50+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 3 days ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+                <div class="job-card" data-job-id="2">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">Product Manager</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Addis Ababa
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 35,000 - 45,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 24+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 1 week ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+                <div class="job-card" data-job-id="3">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">UX Designer</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Remote
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 30,000 - 40,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 15+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 2 weeks ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="job-card" data-job-id="3">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">Casher</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Remote
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 30,000 - 40,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 15+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 2 weeks ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="job-card" data-job-id="3">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">Manager</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Remote
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 30,000 - 40,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 15+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 2 weeks ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="job-card" data-job-id="3">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">Acountant</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Remote
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 80,000 - 40,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 15+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 2 weeks ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <div class="job-card" data-job-id="3">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">Web developer</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Remote
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 50,000 - 40,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 15+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 2 weeks ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                <div class="job-card" data-job-id="3">
+                    <span class="job-badge job-badge-verified">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
+                    <h3 class="job-title">Designer</h3>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <i class="fas fa-map-marker-alt"></i> Remote
+                        </div>
+                        <div class="job-meta-item job-salary">
+                            <i class="fas fa-money-bill-wave"></i> ETB 20,000 - 40,000
+                        </div>
+                        <div class="job-meta-item job-applicants">
+                            <i class="fas fa-fire"></i> 15+ applied
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <div class="job-posted">
+                            <i class="far fa-clock"></i> Posted 2 weeks ago
+                        </div>
+                        <button class="btn btn-apply">Apply Now</button>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </section>
+
+        <section class="company-gallery">
+            <h2 class="section-title">Our Workplace</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://media.istockphoto.com/id/1461425430/photo/a-group-of-young-business-people-during-a-meeting-close-up-on-young-african-entrepreneur.webp?a=1&b=1&s=612x612&w=0&k=20&c=xAydFMflELJvObM8kc4WrsBDGh6Ii0eS2nuA7XXpxps=" alt="TechJitu Office">
+                    <div class="gallery-caption">Our Addis Ababa office</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.istockphoto.com/id/2215688126/photo/business-people-shaking-hands-during-a-meeting-in-modern-office.webp?a=1&b=1&s=612x612&w=0&k=20&c=3VJaJX6vjcu0sV6fTtzXCc3_WnTFOySE90uTL8RaPkk=" alt="TechJitu Team">
+                    <div class="gallery-caption">Our amazing team</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://media.istockphoto.com/id/2178497083/photo/african-american-couple-collaborating-on-holiday-gift-wrapping-sharing-joy.jpg?s=612x612&w=0&k=20&c=HUwoGmU6ABvZr4tAK9Vh35DplzEmbPTCl7kThbKbZrA=" alt="TechJitu Event">
+                    <div class="gallery-caption">Community tech event</div>
+                </div>
+                                <div class="gallery-item">
+                    <img src="https://plus.unsplash.com/premium_photo-1663013412690-d22922c46f5f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZXRoaW9waWFuJTIwb2ZmaWNlfGVufDB8fDB8fHww" alt="TechJitu Event">
+                    <div class="gallery-caption">our position</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <img src="https://via.placeholder.com/120x40" alt="EthioJobs" class="footer-logo">
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: var(--space-md);">
+                    Connecting Ethiopian talent with great opportunities
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link linkedin" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-link facebook" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link twitter" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title">Company</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">About Us</a></li>
+                    <li class="footer-link"><a href="#">Careers</a></li>
+                    <li class="footer-link"><a href="#">Blog</a></li>
+                    <li class="footer-link"><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title">For Job Seekers</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">Browse Jobs</a></li>
+                    <li class="footer-link"><a href="#">Salary Calculator</a></li>
+                    <li class="footer-link"><a href="#">Career Advice</a></li>
+                    <li class="footer-link"><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-title">Contact</h3>
+                <div class="footer-contact">
+                    <p><i class="fas fa-map-marker-alt"></i> Addis Ababa, Ethiopia</p>
+                    <p><i class="fas fa-phone"></i> +251 911 234 567</p>
+                    <p><i class="fas fa-envelope"></i> info@ethiojobs.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2023 EthioJobs. All rights reserved. | <a href="#" style="color: rgba(255,255,255,0.7);">Privacy Policy</a> | <a href="#" style="color: rgba(255,255,255,0.7);">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <div class="sticky-cta" id="stickyCTA">
+        <button class="btn btn-primary">
+            <i class="fas fa-briefcase"></i> View All Jobs from TechJitu
+        </button>
+    </div>
+
+    <div class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close" id="lightboxClose">×</span>
+            <img src="" alt="" class="lightbox-img" id="lightboxImg">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <script>
+        // Job data
+        const jobs = [
+            {
+                id: 1,
+                title: 'Senior Software Engineer',
+                company: 'TechJitu Ethiopia',
+                location: 'Addis Ababa (Remote)',
+                salary: 'ETB 45,000 - 60,000',
+                applicants: '50+',
+                posted: '3 days ago',
+                description: 'Join our team to build cutting-edge software solutions for global clients. You will work on challenging projects in a collaborative environment.',
+                responsibilities: [
+                    'Develop and maintain high-quality web applications',
+                    'Collaborate with cross-functional teams to define and implement features',
+                    'Optimize applications for performance and scalability',
+                    'Mentor junior developers'
+                ],
+                requirements: [
+                    '5+ years of software development experience',
+                    'Proficiency in JavaScript, React, and Node.js',
+                    'Experience with cloud platforms (AWS, Azure)',
+                    'Strong problem-solving skills'
+                ],
+                benefits: [
+                    'Competitive salary and equity options',
+                    'Remote work flexibility',
+                    'Health and wellness programs',
+                    'Continuous learning opportunities'
+                ]
+            },
+            {
+                id: 2,
+                title: 'Product Manager',
+                company: 'TechJitu Ethiopia',
+                location: 'Addis Ababa',
+                salary: 'ETB 35,000 - 45,000',
+                applicants: '24+',
+                posted: '1 week ago',
+                description: 'Lead the product lifecycle from ideation to launch, working closely with engineering and design teams to deliver impactful solutions.',
+                responsibilities: [
+                    'Define product vision and strategy',
+                    'Manage product roadmaps and prioritize features',
+                    'Conduct market research and user testing',
+                    'Collaborate with stakeholders to ensure alignment'
+                ],
+                requirements: [
+                    '3+ years of product management experience',
+                    'Strong understanding of agile methodologies',
+                    'Excellent communication and leadership skills',
+                    'Experience in tech or software industries'
+                ],
+                benefits: [
+                    'Competitive salary and performance bonuses',
+                    'Health insurance and wellness benefits',
+                    'Professional development budget',
+                    'Collaborative and inclusive culture'
+                ]
+            },
+            {
+                id: 3,
+                title: 'UX Designer',
+                company: 'TechJitu Ethiopia',
+                location: 'Remote',
+                salary: 'ETB 30,000 - 40,000',
+                applicants: '15+',
+                posted: '2 weeks ago',
+                description: 'Create intuitive and engaging user experiences for our digital products, ensuring a seamless journey for our users.',
+                responsibilities: [
+                    'Design wireframes, prototypes, and high-fidelity mockups',
+                    'Conduct user research and usability testing',
+                    'Collaborate with developers to implement designs',
+                    'Maintain design consistency across products'
+                ],
+                requirements: [
+                    '2+ years of UX/UI design experience',
+                    'Proficiency in Figma, Sketch, or Adobe XD',
+                    'Strong portfolio showcasing user-centered design',
+                    'Knowledge of HTML/CSS is a plus'
+                ],
+                benefits: [
+                    'Flexible remote work options',
+                    'Health and dental insurance',
+                    'Creative and supportive team environment',
+                    'Access to design workshops and tools'
+                ]
+            }
+        ];
+
+        // Store jobs in localStorage for job_detail.html
+        localStorage.setItem('companyJobs', JSON.stringify(jobs));
+
+        // Animate numbers when they come into view
+        function animateValue(id, start, end, duration, suffix = '') {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                obj.innerHTML = value + suffix;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('company-stats')) {
+                        setTimeout(() => {
+                            animateValue('totalEmployees', 0, 180, 1000);
+                            animateValue('branchLocations', 0, 3, 800);
+                            animateValue('totalCustomers', 0, 120, 1200, '+');
+                        }, 200);
+                    }
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.company-stats, .additional-stats, .job-listings, .company-gallery').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Sticky CTA
+        const stickyCTA = document.getElementById('stickyCTA');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 500) {
+                stickyCTA.classList.add('visible');
+            } else {
+                stickyCTA.classList.remove('visible');
+            }
+        });
+
+        stickyCTA.querySelector('button').addEventListener('click', () => {
+            document.querySelector('.job-listings').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // View Full Profile button
+        document.getElementById('viewFullProfile').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('This would expand to show full company profile in a real implementation');
+        });
+
+        // Job card click handlers
+        document.querySelectorAll('.job-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    return;
+                }
+                const jobId = card.dataset.jobId;
+                window.location.href = `job_detal.html?jobId=${jobId}`;
+            });
+        });
+
+        // Apply button handlers
+        document.querySelectorAll('.btn-apply').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const jobId = btn.closest('.job-card').dataset.jobId;
+                window.location.href = `job_detal.html?jobId=${jobId}`;
+            });
+        });
+
+        // Lightbox for gallery
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                const caption = item.querySelector('.gallery-caption').textContent;
+                lightboxImg.src = imgSrc;
+                lightboxCaption.textContent = caption;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Save company toggle
+        const saveCompany = document.createElement('button');
+        saveCompany.innerHTML = '<i class="far fa-bookmark"></i> Save Company';
+        saveCompany.style.position = 'fixed';
+        saveCompany.style.top = '20px';
+        saveCompany.style.right = '20px';
+        saveCompany.style.zIndex = '99';
+        saveCompany.style.padding = '8px 16px';
+        saveCompany.style.borderRadius = '20px';
+        saveCompany.style.backgroundColor = 'var(--bg-white)';
+        saveCompany.style.color = 'var(--primary-blue)';
+        saveCompany.style.border = '1px solid var(--primary-blue)';
+        saveCompany.style.cursor = 'pointer';
+        saveCompany.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+        saveCompany.style.transition = 'var(--transition)';
+        
+        saveCompany.addEventListener('click', () => {
+            if (saveCompany.innerHTML.includes('far')) {
+                saveCompany.innerHTML = '<i class="fas fa-bookmark"></i> Saved';
+                saveCompany.style.backgroundColor = 'var(--primary-blue)';
+                saveCompany.style.color = 'white';
+            } else {
+                saveCompany.innerHTML = '<i class="far fa-bookmark"></i> Save Company';
+                saveCompany.style.backgroundColor = 'var(--bg-white)';
+                saveCompany.style.color = 'var(--primary-blue)';
+            }
+        });
+        
+        document.body.appendChild(saveCompany);
+    </script>
+</body>
+</html>

@@ -24,10 +24,10 @@
 
         body {
             font-family: 'Inter', sans-serif;
-    background-color: #F3F4F6;
-    background-image: url("./bg.png");
-    background-repeat: no-repeat;
-    background-size: auto;
+            background-color: #F3F4F6;
+            background-image: url("./bg.png");
+            background-repeat: no-repeat;
+            background-size: auto;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -327,8 +327,7 @@
             }
         }
     </style>
-    <!-- Cloudinary Upload Widget -->
-    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+
 </head>
 <body>
     <div class="login-container">
@@ -366,8 +365,7 @@
                     >
                     <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/>
                         </svg>
                     </button>
                 </div>
@@ -388,53 +386,22 @@
 
             <div class="login-footer">
                 <p>Don't have an account? <a href="../register/register.html">Sign up</a></p>
-                <p><a href="../forgot-password/forgot.html">Forgot password?</a></p>
+                <p><a href="../forgot_password/forgot.html">Forgot password?</a></p>
             </div>
         </form>
     </div>
-
-    <script type="module">
-        // Firebase Imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword, 
-            signInWithPopup, 
-            GoogleAuthProvider,
-            sendEmailVerification,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc, 
-            setDoc 
-        } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
-
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD11ABaNYrhHo5clZDpmuIanlGGRsW1-eU",
-            authDomain: "sira-gebeya-job-market.firebaseapp.com",
-            projectId: "sira-gebeya-job-market",
-            storageBucket: "sira-gebeya-job-market.appspot.com",
-            messagingSenderId: "460938974467",
-            appId: "1:460938974467:web:703df4960cbd9941ba0536",
-            measurementId: "G-65HYNHT5Q4"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const googleProvider = new GoogleAuthProvider();
-
-        // Cloudinary Configuration
-        const cloudinaryConfig = {
-            cloudName: 'dbw2rypb0',
-            uploadPreset: 'your_upload_preset'
-        };
-
+    
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Simple database access
+            const db = {
+                users: JSON.parse(localStorage.getItem('users')) || [],
+                
+                findUserByEmail: function(email) {
+                    return this.users.find(user => user.email === email);
+                }
+            };
+
             // DOM Elements
             const loginForm = document.getElementById('loginForm');
             const emailInput = document.getElementById('email');
@@ -457,19 +424,17 @@
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 passwordInput.setAttribute('type', type);
                 
-                // Update icon and aria-label
+                // Update icon
                 const icon = this.querySelector('svg');
                 if (type === 'password') {
                     icon.innerHTML = '<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>';
-                    this.setAttribute('aria-label', 'Show password');
                 } else {
                     icon.innerHTML = '<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/><path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829l.822.822zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829z"/><path d="M3.35 5.47c-.18.16-.353.322-.518.487A13.134 13.134 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7.029 7.029 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12-.708.708z"/>';
-                    this.setAttribute('aria-label', 'Hide password');
                 }
             });
 
-            // Email/Password Login
-            loginForm.addEventListener('submit', async function(e) {
+            // Form submission
+            loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const email = emailInput.value.trim();
@@ -516,23 +481,24 @@
                 setLoadingState(true);
                 
                 try {
-                    // Firebase email/password sign-in
-                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    // Check credentials against our "database"
+                    const user = db.findUserByEmail(email);
                     
-                    // Check if email is verified
-                    if (!userCredential.user.emailVerified) {
-                        await sendEmailVerification(userCredential.user);
-                        await signOut(auth);
-                        throw new Error('Please verify your email first. Check your inbox for the verification link.');
+                    if (!user) {
+                        throw new Error('No account found with this email');
                     }
                     
-                    // Get user role from Firestore
-                    const role = await getUserRole(userCredential.user.uid);
+                    if (user.password !== password) {
+                        throw new Error('Incorrect password');
+                    }
+                    
+                    // Store current user in session
+                    sessionStorage.setItem('currentUser', JSON.stringify(user));
                     
                     // Redirect based on role
-                    window.location.href = role === 'company' 
-                        ? '/company/dashboard' 
-                        : '/job-seeker/dashboard';
+                    window.location.href = user.role === 'company' 
+                        ? '../dashboard/dashboard.html' 
+                        : '../dashboard/dashboard.html';
                     
                 } catch (error) {
                     handleAuthError(error);
@@ -541,107 +507,55 @@
                 }
             });
 
-            // Google Sign-In
-            googleSignInBtn.addEventListener('click', async function() {
-                try {
-                    setLoadingState(true, true);
-                    
-                    const result = await signInWithPopup(auth, googleProvider);
-                    const user = result.user;
-                    
-                    // Check if this is a new user
-                    const isNewUser = result.additionalUserInfo?.isNewUser;
-                    
-                    if (isNewUser) {
-                        // Save additional user data to Firestore
-                        await saveUserData({
-                            uid: user.uid,
-                            email: user.email,
-                            displayName: user.displayName,
-                            photoURL: user.photoURL || await uploadDefaultProfilePicture(user.uid),
-                            role: 'jobSeeker', // Default role
+            // Google Sign-In (simulated)
+            googleSignInBtn.addEventListener('click', function() {
+                setLoadingState(true, true);
+                
+                // Simulate Google sign-in after delay
+                setTimeout(() => {
+                    try {
+                        // Create a mock user for demo purposes
+                        const mockUser = {
+                            id: 'google_' + Date.now(),
+                            email: 'demo@example.com',
+                            displayName: 'Google User',
+                            photoURL: 'https://via.placeholder.com/150',
+                            role: 'jobSeeker',
                             createdAt: new Date().toISOString()
-                        });
+                        };
+                        
+                        // Store in our database if not exists
+                        if (!db.findUserByEmail(mockUser.email)) {
+                            db.users.push(mockUser);
+                            localStorage.setItem('users', JSON.stringify(db.users));
+                        }
+                        
+                        // Store current user in session
+                        sessionStorage.setItem('currentUser', JSON.stringify(mockUser));
+                        
+                        // Redirect
+                        window.location.href = '../dashboard/dashboard.html';
+                    } catch (error) {
+                        handleAuthError(error);
+                    } finally {
+                        setLoadingState(false, true);
                     }
-                    
-                    // Redirect based on role
-                    const role = await getUserRole(user.uid);
-                    window.location.href = role === 'company' 
-                        ? '/company/dashboard' 
-                        : '/job-seeker/dashboard';
-                    
-                } catch (error) {
-                    handleAuthError(error);
-                } finally {
-                    setLoadingState(false, true);
-                }
+                }, 1500);
             });
-
-            // Helper Functions
-            async function getUserRole(uid) {
-                try {
-                    const userDoc = await getDoc(doc(db, "users", uid));
-                    return userDoc.exists() ? userDoc.data().role : 'jobSeeker';
-                } catch (error) {
-                    console.error("Error getting user role:", error);
-                    return 'jobSeeker';
-                }
-            }
-
-            async function saveUserData(userData) {
-                try {
-                    await setDoc(doc(db, "users", userData.uid), {
-                        email: userData.email,
-                        displayName: userData.displayName,
-                        photoURL: userData.photoURL,
-                        role: userData.role,
-                        lastLogin: new Date().toISOString(),
-                        ...(userData.createdAt && { createdAt: userData.createdAt })
-                    }, { merge: true });
-                } catch (error) {
-                    console.error("Error saving user data:", error);
-                    throw error;
-                }
-            }
-
-            async function uploadDefaultProfilePicture(uid) {
-                try {
-                    // In production, implement actual Cloudinary upload
-                    return 'https://via.placeholder.com/150';
-                } catch (error) {
-                    console.error("Error uploading default profile picture:", error);
-                    return '';
-                }
-            }
 
             function handleAuthError(error) {
                 let errorMessage = 'Authentication failed. Please try again.';
                 
-                switch(error.code) {
-                    case 'auth/user-not-found':
-                        errorMessage = 'No account found with this email';
-                        emailError.textContent = errorMessage;
-                        emailInput.style.borderColor = 'var(--error)';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Incorrect password';
-                        passwordError.textContent = errorMessage;
-                        passwordInput.style.borderColor = 'var(--error)';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = 'Account temporarily locked due to many failed attempts';
-                        break;
-                    case 'auth/account-exists-with-different-credential':
-                        errorMessage = 'This email is already registered with another method';
-                        break;
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'Email already in use';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password should be at least 6 characters';
-                        break;
-                    default:
-                        errorMessage = error.message || errorMessage;
+                if (error.message.includes('No account found')) {
+                    errorMessage = error.message;
+                    emailError.textContent = errorMessage;
+                    emailInput.style.borderColor = 'var(--error)';
+                } else if (error.message.includes('Incorrect password')) {
+                    errorMessage = error.message;
+                    passwordError.textContent = errorMessage;
+                    passwordInput.style.borderColor = 'var(--error)';
+                } else {
+                    errorMessage = error.message || errorMessage;
                 }
                 
                 showToast(errorMessage, 'error');

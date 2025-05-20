@@ -1,145 +1,656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Applicant Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Applicant Tracker - ስራ-ገበያ (Light Theme)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        /* Custom CSS for resume viewer iframe */
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #93c5fd;
+            --secondary-color: #16a34a;
+            --danger-color: #dc2626;
+            --warning-color: #f59e0b;
+            --dark-color: #374151;
+            --light-color: #f9fafb;
+            --gray-color: #6b7280;
+            --border-color: #d1d5db;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            user-select: none;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            user-select: none;
+            user-drag: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: var(--secondary-color);
+        }
+
+        .logo-icon {
+            font-size: 2.3rem;
+            animation: bounce 3s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-8px) scale(1.1);
+            }
+        }
+
+        nav {
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            user-select: none;
+        }
+
+        .nav-links li a {
+            color: var(--dark-color);
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-links li a:hover,
+        .nav-links li a:focus {
+            color: var(--secondary-color);
+            outline-offset: 3px;
+            outline: 3px solid var(--secondary-color);
+            outline-radius: var(--radius-sm);
+            text-shadow: 0 0 6px var(--secondary-color);
+        }
+
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            height: 3px;
+            width: 0%;
+            background: var(--secondary-color);
+            border-radius: 3px;
+            transition: width 0.35s ease;
+        }
+
+        .nav-links li a:hover::after,
+        .nav-links li a:focus::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark-color);
+            font-size: 2.4rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            user-select: none;
+            padding: 0.2rem;
+        }
+
+        .mobile-menu-btn:hover,
+        .mobile-menu-btn:focus {
+            color: var(--secondary-color);
+            outline: none;
+            transform: scale(1.1);
+        }
+
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 260px;
+            height: 100vh;
+            background-color: white;
+            transition: left 0.3s ease;
+            z-index: 10000;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+            user-select: none;
+            color: var(--dark-color);
+        }
+
+        .mobile-sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 2rem;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.3s ease;
+        }
+
+        .close-sidebar:hover,
+        .close-sidebar:focus {
+            color: var(--secondary-color);
+            outline: none;
+            transform: scale(1.1);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav-links a {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            user-select: none;
+        }
+
+        .mobile-nav-links a:hover,
+        .mobile-nav-links a:focus {
+            color: var(--secondary-color);
+            outline: none;
+            border-bottom-color: var(--secondary-color);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.7);
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 767px) {
+            .nav-links {
+                display: none !important;
+            }
+
+            .mobile-menu-btn {
+                display: inline-flex !important;
+            }
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 1rem 3rem;
+            position: relative;
+            z-index: 100;
+            user-select: text;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 14px var(--primary-light);
+        }
+
+        .card {
+            background: white;
+            color: var(--dark-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+        }
+
+        .filters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            color: var(--gray-color);
+            user-select: none;
+        }
+
+        select,
+        input[type="text"],
+        textarea {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+            box-shadow: none;
+            background: white;
+            color: var(--dark-color);
+            user-select: text;
+        }
+
+        select:focus,
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 14px var(--primary-light);
+        }
+
+        input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            color: var(--dark-color);
+        }
+
+        th {
+            background: var(--primary-light);
+            text-align: left;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-color);
+            cursor: pointer;
+        }
+
+        th:hover,
+        th:focus {
+            background: var(--primary-color);
+            color: white;
+            outline: none;
+        }
+
+        th .sort-icon {
+            margin-left: 0.25rem;
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        th .sort-icon.asc {
+            transform: rotate(180deg);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background-color: #e0e7ff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: var(--radius-sm);
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 0 12px var(--primary-light);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            user-select: none;
+        }
+
+        .btn-sm:hover {
+            background-color: #1e40af;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-light);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-new {
+            background-color: #bfdbfe;
+            color: #1e40af;
+            box-shadow: 0 0 15px #93c5fdaa;
+        }
+
+        .status-reviewed {
+            background-color: #bbf7d0;
+            color: #166534;
+            box-shadow: 0 0 15px #4ade8099;
+        }
+
+        .status-hired {
+            background-color: #dcfce7;
+            color: #14532d;
+            border: 1px solid #86efac;
+            box-shadow: 0 0 15px #86efac99;
+        }
+
         #resume-viewer {
             width: 100%;
             height: 500px;
-            border: 1px solid #e5e7eb; /* Tailwind gray-200 */
-            border-radius: 0.375rem; /* Tailwind rounded-md */
-            margin-bottom: 1rem;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 30px var(--primary-light);
+            user-select: none;
+            transition: box-shadow 0.5s ease;
         }
+
+        #resume-viewer:hover {
+            box-shadow: 0 0 45px var(--secondary-color);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            resize: vertical;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--dark-color);
+            transition: box-shadow 0.3s ease;
+            user-select: text;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 20px var(--primary-light);
+        }
+
+        #save-notes-button {
+            background-color: var(--secondary-color);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 0 12px var(--secondary-color);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            user-select: none;
+            display: block;
+            margin-top: 1rem;
+        }
+
+        #save-notes-button:hover {
+            background-color: #15803d;
+            box-shadow: 0 0 20px #22c55e;
+        }
+
+        #notes-warning {
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: var(--danger-color);
+            height: 1.2rem;
+            user-select: none;
+        }
+
+        .text-right {
+            text-align: right;
+            margin-bottom: 3rem;
+        }
+
         .anonymized {
-            filter: blur(5px);
+            filter: blur(4px);
+            transition: filter 0.3s ease;
         }
     </style>
 </head>
-<body class="bg-gray-100 font-inter">
-    <div class="container mx-auto py-6">
-        <h1 class="text-3xl font-semibold text-gray-800 mb-6">Applicant Tracker</h1>
-
-        <div class="mb-4">
-            <label for="status-filter" class="inline-flex items-center">
-                <span class="mr-2 text-gray-700">Filter by Status:</span>
-                <select id="status-filter" class="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:border-blue-500">
-                    <option value="all">All</option>
-                    <option value="new">New</option>
-                    <option value="reviewed">Reviewed</option>
-                    <option value="hired">Hired</option>
-                </select>
-            </label>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="../dashboard/dashboard.html" class="logo" title="Dashboard">
+                    <span class="logo-icon">💼</span>
+                    <span>ስራ</span>-<span>ገበያ</span>
+                </a>
+            </div>
+            <nav class="nav-container" role="navigation" aria-label="Primary navigation">
+                <ul class="nav-links">
+                    <li><a href="../dashboard/dashboard.html">HOME</a></li>
+                    <li><a href="../job management/job.html">Jobs</a></li>
+                    <li><a href="../interview schedule/interview.html">Interviews</a></li>
+                    <li><a href="../application tracking/app.html">Applications</a></li>
+                    <li><a href="../candidate pepline/pepline.html">Candidates</a></li>
+                    <li><a href="../message/message.html">Messages</a></li>
+                    <li><a href="../payment gateway/payment.html">Payments</a></li>
+                </ul>
+                <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false"
+                    aria-controls="mobile-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
         </div>
-
-        <div class="bg-white shadow-md rounded-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">Applicants</h2>
-            <table class="min-w-full table-auto rounded-md overflow-hidden" id="applicant-table">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Name</th>
-                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Email</th>
-                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Phone</th>
-                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Status</th>
-                        <th class="px-4 py-2 text-left text-gray-600 font-semibold uppercase">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white" id="applicant-table-body">
-                    </tbody>
-            </table>
+        <div class="mobile-sidebar" id="mobile-sidebar" aria-hidden="true" tabindex="-1">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💼</span>
+                    <span>ስራ</span>-<span>ገበያ</span>
+                </div>
+                <button class="close-sidebar" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul class="mobile-nav-links" role="menu">
+                <li><a href="../dashboard/dashboard.html" role="menuitem">HOME</a></li>
+                <li><a href="../job management/job.html" role="menuitem">Jobs</a></li>
+                <li><a href="../interview schedule/interview.html" role="menuitem">Interviews</a></li>
+                <li><a href="../application tracking/app.html" role="menuitem">Applications</a></li>
+                <li><a href="../candidate pepline/pepline.html" role="menuitem">Candidates</a></li>
+                <li><a href="../message/message.html" role="menuitem">Messages</a></li>
+                <li><a href="../payment gateway/payment.html" role="menuitem">Payments</a></li>
+            </ul>
         </div>
+        <div class="overlay" tabindex="-1"></div>
+    </header>
 
-        <div class="bg-white shadow-md rounded-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">Resume Viewer</h2>
-            <iframe id="resume-viewer" src=""></iframe>
-        </div>
+    <main class="container" role="main">
+        <h1>Applicant Tracker</h1>
 
-        <div class="bg-white shadow-md rounded-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">Secure Notes</h2>
-            <div id="secure-notes-container">
-                <textarea id="secure-notes" placeholder="Enter secure notes here..." class="w-full h-32 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:border-blue-500"></textarea>
-                <p id="notes-warning" class="text-red-500 text-sm mt-2"></p>
-                <button id="save-notes-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mt-2">Save Notes</button>
+        <div class="filters-container" aria-label="Filters">
+            <div class="filter-row">
+                <label for="status-filter">
+                    <span>Filter by Status:</span>
+                    <select id="status-filter" aria-label="Filter applicants by status">
+                        <option value="all">All</option>
+                        <option value="new">New</option>
+                        <option value="reviewed">Reviewed</option>
+                        <option value="hired">Hired</option>
+                    </select>
+                </label>
+            </div>
+            <div class="filter-row">
+                <label class="checkbox-container" for="anonymize-toggle">
+                    <input type="checkbox" id="anonymize-toggle" aria-checked="false" />
+                    <span>Anonymize Data</span>
+                </label>
             </div>
         </div>
 
-        <div class="text-right">
-            <button id="export-csv-button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md">Export to CSV</button>
+        <section class="card" aria-label="Applicants table">
+            <h2>Applicants</h2>
+            <div class="table-container">
+                <table id="applicant-table" role="table" aria-live="polite" aria-relevant="all"
+                    aria-describedby="table-caption">
+                    <caption id="table-caption" class="sr-only">List of applicants with status and contact info.</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col" tabindex="0" aria-sort="none" data-sort="name">Name <span
+                                    class="sort-icon">▼</span></th>
+                            <th scope="col" tabindex="0" aria-sort="none" data-sort="email">Email <span
+                                    class="sort-icon">▼</span></th>
+                            <th scope="col" tabindex="0" aria-sort="none" data-sort="phone">Phone <span
+                                    class="sort-icon">▼</span></th>
+                            <th scope="col" tabindex="0" aria-sort="none" data-sort="status">Status <span
+                                    class="sort-icon">▼</span></th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicant-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card" aria-label="Resume viewer">
+            <h2>Resume Viewer</h2>
+            <iframe id="resume-viewer" src="" title="Resume Viewer"></iframe>
+        </section>
+
+        <section class="card" aria-label="Secure notes">
+            <h2>Secure Notes</h2>
+            <textarea id="secure-notes" placeholder="Enter secure notes here..." aria-label="Secure notes input"></textarea>
+            <p id="notes-warning" aria-live="assertive" style="height:1.2rem;"></p>
+            <button id="save-notes-button" aria-label="Save notes">Save Notes</button>
+        </section>
+
+        <div class="text-right" aria-label="Export actions" style="margin-bottom:3rem;">
+            <button id="export-csv-button" class="btn btn-success" aria-label="Export applicants to CSV">Export to
+                CSV</button>
         </div>
-    </div>
+    </main>
 
     <script>
-        // --- Helper Functions ---
-        /**
-         * Masks email address.
-         * @param {string} email The email address to mask.
-         * @returns {string} The masked email address.
-         */
-        function maskEmail(email) {
-            if (!email) return '';
-            const parts = email.split('@');
-            if (parts.length !== 2) return email;
-            return parts[0].replace(/./g, '*') + '@' + parts[1];
-        }
+        // Google Apps Script Web App URL (Replace with your actual URL)
+        const SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbwq6Im5isHpGey-x_4YeP24u-E7GCKQIThV5h5OkeDqubq1VZP0mqXW53t7R9hIOyLQLg/exec";
 
-        /**
-         * Masks phone number.
-         * @param {string} phone The phone number to mask.
-         * @returns {string} The masked phone number.
-         */
-        function maskPhone(phone) {
-            if (!phone) return '';
-            return phone.replace(/\d/g, '*');
-        }
-
-        /**
-         * Exports data to CSV.
-         * @param {Array} data The data to export.
-         * @param {boolean} anonymize Whether to anonymize the data.
-         */
-        function exportToCsv(data, anonymize = false) {
-            if (!data || data.length === 0) {
-                alert('No data to export.');
-                return;
-            }
-
-            const header = Object.keys(data[0]).join(',') + '\n';
-            const rows = data.map(item => {
-                let row = Object.values(item);
-                if (anonymize) {
-                    row[1] = maskEmail(row[1]); // Mask email
-                    row[2] = maskPhone(row[2]); // Mask phone
-                }
-                return row.join(',');
-            }).join('\n');
-
-            const csvContent = header + rows;
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", "applicants.csv");
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // --- Data ---
-        let applicants = [
-            { name: 'John Doe', email: 'john.doe@example.com', phone: '123-456-7890', status: 'new', resume: 'resume1.pdf' },
-            { name: 'Jane Smith', email: 'jane.smith@example.com', phone: '987-654-3210', status: 'reviewed', resume: 'resume2.pdf' },
-            { name: 'Mike Johnson', email: 'mike.johnson@example.com', phone: '555-123-4567', status: 'hired', resume: 'resume3.pdf' },
-            { name: 'Alice Brown', email: 'alice.brown@example.com', phone: '111-222-3333', status: 'new', resume: 'resume4.pdf' },
-            { name: 'Bob Williams', email: 'bob.williams@example.com', phone: '444-555-6666', status: 'reviewed', resume: 'resume5.pdf' },
-        ];
-
-        // --- DOM Elements ---
         const statusFilter = document.getElementById('status-filter');
+        const anonymizeToggle = document.getElementById('anonymize-toggle');
         const applicantTableBody = document.getElementById('applicant-table-body');
         const resumeViewer = document.getElementById('resume-viewer');
         const exportCsvButton = document.getElementById('export-csv-button');
@@ -147,104 +658,271 @@
         const saveNotesButton = document.getElementById('save-notes-button');
         const notesWarning = document.getElementById('notes-warning');
 
-        // --- State Management ---
-        let anonymizeData = false; // Default is to not anonymize
-        let storedNotes = localStorage.getItem('secureNotes');
-        let secureNotes = storedNotes ? storedNotes : "";
+        let anonymizeData = false;
+        let storedNotes = localStorage.getItem('secureNotes') || '';
+        let currentSort = { field: 'name', direction: 'asc' };
+        let searchQuery = '';
+        let applicants = []; // To store fetched data
 
-        // --- Functions ---
 
-        /**
-         * Renders the applicant table.
-         * @param {Array} applicants The applicants to render.
-         */
-        function renderApplicantTable(applicants) {
-            applicantTableBody.innerHTML = ''; // Clear table
-            applicants.forEach(applicant => {
-                const row = document.createElement('tr');
-                const nameCell = document.createElement('td');
-                nameCell.textContent = applicant.name;
-                nameCell.className = 'px-4 py-2';
-                const emailCell = document.createElement('td');
-                emailCell.textContent = anonymizeData ? maskEmail(applicant.email) : applicant.email;
-                emailCell.className = 'px-4 py-2';
-                const phoneCell = document.createElement('td');
-                phoneCell.textContent = anonymizeData ? maskPhone(applicant.phone) : applicant.phone;
-                phoneCell.className = 'px-4 py-2';
-                const statusCell = document.createElement('td');
-                statusCell.textContent = applicant.status;
-                statusCell.className = 'px-4 py-2';
-                const actionsCell = document.createElement('td');
-                const viewResumeButton = document.createElement('button');
-                viewResumeButton.textContent = 'View Resume';
-                viewResumeButton.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-md text-sm';
-                viewResumeButton.addEventListener('click', () => {
-                    resumeViewer.src = applicant.resume;
-                });
-                actionsCell.appendChild(viewResumeButton);
-                actionsCell.className = 'px-4 py-2';
+        function maskEmail(email) {
+            if (!email) return '';
+            const parts = email.split('@');
+            if (parts.length !== 2) return email;
+            return parts[0].charAt(0) + '*****' + parts[0].slice(-1) + '@' + parts[1];
+        }
 
-                row.appendChild(nameCell);
-                row.appendChild(emailCell);
-                row.appendChild(phoneCell);
-                row.appendChild(statusCell);
-                row.appendChild(actionsCell);
-                applicantTableBody.appendChild(row);
+        function maskPhone(phone) {
+            if (!phone) return '';
+            return phone.replace(/\d(?=\d{4})/g, '*');
+        }
+
+        function exportToCsv(data, anonymize = false) {
+            if (!data.length) {
+                alert('No data to export.');
+                return;
+            }
+            const headers = ['Name', 'Email', 'Phone', 'Status', 'Resume'];
+            const csvRows = data.map(a => [
+                a.name,
+                anonymize ? maskEmail(a.email) : a.email,
+                anonymize ? maskPhone(a.phone) : a.phone,
+                a.status,
+                a.resume
+            ].join(','));
+            const csvContent = [headers.join(','), ...csvRows].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'applicants.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function filterApplicants(applicants, status, query) {
+            let filtered = [...applicants];
+            if (status !== 'all') {
+                filtered = filtered.filter(a => a.status.toLowerCase() === status.toLowerCase());
+            }
+            if (query) {
+                const q = query.toLowerCase();
+                filtered = filtered.filter(a =>
+                    a.name.toLowerCase().includes(q) ||
+                    a.email.toLowerCase().includes(q) ||
+                    a.phone.includes(q) ||
+                    a.status.toLowerCase().includes(q)
+                );
+            }
+            return filtered;
+        }
+
+        function sortApplicants(applicants, field, direction) {
+            return [...applicants].sort((a, b) => {
+                let valA = a[field]?.toString().toLowerCase() || '';
+                let valB = b[field]?.toString().toLowerCase() || '';
+                if (field === 'status') {
+                    const order = {
+                        new: 1,
+                        reviewed: 2,
+                        hired: 3
+                    };
+                    valA = order[valA] || 0;
+                    valB = order[valB] || 0;
+                    return direction === 'asc' ? valA - valB : valB - valA;
+                }
+                if (direction === 'asc') return valA.localeCompare(valB);
+                else return valB.localeCompare(valA);
             });
         }
 
-        /**
-         * Filters applicants by status.
-         * @param {Array} applicants The applicants to filter.
-         * @param {string} status The status to filter by.
-         * @returns {Array} The filtered applicants.
-         */
-        function filterApplicants(applicants, status) {
-            if (status === 'all') {
-                return applicants;
-            }
-            return applicants.filter(applicant => applicant.status === status);
+        function updateTable() {
+            let filtered = filterApplicants(applicants, statusFilter.value, searchQuery);
+            filtered = sortApplicants(filtered, currentSort.field, currentSort.direction);
+            renderApplicantTable(filtered);
         }
 
-        /**
-         * Initializes the app.
-         */
-        function initApp() {
-            renderApplicantTable(applicants);
-            if (storedNotes) {
-                secureNotesInput.value = storedNotes;
+        function getStatusClass(status) {
+            status = status.toLowerCase();
+            switch (status) {
+                case 'new':
+                    return 'status-new';
+                case 'reviewed':
+                    return 'status-reviewed';
+                case 'hired':
+                    return 'status-hired';
+                default:
+                    return '';
             }
         }
 
-        // --- Event Listeners ---
-
-        // Status filter change
-        statusFilter.addEventListener('change', (event) => {
-            const status = event.target.value;
-            const filteredApplicants = filterApplicants(applicants, status);
-            renderApplicantTable(filteredApplicants);
-        });
-
-        // Export CSV button click
-        exportCsvButton.addEventListener('click', () => {
-            exportToCsv(applicants, anonymizeData);
-        });
-
-        // Secure notes save button
-        saveNotesButton.addEventListener('click', () => {
-            const notes = secureNotesInput.value.trim();
-            if (notes.length > 200) {
-                notesWarning.textContent = "Notes cannot exceed 200 characters.";
+        function renderApplicantTable(applicants) {
+            applicantTableBody.innerHTML = '';
+            if (applicants.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="6" style="text-align:center; padding:1.5rem; color:#6b7280;">No applicants found</td>`;
+                applicantTableBody.appendChild(row);
                 return;
             }
-            secureNotes = notes;
-            localStorage.setItem('secureNotes', notes);
-            notesWarning.textContent = ""; // Clear message
-            alert("Notes saved successfully!");
-        });
+            applicants.forEach(applicant => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <img src="${applicant.photo}" alt="Photo of ${applicant.name}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; vertical-align: middle; margin-right: 0.5rem;" />
+                        ${applicant.name}
+                    </td>
+                    <td class="${anonymizeData ? 'anonymized' : ''}">${anonymizeData ? maskEmail(applicant.email) : applicant.email}</td>
+                    <td class="${anonymizeData ? 'anonymized' : ''}">${anonymizeData ? maskPhone(applicant.phone) : applicant.phone}</td>
+                    <td><span class="status-badge ${getStatusClass(applicant.status)}">${applicant.status}</span></td>
+                    <td>
+                        <button class="btn-sm view-resume" data-resume="${applicant.resume}" aria-label="View resume for ${applicant.name}">
+                            <i class="fas fa-file-alt"></i> View
+                        </button>
+                    </td>
+                `;
+                applicantTableBody.appendChild(row);
+            });
+            document.querySelectorAll('.view-resume').forEach(button => {
+                button.addEventListener('click', () => {
+                    const resumeUrl = button.getAttribute('data-resume');
+                    if (resumeUrl) {
+                        resumeViewer.src = resumeUrl;
+                    } else {
+                        alert('No resume available for this applicant.');
+                    }
+                });
+            });
+        }
 
-        // --- Initialization ---
-        initApp();
+        function debounce(fn, wait) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn.apply(this, args), wait);
+            };
+        }
+
+        function initApp() {
+            secureNotesInput.value = storedNotes;
+
+            // Fetch and display data from Google Sheet
+            fetch(SPREADSHEET_URL)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.error) {
+                        console.error("Error fetching data:", data.error);
+                        alert("Failed to fetch data. Please check console for details.");
+                        return;
+                    }
+                    applicants = data; // Store the fetched data
+                    updateTable(); // Initial render
+                    // Set up sorting headers
+                    const sortHeaders = document.querySelectorAll('th[data-sort]');
+                    sortHeaders.forEach(th => {
+                        th.setAttribute('aria-sort', 'none');
+                    });
+                    const firstSort = document.querySelector(`th[data-sort="${currentSort.field}"]`);
+                    if (firstSort) firstSort.setAttribute('aria-sort', currentSort.direction === 'asc' ? 'ascending' : 'descending');
+
+                    sortHeaders.forEach(th => {
+                        th.addEventListener('click', () => {
+                            const field = th.dataset.sort;
+                            if (currentSort.field === field) {
+                                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                            } else {
+                                currentSort.field = field;
+                                currentSort.direction = 'asc';
+                            }
+                            sortHeaders.forEach(h => h.setAttribute('aria-sort', 'none'));
+                            th.setAttribute('aria-sort', currentSort.direction === 'asc' ? 'ascending' : 'descending');
+                            updateTable();
+                        });
+                    });
+
+                    statusFilter.addEventListener('change', updateTable);
+
+                    anonymizeToggle.addEventListener('change', (e) => {
+                        anonymizeData = e.target.checked;
+                        updateTable();
+                    });
+
+                    exportCsvButton.addEventListener('click', () => {
+                        const filtered = filterApplicants(applicants, statusFilter.value, searchQuery);
+                        exportToCsv(filtered, anonymizeData);
+                    });
+
+                    saveNotesButton.addEventListener('click', () => {
+                        const notes = secureNotesInput.value.trim();
+                        if (notes.length > 500) {
+                            notesWarning.textContent = "Notes cannot exceed 500 characters.";
+                            return;
+                        }
+                        notesWarning.textContent = '';
+                        localStorage.setItem('secureNotes', notes);
+                        storedNotes = notes;
+                        saveNotesButton.textContent = 'Saved! ✔️';
+                        saveNotesButton.disabled = true;
+                        setTimeout(() => {
+                            saveNotesButton.textContent = 'Save Notes';
+                            saveNotesButton.disabled = false;
+                        }, 2000);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    alert("Failed to fetch data. Please check console and your Google Apps Script.");
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            const closeSidebarBtn = document.querySelector('.close-sidebar');
+            const overlay = document.querySelector('.overlay');
+
+            function openSidebar() {
+                mobileSidebar.classList.add('active');
+                overlay.classList.add('active');
+                mobileSidebar.setAttribute('aria-hidden', 'false');
+                mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                mobileSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                mobileSidebar.setAttribute('aria-hidden', 'true');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+
+            mobileMenuBtn.addEventListener('click', () => {
+                if (mobileSidebar.classList.contains('active')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            closeSidebarBtn.addEventListener('click', closeSidebar);
+            overlay.addEventListener('click', closeSidebar);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileSidebar.classList.contains('active')) {
+                    closeSidebar();
+                    mobileMenuBtn.focus();
+                }
+            });
+        });
     </script>
 </body>
 </html>

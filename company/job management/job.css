@@ -1,0 +1,241 @@
+/* Job status badges */
+.status-badge {
+    @apply text-xs px-2 py-1 rounded;
+}
+
+.status-draft {
+    @apply bg-gray-100 text-gray-800;
+}
+
+.status-active {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-archived {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+/* Promoted jobs */
+.promoted-job {
+    border-left: 4px solid #f59e0b;
+}
+
+/* Quill editor customizations */
+.ql-toolbar.ql-snow {
+    @apply border-gray-300 rounded-t-md;
+}
+
+.ql-container.ql-snow {
+    @apply border-gray-300 rounded-b-md;
+}
+
+.ql-editor {
+    @apply text-gray-800;
+}
+
+/* File attachments in editor */
+.quill-file-attachment {
+    @apply inline-flex items-center px-2 py-1 bg-gray-100 rounded text-gray-700;
+}
+
+/* Toast notifications */
+.toast {
+    @apply fixed bottom-4 right-4 px-4 py-2 rounded-md shadow-lg text-white;
+}
+
+.toast-info {
+    @apply bg-blue-500;
+}
+
+.toast-success {
+    @apply bg-green-500;
+}
+
+.toast-error {
+    @apply bg-red-500;
+}/* Base Styles */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+/* Job status badges */
+.status-badge {
+    @apply text-xs px-2 py-1 rounded font-medium;
+}
+
+.status-draft {
+    @apply bg-gray-100 text-gray-800;
+}
+
+.status-active {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-archived {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+/* Promoted jobs */
+.promoted-job {
+    border-left: 4px solid #f59e0b;
+}
+
+/* Quill editor customizations */
+.ql-toolbar.ql-snow {
+    @apply border-gray-300 rounded-t-md;
+}
+
+.ql-container.ql-snow {
+    @apply border-gray-300 rounded-b-md h-64;
+}
+
+.ql-editor {
+    @apply text-gray-800 text-base;
+    min-height: 250px;
+}
+
+.ql-editor.ql-blank::before {
+    @apply text-gray-400 not-italic;
+}
+
+/* File attachments in editor */
+.quill-file-attachment {
+    @apply inline-flex items-center px-2 py-1 bg-gray-100 rounded text-gray-700 text-sm border border-gray-200;
+}
+
+.quill-file-attachment i {
+    @apply text-gray-500;
+}
+
+/* Toast notifications */
+.toast {
+    @apply fixed bottom-4 right-4 px-4 py-3 rounded-md shadow-lg text-white flex items-center;
+    min-width: 250px;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.toast-info {
+    @apply bg-blue-500;
+}
+
+.toast-success {
+    @apply bg-green-500;
+}
+
+.toast-error {
+    @apply bg-red-500;
+}
+
+.toast i {
+    @apply mr-2;
+}
+
+/* Modal styles */
+.modal-overlay {
+    @apply fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50;
+}
+
+.modal-content {
+    @apply relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white;
+}
+
+/* Form elements */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm;
+}
+
+input[type="checkbox"] {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded;
+}
+
+label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+/* Buttons */
+.btn {
+    @apply px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500;
+}
+
+.btn-secondary {
+    @apply border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 focus:ring-blue-500;
+}
+
+.btn-danger {
+    @apply bg-red-600 hover:bg-red-700 text-white focus:ring-red-500;
+}
+
+/* Job cards */
+.job-card {
+    @apply bg-white rounded-lg shadow p-6 transition-all duration-200;
+}
+
+.job-card:hover {
+    @apply shadow-md;
+}
+
+.job-checkbox {
+    @apply h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1;
+}
+
+/* Pagination */
+.pagination {
+    @apply flex items-center justify-between;
+}
+
+.pagination-btn {
+    @apply px-4 py-2 border rounded-md text-sm font-medium disabled:opacity-50;
+}
+
+/* Confirmation modal */
+.confirmation-modal {
+    @apply fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center;
+}
+
+.confirmation-content {
+    @apply bg-white rounded-lg shadow-xl p-6 max-w-md w-full;
+}
+
+/* Utility classes */
+.hidden {
+    display: none;
+}
+
+/* Main content adjustment for header */
+main {
+    margin-top: 80px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .job-card .flex {
+        @apply flex-col;
+    }
+    
+    .job-card .flex > div:first-child {
+        @apply mb-4;
+    }
+    
+    .job-actions {
+        @apply mt-4 pt-4 border-t border-gray-200;
+    }
+}

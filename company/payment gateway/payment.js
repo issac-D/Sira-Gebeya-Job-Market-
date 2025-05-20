@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnText = document.getElementById('btnText');
     const spinner = document.getElementById('spinner');
     const attemptsWarning = document.getElementById('attemptsWarning');
+    const successModal = document.getElementById('successModal');
     
     // Error elements
     const amountError = document.getElementById('amountError');
@@ -138,12 +139,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const isSuccess = Math.random() > 0.3;
             
             if (isSuccess) {
-                // Success case
-                alert('Payment successful! Thank you.');
+                // Show success modal
+                successModal.classList.remove('hidden');
+                
                 // Reset form
                 paymentForm.reset();
                 fileNameSpan.textContent = 'Choose file';
                 failedAttempts = 0;
+                
+                // Redirect to dashboard after 3 seconds
+                setTimeout(() => {
+                    window.location.href = '../dashboard/dashboard.html';
+                }, 3000);
             } else {
                 // Failure case
                 alert('Payment failed. Please try again.');

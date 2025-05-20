@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EthioJobs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-hover: #1E40AF;
+            --secondary: #16A34A;
+            --secondary-hover: #15803D;
+            --alert: #EA580C;
+            --text-dark: #1F2937;
+            --text-medium: #4B5563;
+            --text-light: #6B7280;
+            --bg-white: #FFFFFF;
+            --bg-light: #F3F4F6;
+            --border: #E5E7EB;
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #E5E7EB 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: var(--space-md);
+        }
+
+        .auth-container {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 440px;
+            padding: var(--space-lg);
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .logo h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), #4F46E5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            transition: transform 0.3s ease;
+        }
+
+        .logo h1:hover {
+            transform: scale(1.05);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-md);
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #FAFAFA;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: var(--bg-white);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: var(--space-md);
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .forgot-password a:hover {
+            color: var(--primary-hover);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+        }
+
+        .auth-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: var(--space-lg) 0;
+            color: var(--text-medium);
+            font-size: 0.9rem;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .divider::before {
+            margin-right: var(--space-sm);
+        }
+
+        .divider::after {
+            margin-left: var(--space-sm);
+        }
+
+        .social-login {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg-white);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background-color: var(--bg-light);
+            transform: translateY(-2px);
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: var(--space-md);
+            font-size: 0.9rem;
+        }
+
+        .auth-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .auth-link a:hover {
+            color: var(--primary-hover);
+        }
+
+        .error-message {
+            color: var(--alert);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--secondary);
+            text-align: center;
+            padding: var(--space-sm);
+            background-color: rgba(22, 163, 74, 0.1);
+            border-radius: 4px;
+            margin-bottom: var(--space-md);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+        }
+
+        /* Forgot Password Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            max-width: 400px;
+            width: 90%;
+            border-radius: 8px;
+            padding: var(--space-lg);
+            position: relative;
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-medium);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--text-dark);
+        }
+
+        .modal-form .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            background-color: var(--secondary-hover);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: var(--space-lg);
+                margin: var(--space-sm);
+            }
+
+            .logo h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <h1>SIRA GEBEYA</h1>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="text" id="username" name="username" placeholder="Enter your email" required>
+                <div class="error-message" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="auth-btn">
+                <i class="fas fa-sign-in-alt"></i> Log In
+            </button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <div class="social-login">
+            <button class="social-btn" id="googleLoginBtn">
+                <i class="fab fa-google"></i> Continue with Google
+            </button>
+        </div>
+
+        <div class="auth-link">
+            Don't have an account? <a href="register.html">Register</a>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal" id="forgotPasswordModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">×</span>
+            <h2 class="modal-title">Reset Your Password</h2>
+            <form id="forgotPasswordForm" class="modal-form">
+                <div class="form-group">
+                    <label for="resetUsername">Email</label>
+                    <input type="text" id="resetUsername" name="resetUsername" placeholder="Enter your email" required>
+                    <div class="error-message" id="resetUsernameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" required>
+                    <div class="error-message" id="newPasswordError"></div>
+                </div>
+                <button type="submit" class="modal-btn">Reset Password</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check for successful registration redirect and auto-fill
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const registered = urlParams.get('registered');
+            const autoLoginData = localStorage.getItem('autoLogin');
+
+            if (registered === 'true' && autoLoginData) {
+                const { email, password, timestamp } = JSON.parse(autoLoginData);
+                // Check if autoLogin data is recent (e.g., within 5 minutes)
+                if (Date.now() - timestamp < 5 * 60 * 1000) {
+                    const usernameInput = document.getElementById('username');
+                    const passwordInput = document.getElementById('password');
+                    if (usernameInput && passwordInput) {
+                        usernameInput.value = email;
+                        passwordInput.value = password;
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'success-message';
+                        successMessage.innerHTML = `
+                            <i class="fas fa-check-circle"></i> Registration successful! Please click "Log In" to continue.
+                        `;
+                        document.getElementById('loginForm').prepend(successMessage);
+                        // Clear autoLogin data after use
+                        localStorage.removeItem('autoLogin');
+                    }
+                }
+            }
+        });
+
+        // Form validation and submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+            
+            // Reset errors
+            usernameError.style.display = 'none';
+            passwordError.style.display = 'none';
+            
+            // Validation
+            let isValid = true;
+            
+            if (!username) {
+                usernameError.textContent = 'Email is required';
+                usernameError.style.display = 'block';
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
+                usernameError.textContent = 'Please enter a valid email address';
+                usernameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!password) {
+                passwordError.textContent = 'Password is required';
+                passwordError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                const loginBtn = document.querySelector('.auth-btn');
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+                loginBtn.disabled = true;
+                
+                // Retrieve users from localStorage
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const user = users.find(u => u.email === username && u.password === password);
+                
+                setTimeout(() => {
+                    if (user) {
+                        // Store current user and redirect
+                        localStorage.setItem('currentUser', JSON.stringify({ email: username, fullName: user.fullName }));
+                        window.location.href = 'aaffterlogin.html';
+                    } else {
+                        usernameError.textContent = 'Invalid email or password';
+                        usernameError.style.display = 'block';
+                        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Log In';
+                        loginBtn.disabled = false;
+                    }
+                }, 1500);
+            }
+        });
+
+        // Forgot Password Modal
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+        const modalClose = document.getElementById('modalClose');
+        
+        forgotPasswordLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            forgotPasswordModal.style.display = 'flex';
+        });
+
+        modalClose.addEventListener('click', function() {
+            forgotPasswordModal.style.display = 'none';
+            document.getElementById('forgotPasswordForm').reset();
+            document.getElementById('resetUsernameError').style.display = 'none';
+            document.getElementById('newPasswordError').style.display = 'none';
+        });
+
+        // Handle clicks outside modal to close
+        window.addEventListener('click', function(e) {
+            if (e.target === forgotPasswordModal) {
+                forgotPasswordModal.style.display = 'none';
+                document.getElementById('forgotPasswordForm').reset();
+                document.getElementById('resetUsernameError').style.display = 'none';
+                document.getElementById('newPasswordError').style.display = 'none';
+            }
+        });
+
+        // Forgot Password Form Submission
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('resetUsername').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            const resetUsernameError = document.getElementById('resetUsernameError');
+            const newPasswordError = document.getElementById('newPasswordError');
+            
+            resetUsernameError.style.display = 'none';
+            newPasswordError.style.display = 'none';
+            
+            let isValid = true;
+            
+            if (!username) {
+                resetUsernameError.textContent = 'Email is required';
+                resetUsernameError.style.display = 'block';
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) {
+                resetUsernameError.textContent = 'Please enter a valid email address';
+                resetUsernameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!newPassword) {
+                newPasswordError.textContent = 'New password is required';
+                newPasswordError.style.display = 'block';
+                isValid = false;
+            } else if (newPassword.length < 8 || !/[A-Za-z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+                newPasswordError.textContent = 'Password must be at least 8 characters and include letters and numbers';
+                newPasswordError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                const modalBtn = document.querySelector('.modal-btn');
+                const originalText = modalBtn.innerHTML;
+                modalBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Resetting...';
+                modalBtn.disabled = true;
+                
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const userIndex = users.findIndex(u => u.email === username);
+                
+                setTimeout(() => {
+                    if (userIndex !== -1) {
+                        users[userIndex].password = newPassword;
+                        localStorage.setItem('users', JSON.stringify(users));
+                        alert(`Password for ${username} has been reset successfully. Please log in.`);
+                        forgotPasswordModal.style.display = 'none';
+                        document.getElementById('forgotPasswordForm').reset();
+                    } else {
+                        resetUsernameError.textContent = 'No account found with this email';
+                        resetUsernameError.style.display = 'block';
+                    }
+                    modalBtn.innerHTML = originalText;
+                    modalBtn.disabled = false;
+                }, 1500);
+            }
+        });
+
+        // Google Login Simulation
+        document.getElementById('googleLoginBtn').addEventListener('click', function() {
+            const googleBtn = this;
+            const originalText = googleBtn.innerHTML;
+            googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+            googleBtn.disabled = true;
+            
+            setTimeout(() => {
+                const email = prompt('Enter your email for Google login:')?.trim();
+                
+                if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const user = users.find(u => u.email === email);
+                    if (user) {
+                        localStorage.setItem('currentUser', JSON.stringify({ email: user.email, fullName: user.fullName }));
+                        window.location.href = 'afterlogin.html';
+                    } else {
+                        alert('No account found with this email. Please register first.');
+                        googleBtn.innerHTML = originalText;
+                        googleBtn.disabled = false;
+                    }
+                } else {
+                    alert('Please enter a valid email address');
+                    googleBtn.innerHTML = originalText;
+                    googleBtn.disabled = false;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
